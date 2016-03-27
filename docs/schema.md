@@ -18,6 +18,7 @@ search-age  | text      |
 search-sex  | text      | 
 
 users Auth: 
+
 column name     | data type | details
 ----------------|-----------|-----------------------
 password_digest | string    | not null
