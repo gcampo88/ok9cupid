@@ -1,13 +1,12 @@
 ## Component Hierarchy
 
 * `App`
-  * `SearchIndex`
-  * `NotebooksIndex`
-    * `NotebookIndexItem`
-  * `NotebookForm`
-  * `NotesIndex`
-    * `NoteForm`
-    * `NoteIndexItem`
-  * `NoteDetail`
-    * `NoteTags`
-    * `NoteEditArea`
+  * `BrowseIndex`
+  * `DogsIndex`
+    * `DogsIndexItem`
+  * `Quickmatch`
+  * `FavoritesIndex`
+    * `FavoritesIndexItem`
+  * `ProfileIndex`
+    * `ProfileForm`
+    * `ProfileIndexItems`
