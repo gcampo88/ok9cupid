@@ -1,23 +1,24 @@
 # FresherNote
 
-[Heroku link][heroku] **NB:** This should be a link to your production site
+[Heroku link TK][heroku] 
 
-[heroku]: http://www.herokuapp.com
+[heroku]: http://www.herokuapp.com TK
 
 ## Minimum Viable Product
 
-FresherNote is a web application inspired by Evernote built using Ruby on Rails
-and React.js. FresherNote allows users to:
+ok9cupid is a web application inspired by OKCupid built using Ruby on Rails
+and React.js. ok9cupid allows users to:
 
 <!-- This is a Markdown checklist. Use it to keep track of your
 progress. Put an x between the brackets for a checkmark: [x] -->
 
 - [ ] Create an account
 - [ ] Log in / Log out
-- [ ] Create, read, edit, and delete notes
-- [ ] Organize notes within Notebooks
-- [ ] Tag notes with multiple tags
-- [ ] Apply complex styling to notes while editing
+- [ ] Create, read, edit, and delete profile information and photos
+- [ ] Browse adoptable dogs
+- [ ] Search for adoptable dogs that match specific parameters like age, size, sex, location, breed
+- [ ] Add dogs to and remove dogs from their list of favorites
+- [ ] Be "quickmatched" with a random adoptable dog that meets their search parameters
 
 ## Design Docs
 * [View Wireframes][views]
@@ -44,30 +45,26 @@ progress. Put an x between the brackets for a checkmark: [x] -->
 - [ ] user signup/signin pages
 - [ ] blank landing page after signin
 
-### Phase 2: Notes Model, API, and basic APIUtil (1.5 days)
+### Phase 2: User Model, API, and basic APIUtil (1.5 days)
 
-**Objective:** Notes can be created, read, edited and destroyed through
+**Objective:** User profile information can be created, read, edited and destroyed through
 the API.
 
-- [ ] create `Note` model
+- [ ] flesh out "User" model
 - [ ] seed the database with a small amount of test data
-- [ ] CRUD API for notes (`NotesController`)
-- [ ] jBuilder views for notes
+- [ ] CRUD API for notes 
 - [ ] setup Webpack & Flux scaffold
 - [ ] setup `APIUtil` to interact with the API
 - [ ] test out API interaction in the console.
 
 ### Phase 3: Flux Architecture and Router (1.5 days)
 
-**Objective:** Notes can be created, read, edited and destroyed with the
+**Objective:** User profile information can be created, read, edited and destroyed with the
 user interface.
 
 - [ ] setup the flux loop with skeleton files
 - [ ] setup React Router
-- implement each note component, building out the flux loop as needed.
-  - [ ] `NotesIndex`
-  - [ ] `NoteIndexItem`
-  - [ ] `NoteForm`
+- [ ] implement each note component, building out the flux loop as needed.
 - [ ] save Notes to the DB when the form loses focus or is left idle
   after editing.
 
@@ -79,40 +76,36 @@ user interface.
 - [ ] position elements on the page
 - [ ] add basic colors & styles
 
-### Phase 5: Notebooks (1 day)
+### Phase 5: Browsing Dogs (1.5 days)
 
-**Objective:** Notes belong to Notebooks, and can be viewed by notebook.
+**Objective:** Users can search for adoptable dogs with or without search parameters.
 
-- [ ] create `Notebook` model
-- build out API, Flux loop, and components for:
-  - [ ] Notebook CRUD
-  - [ ] adding notes requires a notebook
-  - [ ] moving notes to a different notebook
-  - [ ] viewing notes by notebook
+- [ ] set up connection with Petfinder's API
+- [ ] set up dogs front end, including index, show, and search pages
+- [ ] build form for user to set search parameters, following petfinder's API docs
+- [ ] enable infinite search with react-scroll
 - Use CSS to style new views
 
 Phase 3 adds organization to the Notes. Notes belong to a Notebook,
 which has its own `Index` view.
 
-### Phase 6: Tags (1.5 days)
+### Phase 6: Favorites (1 day)
 
-**Objective:** Notes can be tagged with multiple tags, and tags are searchable.
+**Objective:** Users can add dogs to and remove them from their Favorites list. 
 
-- [ ] create `Tag` model and join table
+- [ ] create 'Favorites' model
 - build out API, Flux loop, and components for:
-  - [ ] fetching tags for notebook
-  - [ ] adding tags to notebook
-  - [ ] creating tags while adding to notebooks
-  - [ ] searching notebooks by tag
+  - [ ] adding dogs to favorites
+  - [ ] viewing specific dogs within Favorites list, as well as all Favorites at same time
+  - [ ] removing dogs from favorites
 - [ ] Style new elements
 
-### Phase 7: Allow Complex Styling in Notes (0.5 days)
+### Phase 7: QuickMatch (0.5 days)
 
-**objective:** Enable complex styling of notes.
+**objective:** Enable quickmatch functionality. 
 
-- [ ] Integrate `react-quill` (based on Quill.js).
-- [ ] Use Rails helpers to sanitize HTML before rendering.
-- [ ] Style the new Quill elements.
+- [ ] QuickMatch pulls in one dog at random from the results of the user's most recent search
+- [ ] enable modal pop-up with quickmatch result using react-modal
 
 ### Phase 8: Styling Cleanup and Seeding (1 day)
 
@@ -123,11 +116,9 @@ which has its own `Index` view.
 - [ ] Add modals, transitions, and other styling flourishes.
 
 ### Bonus Features (TBD)
-- [ ] Search through notes for blocks of text
-- [ ] Pagination / infinite scroll for Notes Index
-- [ ] Set reminders on notes
-- [ ] Changelogs for Notes
-- [ ] Multiple sessions
+- [ ] allow users to email shelters directly from app using Sendgrid
+- [ ] mimic okCupid's immediate user feedback (like "Ahhh, [location]" that pops up when you enter your zip code). 
+
 
 [phase-one]: ./docs/phases/phase1.md
 [phase-two]: ./docs/phases/phase2.md
