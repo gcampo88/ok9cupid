@@ -25,6 +25,7 @@ session_token   | string    | not null, indexed, unique
 
 
 ## favorites
+Favorites belong to users, and join dogs (from petfinder's api) to users. 
 column name | data type | details
 ------------|-----------|-----------------------
 user_id     | integer   | not null, foreign key (references users), indexed
