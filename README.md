@@ -1,8 +1,7 @@
-# FresherNote
+# ok9cupid
 
-[Heroku link TK][heroku] 
+[Heroku link TK]
 
-[heroku]: http://www.herokuapp.com TK
 
 ## Minimum Viable Product
 
