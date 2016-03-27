@@ -75,7 +75,7 @@ user interface.
 - [ ] position elements on the page
 - [ ] add basic colors & styles
 
-### Phase 5: Browsing Dogs (1.5 days)
+### Phase 5: Browsing Dogs (2 days)
 
 **Objective:** Users can search for adoptable dogs with or without search parameters.
 
@@ -83,12 +83,14 @@ user interface.
 - [ ] set up dogs front end, including index, show, and search pages
 - [ ] build form for user to set search parameters, following petfinder's API docs
 - [ ] enable infinite search with react-scroll
+- [ ] design root page with links to Browse, Quickmatch (tk), Favorites (tk). 
+- [ ] create carousel on root page with randomly selected dog photos from dog index 
 - Use CSS to style new views
 
 Phase 3 adds organization to the Notes. Notes belong to a Notebook,
 which has its own `Index` view.
 
-### Phase 6: Favorites (1 day)
+### Phase 6: Favorites (0.5 day)
 
 **Objective:** Users can add dogs to and remove them from their Favorites list. 
 
