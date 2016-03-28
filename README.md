@@ -65,7 +65,6 @@ user interface.
 - [ ] setup React Router
 - [ ] implement user component, building out the flux loop as needed.
 - [ ] save user search params to the DB anytime they change.
-  after editing.
 
 ### Phase 4: Start Styling (1 day)
 
