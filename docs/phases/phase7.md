@@ -12,11 +12,12 @@
 * QuickmatchItem
 
 ### Stores
-Dogs
+* Dogs
+* Favorites
 
 ### Actions
 * ApiActions.receiveSingleDog -> triggered by ApiUtil
 * FavoritesActions.createFavorite 
 
 ## Gems/Libraries
-React-Modal to pop up Quickmatch modal
+* React-Modal to pop up Quickmatch modal
