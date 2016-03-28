@@ -8,8 +8,8 @@ Favorites
 Favorites: create, show, index, destroy
 
 ### Views
-favorites/index.json.jbuilder
-favorites/show.json.jbuilder
+* favorites/index.json.jbuilder
+* favorites/show.json.jbuilder
 
 ## Flux
 ### Views (React Components)
@@ -17,17 +17,17 @@ favorites/show.json.jbuilder
   * FavoritesIndexItem
 
 ### Stores
-Favorites
+* Favorites
 
 ### Actions
-FavoritesActions.fetchAllFavorites <- triggered by API Util
-FavoritesActions.fetchSingleFavorite <- triggered by API Util
-FavoritesActions.destroyFavorite
-FavoritesActions.createFavorite
+* FavoritesActions.fetchAllFavorites <- triggered by API Util
+* FavoritesActions.fetchSingleFavorite <- triggered by API Util
+* FavoritesActions.destroyFavorite
+* FavoritesActions.createFavorite
 
 ### API Util: 
-APIUtil.fetchAllFavorites
-APIUtil.fetchSingleFavorite
+* APIUtil.fetchAllFavorites
+* APIUtil.fetchSingleFavorite
 
 
 
