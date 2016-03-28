@@ -84,7 +84,7 @@ user interface.
 - [ ] enable infinite search with react-scroll
 - [ ] design root page with links to Browse, Quickmatch (tk), Favorites (tk). 
 - [ ] create carousel on root page with randomly selected dog photos from dog index 
-- Use CSS to style new views
+- [ ] Use CSS to style new views
 
 
 ### Phase 6: Favorites (1 day)
@@ -92,18 +92,19 @@ user interface.
 **Objective:** Users can add dogs to and remove them from their Favorites list. 
 
 - [ ] create 'Favorites' model
-- build out API, Flux loop, and components for:
+- [ ] build out API, Flux loop, and components for:
   - [ ] adding dogs to favorites
-  - [ ] viewing specific dogs within Favorites list, as well as all Favorites at same time
+  - [ ] viewing all Favorites
+  - [ ] viewing specific Favorite
   - [ ] removing dogs from favorites
 - [ ] Style new elements
 
 ### Phase 7: QuickMatch (0.5 days)
 
-**objective:** Enable quickmatch functionality. 
+**objective:** Enable QuickMatch functionality. 
 
 - [ ] QuickMatch pulls in one dog at random from the results of the user's most recent search
-- [ ] enable modal pop-up with quickmatch result using react-modal
+- [ ] enable modal pop-up with QuickMatch result using react-modal
 
 ### Phase 8: Styling Cleanup and Seeding (1 day)
 
@@ -118,8 +119,3 @@ user interface.
 - [ ] mimic okCupid's immediate user feedback (like "Ahhh, [location]" that pops up when you enter your zip code). 
 
 
-[phase-one]: ./docs/phases/phase1.md
-[phase-two]: ./docs/phases/phase2.md
-[phase-three]: ./docs/phases/phase3.md
-[phase-four]: ./docs/phases/phase4.md
-[phase-five]: ./docs/phases/phase5.md
