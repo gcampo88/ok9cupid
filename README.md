@@ -88,7 +88,7 @@ user interface.
 - Use CSS to style new views
 
 
-### Phase 6: Favorites (0.5 day)
+### Phase 6: Favorites (1 day)
 
 **Objective:** Users can add dogs to and remove them from their Favorites list. 
 
