@@ -1,4 +1,4 @@
-# Phase 3: Browsing and searching dogs (2 days)
+# Phase 5: Browsing and searching dogs (2 days)
 
 ## Rails
 ### Models
