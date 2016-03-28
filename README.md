@@ -44,30 +44,30 @@ progress. Put an x between the brackets for a checkmark: [x] -->
 - [ ] user signup/signin pages
 - [ ] blank landing page after signin
 
-### Phase 2: User Model, API, and basic APIUtil (1.5 days)
+### Phase 2: User Model, API, and basic APIUtil (1 day)
 
 **Objective:** User profile information can be created, read, edited and destroyed through
 the API.
 
 - [ ] flesh out "User" model
 - [ ] seed the database with a small amount of test data
-- [ ] CRUD API for notes 
+- [ ] CRUD API for profile information 
 - [ ] setup Webpack & Flux scaffold
 - [ ] setup `APIUtil` to interact with the API
 - [ ] test out API interaction in the console.
 
-### Phase 3: Flux Architecture and Router (1.5 days)
+### Phase 3: Flux Architecture and Router (1 day)
 
 **Objective:** User profile information can be created, read, edited and destroyed with the
 user interface.
 
 - [ ] setup the flux loop with skeleton files
 - [ ] setup React Router
-- [ ] implement each note component, building out the flux loop as needed.
-- [ ] save Notes to the DB when the form loses focus or is left idle
+- [ ] implement user component, building out the flux loop as needed.
+- [ ] save user search params to the DB anytime they change.
   after editing.
 
-### Phase 4: Start Styling (0.5 days)
+### Phase 4: Start Styling (1 day)
 
 **Objective:** Existing pages (including singup/signin) will look good.
 
@@ -87,8 +87,6 @@ user interface.
 - [ ] create carousel on root page with randomly selected dog photos from dog index 
 - Use CSS to style new views
 
-Phase 3 adds organization to the Notes. Notes belong to a Notebook,
-which has its own `Index` view.
 
 ### Phase 6: Favorites (0.5 day)
 
