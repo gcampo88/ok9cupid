@@ -1,66 +1,37 @@
 # Flux Stores
 
-### NoteStore
+### ProfileStore
 
-Holds all persisted note data.
-
-##### Actions:
-- `receiveAllNotes`
-- `receiveSingleNote`
-- `removeNote`
-
-##### Listeners:
-- `NotesIndex` (passes to `NoteIndexItem` via props)
-- `NoteDetail`
-
-### NoteFormStore
-
-Holds un-persisted note data to send to the API.
+Holds all persisted user profile data.
 
 ##### Actions:
-- `receiveNoteFormParams`
+- `receiveProfileItems`
 
 ##### Listeners:
-- `NoteForm`
+- `ProfileIndex` (passes to `ProfileIndexItem` via props)
 
-### NotebookStore
 
-Holds all persisted notebook data.
+### DogStore
+
+Holds all persisted dog data, as well as user search parameters to send to the Petfinder API.
 
 ##### Actions:
-- `receiveAllNotebooks`
-- `receiveSingleNotebook`
-- `removeNotebook`
+- `receiveAllDogs`
+- `receiveSingleDog`
 
 ##### Listeners:
-- `NotebookIndex`
+- `DogsIndex`
+- `DogsIndexItem`
 
-### NotebookFormStore
 
-Holds un-persisted notebook data to send to the API.
+### Favorites
+
+Holds all persisted favorites data
 
 ##### Actions:
-- `receiveNotebookFormParams`
+- `receiveFavorites`
 
 ##### Listeners:
-- `NotebookForm`
+- `FavoritesIndex`(passes to `FavoritesIndexItem` on props)
 
-### SearchStore
 
-Holds search parameters to send to the API.
-
-##### Actions:
-- `receiveSearchParams`
-
-##### Listeners:
-- `SearchIndex`
-
-### SearchSuggestionStore
-
-Holds typeahead suggestions for search.
-
-##### Actions:
-- `receiveSearchSuggestions`
-
-##### Listeners:
-- `SearchSuggestions`
