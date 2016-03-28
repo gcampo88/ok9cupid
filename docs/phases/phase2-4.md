@@ -1,4 +1,4 @@
-# Phase 2-4:  User CRUD, APIUtil, Flux Architecture, Styling (2.5 days)
+# Phase 2-4:  User CRUD, APIUtil, Flux Architecture, Styling
 
 ## Rails
 ### Models
