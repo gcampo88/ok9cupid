@@ -11,7 +11,7 @@ Holds all persisted user profile data.
 - `ProfileIndex` (passes to `ProfileIndexItem` via props)
 
 
-### DogStore
+### DogsStore
 
 Holds all persisted dog data, as well as user search parameters to send to the Petfinder API.
 
@@ -24,7 +24,7 @@ Holds all persisted dog data, as well as user search parameters to send to the P
 - `DogsIndexItem`
 
 
-### Favorites
+### FavoritesStore
 
 Holds all persisted favorites data
 
