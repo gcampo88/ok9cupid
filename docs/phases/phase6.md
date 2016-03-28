@@ -1,4 +1,4 @@
-# Phase 6: Favorites (1 day)
+# Phase 6: Favorites
 
 ## Rails
 ### Models
