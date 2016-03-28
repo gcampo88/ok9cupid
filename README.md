@@ -63,7 +63,7 @@ user interface.
 
 - [ ] setup the flux loop with skeleton files
 - [ ] setup React Router
-- [ ] implement user component, building out the flux loop as needed.
+- [ ] implement Profile component, building out the flux loop as needed.
 - [ ] save user search params to the DB anytime they change.
 
 ### Phase 4: Start Styling (1 day)
