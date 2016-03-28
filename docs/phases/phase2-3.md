@@ -1,4 +1,4 @@
-# Phase 2: APIUtil and User CRUD (2 days)
+# Phase 2-3: APIUtil, User CRUD, Flux Architecture (2 days)
 
 ## Rails
 ### Models
