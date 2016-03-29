@@ -4,8 +4,8 @@ var ProfileActions = require('../actions/profile_actions')
 
 var Profile = React.createClass({
   getInitialState: function () {
-    return({ user: UserStore.CurrentUser() })
-  };
+    return({ user: UserStore.CurrentUser() });
+  },
 
   componentDidMount: function () {
     this.userListener = UserStore.addListener(this.onChange);
