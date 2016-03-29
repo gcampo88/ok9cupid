@@ -1,6 +1,6 @@
 # ok9cupid
 
-[Heroku link TK]
+[ok9cupid.herokuapp.com] http://ok9cupid.herokuapp.com/
 
 
 ## Minimum Viable Product
@@ -51,7 +51,7 @@ the API.
 
 - [ ] flesh out "User" model
 - [ ] seed the database with a small amount of test data
-- [ ] CRUD API for profile information 
+- [ ] CRUD API for profile information
 - [ ] setup Webpack & Flux scaffold
 - [ ] setup `APIUtil` to interact with the API
 - [ ] test out API interaction in the console.
@@ -82,14 +82,14 @@ user interface.
 - [ ] set up dogs front end, including index, show, and search pages
 - [ ] build form for user to set search parameters, following petfinder's API docs
 - [ ] enable infinite search with react-scroll
-- [ ] design root page with links to Browse, Quickmatch (tk), Favorites (tk). 
-- [ ] create carousel on root page with randomly selected dog photos from dog index 
+- [ ] design root page with links to Browse, Quickmatch (tk), Favorites (tk).
+- [ ] create carousel on root page with randomly selected dog photos from dog index
 - [ ] Use CSS to style new views
 
 
 ### Phase 6: Favorites (1 day)
 
-**Objective:** Users can add dogs to and remove them from their Favorites list. 
+**Objective:** Users can add dogs to and remove them from their Favorites list.
 
 - [ ] create 'Favorites' model
 - [ ] build out API, Flux loop, and components for:
@@ -101,7 +101,7 @@ user interface.
 
 ### Phase 7: QuickMatch (0.5 days)
 
-**objective:** Enable QuickMatch functionality. 
+**objective:** Enable QuickMatch functionality.
 
 - [ ] QuickMatch pulls in one dog at random from the results of the user's most recent search
 - [ ] enable modal pop-up with QuickMatch result using react-modal
@@ -116,6 +116,4 @@ user interface.
 
 ### Bonus Features (TBD)
 - [ ] allow users to email shelters directly from app using Sendgrid
-- [ ] mimic okCupid's immediate user feedback (like "Ahhh, [location]" that pops up when you enter your zip code). 
-
-
+- [ ] mimic okCupid's immediate user feedback (like "Ahhh, [location]" that pops up when you enter your zip code).
