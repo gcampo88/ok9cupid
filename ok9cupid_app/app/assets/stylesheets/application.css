@@ -13,3 +13,70 @@
  *= require_tree .
  *= require_self
  */
+
+html, body, section, form, ul, li, article, header, h1, h2, h3, h4, p, div {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  outline: 0;
+
+  text-align: inherit;
+  text-decoration: inherit;
+  font: inherit;
+  vertical-align: inherit;
+  color: inherit;
+
+  background: transparent;
+}
+
+.group:after {
+  clear: both;
+  display: block;
+  content: "";
+}
+
+ul {
+  list-style: none;
+}
+
+body {
+  font-family: sans-serif;
+  background: #104DA1;
+  color: white;
+  font-size: 24px;
+  text-shadow: 1px #7EC9F8;
+}
+
+.signup-header {
+  margin: auto;
+  text-align: center;
+  display: block;
+}
+
+.signup-header > h1 {
+  font-size: 36px;
+  text-shadow: 2px 2px #7EC9F8;
+}
+
+.signup-header > h3 {
+  margin: 10px;
+}
+
+.logo {
+  margin: 0 auto;
+  width: 500px;
+  height: auto;
+  display: block;
+}
+
+.form {
+
+  width: 600px;
+  margin: auto;
+  padding: 20px;
+}
+
+.form > ul > li {
+  float: left;
+  display: block;
+}

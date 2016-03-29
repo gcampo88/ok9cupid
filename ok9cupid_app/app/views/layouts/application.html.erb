@@ -17,8 +17,6 @@
 <% if current_user %>
   <%= "Hello, #{current_user.name}!" %>
   <%= button_to "Sign out", session_url, method: "delete" %>
-<% else %>
-  <%= button_to "Sign in!", new_session_url, method: "get" %>
 <% end %>
 
 <%= yield %>
