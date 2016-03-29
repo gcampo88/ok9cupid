@@ -1,6 +1,6 @@
 # ok9cupid
 
-[ok9cupid.herokuapp.com] http://ok9cupid.herokuapp.com/
+[ok9cupid.herokuapp.com][http://ok9cupid.herokuapp.com/]
 
 
 ## Minimum Viable Product
