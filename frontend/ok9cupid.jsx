@@ -13,7 +13,7 @@ var Browse = require('./components/browse');
 var App = React.createClass({
   render: function () {
     return(<div>
-      We are on the root page!
+        <div>We are on the root page!</div>
       {this.props.children}
     </div>)
   }

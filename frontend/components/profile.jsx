@@ -35,9 +35,9 @@ var Profile = React.createClass({
       age: UserStore.currentUser().search_age,
       size: UserStore.currentUser().search_size,
       sex: UserStore.currentUser().search_sex,
-      about_me: UserStore.currentUser().search_sex,
-      about_life: UserStore.currentUser().search_sex,
-      ideal: UserStore.currentUser().search_sex
+      about_me: UserStore.currentUser().about_me,
+      about_life: UserStore.currentUser().about_life,
+      ideal: UserStore.currentUser().ideal_dog
     });
   },
 
@@ -46,13 +46,15 @@ var Profile = React.createClass({
     formData.append("user[search_sex]", this.state.sex);
     formData.append("user[search_size]", this.state.size);
     formData.append("user[search_age]", this.state.age);
-    // debugger;
+    formData.append("user[about_me]", this.state.about_me);
+    formData.append("user[about_life]", this.state.about_life);
+    formData.append("user[ideal_dog]", this.state.ideal);
+
     ApiUtil.updateUserProfile(formData, this.state.user.id);
   },
 
 
   render: function () {
-    console.log(this.state)
     if (!this.state.user) {
       return(
         <div></div>
@@ -66,18 +68,18 @@ var Profile = React.createClass({
         <form className="profile-form">
           <h3>My Profile:</h3>
           <label>About Me</label>
-          <input type="text"
+            <textarea
             className="profile-param"
             valueLink={this.linkState('about_me')}
             onBlur={this.handleInput} />
 
           <label>What kind of life can I give a pup?</label>
-          <input type="text"
-            className="profile-param"
-            valueLink={this.linkState('about_life')}
-            onBlur={this.handleInput}  />
+          <textarea
+          className="profile-param"
+          valueLink={this.linkState('about_life')}
+          onBlur={this.handleInput}   />
 
-          <label>About my ideal dog:</label>
+        <label>My ideal dog enjoys:</label>
           <input type="text"
             className="profile-param"
             valueLink={this.linkState('ideal')}

@@ -16,7 +16,10 @@
 
 /*RESET*/
 
-html, body, section, form, ul, li, article, header, h1, h2, h3, h4, p, input, label, div {
+html, body, section, form, ul,
+li, article, header,
+h1, h2, h3, h4, p,
+input, label, div, textarea {
   margin: 0;
   border: 0;
   padding: 0;
@@ -189,15 +192,56 @@ body {
 
 /*profile*/
 .profile-form {
-  background: red;
+  background: #104DA1;
   width: 300px;
   height: 400px;
-  border: 1px solid darkblue;
+  border: 1px solid lightblue;
   float: left;
 }
 
+.profile-form {
+  width: 300px;
+  height: auto;
+  border: 1px solid lightblue;
+  float: left;
+  margin: 20px;
+  padding: 10px;
+
+}
+
+.profile-form > h3 {
+  color: pink;
+  margin: 10px;
+}
+
+.profile-form > textarea {
+  width: 280px;
+  cursor: text;
+  min-height: 60px;
+
+}
+
+.profile-param {
+
+  cursor: text;
+  width: 260px;
+  height: auto;
+  color: lightblue;
+  font-size: 16px;
+  margin: auto;
+  padding: 10px 0;
+  white-space:
+}
+
+.profile-param:focus {
+  border: 1px dotted lightblue;
+  background: lightgray;
+  color: black;
+}
+
+
+/*profile search params*/
 .profile-search {
-  /*background: green;*/
   width: 200px;
   height: 250px;
   border: 1px solid lightblue;
@@ -207,23 +251,28 @@ body {
 }
 
 .profile-search > h3 {
-  color: pink
+  color: pink;
+  margin: 10px;
 }
 
 .profile-search > label {
 
 }
 
-.profile-search > input {
+.search-param {
+  color: lightblue;
+  font-size: 16px;
   width: 200px;
   margin: auto;
   background: #104DA1;
-  cursor: pointer;
+  cursor: text;
   padding: 10px 0;
 }
 
 .profile-search > input:focus {
+  border: 1px dotted lightblue;
   background: lightgray;
+  color: black;
 }
 
 

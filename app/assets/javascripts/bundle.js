@@ -63,7 +63,11 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      'We are on the root page!',
+	      React.createElement(
+	        'div',
+	        null,
+	        'We are on the root page!'
+	      ),
 	      this.props.children
 	    );
 	  }
@@ -24839,9 +24843,9 @@
 	      age: UserStore.currentUser().search_age,
 	      size: UserStore.currentUser().search_size,
 	      sex: UserStore.currentUser().search_sex,
-	      about_me: UserStore.currentUser().search_sex,
-	      about_life: UserStore.currentUser().search_sex,
-	      ideal: UserStore.currentUser().search_sex
+	      about_me: UserStore.currentUser().about_me,
+	      about_life: UserStore.currentUser().about_life,
+	      ideal: UserStore.currentUser().ideal_dog
 	    });
 	  },
 	
@@ -24850,12 +24854,14 @@
 	    formData.append("user[search_sex]", this.state.sex);
 	    formData.append("user[search_size]", this.state.size);
 	    formData.append("user[search_age]", this.state.age);
-	    // debugger;
+	    formData.append("user[about_me]", this.state.about_me);
+	    formData.append("user[about_life]", this.state.about_life);
+	    formData.append("user[ideal_dog]", this.state.ideal);
+	
 	    ApiUtil.updateUserProfile(formData, this.state.user.id);
 	  },
 	
 	  render: function () {
-	    console.log(this.state);
 	    if (!this.state.user) {
 	      return React.createElement('div', null);
 	    }
@@ -24877,7 +24883,7 @@
 	          null,
 	          'About Me'
 	        ),
-	        React.createElement('input', { type: 'text',
+	        React.createElement('textarea', {
 	          className: 'profile-param',
 	          valueLink: this.linkState('about_me'),
 	          onBlur: this.handleInput }),
@@ -24886,14 +24892,14 @@
 	          null,
 	          'What kind of life can I give a pup?'
 	        ),
-	        React.createElement('input', { type: 'text',
+	        React.createElement('textarea', {
 	          className: 'profile-param',
 	          valueLink: this.linkState('about_life'),
 	          onBlur: this.handleInput }),
 	        React.createElement(
 	          'label',
 	          null,
-	          'About my ideal dog:'
+	          'My ideal dog enjoys:'
 	        ),
 	        React.createElement('input', { type: 'text',
 	          className: 'profile-param',
