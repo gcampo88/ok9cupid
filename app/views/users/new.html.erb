@@ -1,12 +1,12 @@
 <%= button_to "Existing account? Sign in!", new_session_url, method: :get %>
+<link href='https://fonts.googleapis.com/css?family=Kalam:400,700' rel='stylesheet' type='text/css'>
 
-<header class="signup-header">
-  <h1>Sign up!</h1>
+
+
+<header class="signup-header group">
+  <h2>Sign up!</h2>
   <h3>Your new best friend is only a few clicks away.</h3>
 </header>
-<br><br>
-
-<img src="/assets/logo" alt="logo" class="logo"/>
 
 <form class="user-signup form group" action="<%=users_url%>" method="post">
   <%= auth_token %>

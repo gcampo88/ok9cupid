@@ -53,27 +53,51 @@ body {
   display: block;
 }
 
-.signup-header > h1 {
+.logo-header {
+  color: #00B7F0;
+  font-family: 'Kalam', cursive;
+  font-weight: bold;
+  text-shadow:
+    -2px -2px 0 white,
+    2px -2px 0 white,
+    -2px 2px 0 white,
+    2px 2px 0 white;
+  font-size: 90px;
+  height: auto;
+  width: 500px;
+  margin: auto;
+}
+
+.logo {
+  margin: 0 auto;
+  width: 160px;
+  height: auto;
+  display: block;
+  float: left;
+}
+
+.logo-header > h1 {
+  float: right;
+}
+
+.signup-header > h2 {
+  padding: 20px;
   font-size: 36px;
-  text-shadow: 2px 2px #7EC9F8;
+  text-shadow: 1px 1px #7EC9F8;
 }
 
 .signup-header > h3 {
   margin: 10px;
 }
 
-.logo {
-  margin: 0 auto;
-  width: 500px;
-  height: auto;
-  display: block;
-}
-
 .form {
-
   width: 600px;
   margin: auto;
   padding: 20px;
+}
+
+.button_to {
+  display: inline;
 }
 
 .form > ul > li {
