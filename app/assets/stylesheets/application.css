@@ -100,7 +100,7 @@ body {
 }
 
 .form {
-  width: 600px;
+  width: 800px;
   margin: auto;
   padding: 20px;
 }
@@ -110,6 +110,7 @@ body {
 }
 
 .form > ul > li {
+  margin: 10px;
   float: left;
   display: block;
 }
