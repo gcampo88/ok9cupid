@@ -116,6 +116,11 @@ body {
   padding: 20px;
 }
 
+.signin-input {
+  background: white;
+  display: block;
+}
+
 .button_to {
   display: inline;
 }
