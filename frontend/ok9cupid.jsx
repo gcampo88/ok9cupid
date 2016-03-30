@@ -8,11 +8,12 @@ var IndexRoute = ReactRouter.IndexRoute;
 
 var Tabs = require('./components/tabs');
 var Profile = require('./components/profile');
+var Browse = require('./components/browse');
 
 var App = React.createClass({
   render: function () {
     return(<div>
-      Root pageeee
+      We are on the root page!
       {this.props.children}
     </div>)
   }
@@ -21,6 +22,8 @@ var App = React.createClass({
 var routes = (
   <Route path="/" component={App}>
     <IndexRoute component={Tabs} />
+    <Route path="profile" component={Profile} />
+    <Route path="browse" component={Browse} />
   </Route>
 )
 

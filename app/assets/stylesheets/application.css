@@ -16,7 +16,7 @@
 
 /*RESET*/
 
-html, body, section, form, ul, li, article, header, h1, h2, h3, h4, p, div {
+html, body, section, form, ul, li, article, header, h1, h2, h3, h4, p, input, label, div {
   margin: 0;
   border: 0;
   padding: 0;
@@ -32,6 +32,10 @@ html, body, section, form, ul, li, article, header, h1, h2, h3, h4, p, div {
 }
 
 ul {
+  list-style: none;
+}
+
+li {
   list-style: none;
 }
 
@@ -78,6 +82,10 @@ body {
 
 .logo-header > h1 {
   float: right;
+}
+
+.logo-header > h1 > em {
+  color: darkblue;
 }
 
 
@@ -167,6 +175,56 @@ body {
   font-size: 16px;
 }
 
+/*tabs*/
+
+.tab {
+  display: block;
+  padding: 10px;
+  background: lightblue;
+  width: 180px;
+  float: left;
+  border: 1px solid darkblue;
+}
+
+
+/*profile*/
+.profile-form {
+  background: red;
+  width: 300px;
+  height: 400px;
+  border: 1px solid darkblue;
+  float: left;
+}
+
+.profile-search {
+  /*background: green;*/
+  width: 200px;
+  height: 250px;
+  border: 1px solid lightblue;
+  float: right;
+  margin: 20px;
+  padding: 10px;
+}
+
+.profile-search > h3 {
+  color: pink
+}
+
+.profile-search > label {
+
+}
+
+.profile-search > input {
+  width: 200px;
+  margin: auto;
+  background: #104DA1;
+  cursor: pointer;
+  padding: 10px 0;
+}
+
+.profile-search > input:focus {
+  background: lightgray;
+}
 
 
 

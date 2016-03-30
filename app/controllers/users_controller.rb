@@ -19,7 +19,6 @@ class UsersController < ApplicationController
       render :new
       return
     end
-
   end
 
   private

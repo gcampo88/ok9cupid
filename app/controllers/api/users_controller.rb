@@ -1,6 +1,11 @@
 class Api::UsersController < ApplicationController
   def show
-    @user = User.find(params[:id])
+    if current_user
+      @user = current_user
+      render :show
+    else
+      render :nothing => true, :status => 422
+    end
   end
 
   # def edit
@@ -8,8 +13,10 @@ class Api::UsersController < ApplicationController
   # end
 
   def update
-    @user = User.find(params[:id])
+    # debugger
+    @user = User.find(params[:id].to_i)
     @user.update!(user_params)
+    render :show
   end
   #
   # def destroy
