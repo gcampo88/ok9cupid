@@ -1,4 +1,8 @@
 class UsersController < ApplicationController
+  def splash
+    render :splash
+  end
+
   def new
     @user = User.new
     render :new
@@ -13,7 +17,7 @@ class UsersController < ApplicationController
     else
       flash.now[:messages] = @user.errors.full_messages
       render :new
-      return 
+      return
     end
 
   end

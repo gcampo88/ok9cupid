@@ -14,6 +14,8 @@
  *= require_self
  */
 
+/*RESET*/
+
 html, body, section, form, ul, li, article, header, h1, h2, h3, h4, p, div {
   margin: 0;
   border: 0;
@@ -29,12 +31,6 @@ html, body, section, form, ul, li, article, header, h1, h2, h3, h4, p, div {
   background: transparent;
 }
 
-.group:after {
-  clear: both;
-  display: block;
-  content: "";
-}
-
 ul {
   list-style: none;
 }
@@ -47,11 +43,15 @@ body {
   text-shadow: 1px #7EC9F8;
 }
 
-.signup-header {
-  margin: auto;
-  text-align: center;
+/*CLEARFIX*/
+
+.group:after {
+  clear: both;
   display: block;
+  content: "";
 }
+
+/*LOGO*/
 
 .logo-header {
   color: #00B7F0;
@@ -80,6 +80,15 @@ body {
   float: right;
 }
 
+
+/*SIGN-UP PAGE*/
+
+.signup-header {
+  margin: auto;
+  text-align: center;
+  display: block;
+}
+
 .signup-header > h2 {
   padding: 20px;
   font-size: 36px;
@@ -104,3 +113,78 @@ body {
   float: left;
   display: block;
 }
+
+/*SPLASH PAGE */
+
+.splash {
+  background: #104DA1;
+  color: white;
+  font-family: sans-serif;
+  text-align: center;
+  width: 700px;
+  margin: auto;
+}
+
+.splash > h1 {
+  font-size: 36px;
+  margin: 30px;
+}
+
+.splash > ul {
+  text-align: center;
+  margin: auto;
+  width: 450px;
+
+}
+
+.splash > p {
+  font-size: 24px;
+  width: 100px;
+  float: left;
+  margin: 10px 0px;
+}
+
+.splash-dropdown {
+  -webkit-appearance: none;
+  /*-moz-appearance: none;
+  appearance: none;*/
+  padding: 10px;
+  /*height: 200px;*/
+  display: block;
+  font-size: 16px;
+  text-align: center;
+  float: left;
+  margin: 0px 10px;
+}
+
+.splash > input {
+  /*margin: 10px;*/
+  background: #0c0;
+  padding: 10px;
+  float: left;
+  color: white;
+  font-size: 16px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**/

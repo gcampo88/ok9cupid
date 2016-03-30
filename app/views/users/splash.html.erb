@@ -1,0 +1,24 @@
+
+<form action="<%=new_user_url%>" class="splash">
+  <h1>Find your new best friend in minutes.</h1>
+
+  <ul class="splash group">
+    <p>I am a </p>
+    <select class="splash-dropdown">
+      <option>Dog</option>
+      <option>Puppy</option>
+      <option>Canine</option>
+    </select>
+    <select class="splash-dropdown">
+      <option>Cuddler</option>
+      <option>Lover</option>
+      <option>Obsessive</option>
+    </select>
+
+    <input type="submit" value="Continue">
+
+  </ul>
+</form>
+
+<br><br><br>
+<%= button_to "Existing account? Sign in!", new_session_url, method: :get %>
