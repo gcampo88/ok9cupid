@@ -193,7 +193,7 @@ body {
   color: darkblue;
 }
 
-.toggle-existing-user-button > input {
+.toggle-existing-user-button {
   cursor: pointer;
   display: inline-block;
   font-weight: lighter;
@@ -211,15 +211,57 @@ body {
 
 
 /*tabs*/
-
-.tab {
-  display: block;
-  padding: 10px;
-  background: lightblue;
-  width: 180px;
-  float: left;
-  border: 1px solid darkblue;
+.welcome {
+  font-weight: lighter;
+  color: lightblue;
 }
+
+.logout {
+  cursor: pointer;
+  display: inline-block;
+  font-weight: lighter;
+  float: right;
+  height: 60px;
+  padding: 10px;
+  font-size: 16px;
+  border-left: 1px dashed lightblue;
+}
+
+.logout:hover {
+  background: lightblue;
+}
+
+.tabs {
+  border-top: 1px solid lightblue;
+  border-bottom: 1px solid lightblue;
+  border-left: 1px dashed lightblue;
+  height: 60px;
+
+}
+
+.root-tab > img {
+  width: 100px;
+}
+
+.root-tab {
+  display: block;
+  height: 60px;
+  width: auto;
+  box-sizing: border-box;
+  border-right: 1px dashed lightblue;
+  padding: 15px 0px;
+  text-align: center;
+  font-weight: lighter;
+  width: 150px;
+  float: left;
+}
+
+.root-tab:hover {
+  cursor: pointer;
+  background: lightblue;
+}
+
+
 
 
 /*profile*/
@@ -250,7 +292,11 @@ body {
   width: 280px;
   cursor: text;
   min-height: 60px;
+}
 
+.profile-form > img {
+  width: 200px;
+  height: auto;
 }
 
 .profile-param {

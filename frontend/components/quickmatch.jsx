@@ -1,10 +1,10 @@
 var React = require('react');
 
-var Browse = React.createClass({
+var QuickMatch = React.createClass({
 
   render: function () {
     return(<div>
-      <a  className="tab" href="#">Browse results will go here</a>
+      <a  className="tab" href="#">Quickmatch info will go here</a>
 
     </div>)
   }

@@ -15,18 +15,6 @@
 <% end %>
 
 
-<% if current_user %>
-<header class="greeting-user">
-  <%= "Hello, #{current_user.name}!" %>
-  <form class="sign-out-button"
-  action="<%= session_url %>"
-  method="post" >
-  <%= auth_token %>
-    <input type="hidden" name="_method" value="delete">
-    <input type="submit" value="Sign out">
-  </form>
-</header>
-<% end %>
 
 <link href='https://fonts.googleapis.com/css?family=Kalam:400,700' rel='stylesheet' type='text/css'>
 <header class="logo-header group" >

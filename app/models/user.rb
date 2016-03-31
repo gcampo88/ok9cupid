@@ -1,5 +1,4 @@
 class User < ActiveRecord::Base
-  # has_many: favorites
   attr_reader :password
   validates :name, :password_digest, :zipcode, :email, presence: true
   validates :email, uniqueness: true
@@ -7,11 +6,15 @@ class User < ActiveRecord::Base
 
   before_validation :ensure_session_token
 
-  def self.find_by_credentials(email, password)
-    @user = User.find_by(email: email)
-    return nil unless @user
+  # has_many: favorites
+  has_attached_file :image, default_url: "assets/images/default.jpg"
+  validates_attachment_content_type :image, content_type: /\Aimage\/.*\Z/
 
-    @user.is_password?(password) ? @user : nil
+  def self.find_by_credentials(email, password)
+    user = User.find_by(email: email)
+    return nil unless user
+
+    user.is_password?(password) ? user : nil
   end
 
   def self.generate_session_token

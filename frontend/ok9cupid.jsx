@@ -5,29 +5,52 @@ var ReactRouter = require('react-router');
 var Route = ReactRouter.Route;
 var Router = ReactRouter.Router;
 var IndexRoute = ReactRouter.IndexRoute;
+var hashHistory = ReactRouter.hashHistory;
 
 var Tabs = require('./components/tabs');
 var Profile = require('./components/profile');
 var Browse = require('./components/browse');
+var LoginForm = require('./components/login_form');
+var SignupForm = require('./components/signup_form');
+var Splash = require('./components/splash');
+var App = require('./components/app');
+var SessionStore = require('./stores/session');
 
-var App = React.createClass({
-  render: function () {
-    return(<div>
-        <div>We are on the root page!</div>
-      {this.props.children}
-    </div>)
-  }
-})
 
-var routes = (
-  <Route path="/" component={App}>
-    <IndexRoute component={Tabs} />
-    <Route path="profile" component={Profile} />
-    <Route path="browse" component={Browse} />
-  </Route>
+var router = (
+  <Router history={hashHistory}>
+
+    <Route path="/" component={App} onEnter={_requireLoggedIn} >
+      <IndexRoute component={Tabs} />
+      <Route path="profile" component={Profile} />
+      <Route path="browse" component={Browse} />
+    </Route>
+
+    <Route path="/login" component={LoginForm} />
+    <Route path="/splash" component={Splash} />
+    <Route path="/signup" component={SignupForm} />
+
+
+  </Router>
 )
 
+function _requireLoggedIn(nextState, replace, asyncCompletionCallback) {
+  if (!SessionStore.currentUserHasBeenFetched()) {
+    ApiUtil.fetchCurrentUser(_redirectIfNotLoggedIn);
+  } else {
+    _redirectIfNotLoggedIn();
+  }
+
+  function _redirectIfNotLoggedIn() {
+
+    if (!SessionStore.isLoggedIn()) {
+      replace("/login");
+    }
+    asyncCompletionCallback();
+  }
+}
+
 $(document).ready(function () {
-  ReactDOM.render(<Router>{routes}</Router>, $('#content')[0]);
+  ReactDOM.render(router, $('#content')[0]);
 
 });

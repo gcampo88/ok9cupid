@@ -51,42 +51,50 @@
 	var Route = ReactRouter.Route;
 	var Router = ReactRouter.Router;
 	var IndexRoute = ReactRouter.IndexRoute;
+	var hashHistory = ReactRouter.hashHistory;
 	
 	var Tabs = __webpack_require__(216);
 	var Profile = __webpack_require__(217);
-	var Browse = __webpack_require__(247);
+	var Browse = __webpack_require__(249);
+	var LoginForm = __webpack_require__(250);
+	var SignupForm = __webpack_require__(251);
+	var Splash = __webpack_require__(252);
+	var App = __webpack_require__(253);
+	var SessionStore = __webpack_require__(222);
 	
-	var App = React.createClass({
-	  displayName: 'App',
-	
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'div',
-	        null,
-	        'We are on the root page!'
-	      ),
-	      this.props.children
-	    );
-	  }
-	});
-	
-	var routes = React.createElement(
-	  Route,
-	  { path: '/', component: App },
-	  React.createElement(IndexRoute, { component: Tabs }),
-	  React.createElement(Route, { path: 'profile', component: Profile }),
-	  React.createElement(Route, { path: 'browse', component: Browse })
+	var router = React.createElement(
+	  Router,
+	  { history: hashHistory },
+	  React.createElement(
+	    Route,
+	    { path: '/', component: App, onEnter: _requireLoggedIn },
+	    React.createElement(IndexRoute, { component: Tabs }),
+	    React.createElement(Route, { path: 'profile', component: Profile }),
+	    React.createElement(Route, { path: 'browse', component: Browse })
+	  ),
+	  React.createElement(Route, { path: '/login', component: LoginForm }),
+	  React.createElement(Route, { path: '/splash', component: Splash }),
+	  React.createElement(Route, { path: '/signup', component: SignupForm })
 	);
 	
+	function _requireLoggedIn(nextState, replace, asyncCompletionCallback) {
+	  if (!SessionStore.currentUserHasBeenFetched()) {
+	    ApiUtil.fetchCurrentUser(_redirectIfNotLoggedIn);
+	  } else {
+	    _redirectIfNotLoggedIn();
+	  }
+	
+	  function _redirectIfNotLoggedIn() {
+	
+	    if (!SessionStore.isLoggedIn()) {
+	      replace("/login");
+	    }
+	    asyncCompletionCallback();
+	  }
+	}
+	
 	$(document).ready(function () {
-	  ReactDOM.render(React.createElement(
-	    Router,
-	    null,
-	    routes
-	  ), $('#content')[0]);
+	  ReactDOM.render(router, $('#content')[0]);
 	});
 
 /***/ },
@@ -24763,39 +24771,45 @@
 
 	var React = __webpack_require__(1);
 	var Profile = __webpack_require__(217);
-	var Browse = __webpack_require__(247);
+	var Browse = __webpack_require__(249);
+	var SessionStore = __webpack_require__(222);
 	
 	var Tabs = React.createClass({
 	  displayName: 'Tabs',
 	
-	  contextTypes: {
-	    router: React.PropTypes.object.isRequired
-	  },
-	
-	  handleProfileClick: function () {
-	    this.context.router.push("/profile");
-	  },
-	
-	  handleBrowseClick: function () {
-	    this.context.router.push("/browse");
-	  },
-	
+	  //   contextTypes: {
+	  //     router: React.PropTypes.object.isRequired
+	  //   },
+	  //
+	  //   handleProfileClick: function () {
+	  //     this.context.router.push("/profile");
+	  //   },
+	  //
+	  //   handleBrowseClick: function () {
+	  //     this.context.router.push("/browse");
+	  //   },
+	  //
 	  render: function () {
-	    return React.createElement(
-	      'nav',
-	      { className: 'tabs group' },
-	      React.createElement(
-	        'li',
-	        { onClick: this.handleProfileClick },
-	        'Profile'
-	      ),
-	      React.createElement(
-	        'li',
-	        { onClick: this.handleBrowseClick },
-	        'Browse Dogs'
-	      )
-	    );
+	    return React.createElement('div', null);
 	  }
+	  //     var button;
+	  //
+	  //     if (SessionStore.currentUser()) {
+	  //       button = <button className="logout" onClick={ApiUtil.logout}>Logout</button>
+	  //     }
+	  //
+	  //     // var img = <img src="assets/images/logo.png" alt="logo" />
+	  //     <nav className="tabs group">
+	  //       <li className="root-tab">[Logo]</li>
+	  //       <li className="root-tab" onClick={this.handleBrowseClick} >Browse Dogs</li>
+	  //       <li className="root-tab" onClick={this.handleQuickMatchClick} >QuickMatch</li>
+	  //       <li className="root-tab" onClick={this.handleProfileClick} >Profile</li>
+	  //       {button}
+	  //     </nav>
+	  //     return(<div></div>
+	  // )
+	  //
+	  //   }
 	});
 	
 	module.exports = Tabs;
@@ -24806,9 +24820,9 @@
 
 	var React = __webpack_require__(1);
 	var LinkedStateMixin = __webpack_require__(218);
-	var UserStore = __webpack_require__(222);
+	var SessionStore = __webpack_require__(222);
 	var ProfileActions = __webpack_require__(245);
-	var ApiUtil = __webpack_require__(246);
+	var ApiUtil = __webpack_require__(247);
 	
 	var Profile = React.createClass({
 	  displayName: 'Profile',
@@ -24817,20 +24831,21 @@
 	
 	  getInitialState: function () {
 	    return {
-	      user: UserStore.currentUser(),
+	      user: SessionStore.currentUser(),
 	      age: "",
 	      size: "",
 	      sex: "",
 	      about_me: "",
 	      about_life: "",
-	      ideal: ""
+	      ideal: "",
+	      imageFile: null
 	
 	    };
 	  },
 	
 	  componentDidMount: function () {
-	    this.userListener = UserStore.addListener(this.onChange);
-	    ApiUtil.fetchCurrentUser(currentUserId);
+	    this.userListener = SessionStore.addListener(this.onChange);
+	    ApiUtil.fetchCurrentUser();
 	  },
 	
 	  componentWillUnmount: function () {
@@ -24839,14 +24854,29 @@
 	
 	  onChange: function () {
 	    this.setState({
-	      user: UserStore.currentUser(),
-	      age: UserStore.currentUser().search_age,
-	      size: UserStore.currentUser().search_size,
-	      sex: UserStore.currentUser().search_sex,
-	      about_me: UserStore.currentUser().about_me,
-	      about_life: UserStore.currentUser().about_life,
-	      ideal: UserStore.currentUser().ideal_dog
+	      user: SessionStore.currentUser(),
+	      age: SessionStore.currentUser().search_age,
+	      size: SessionStore.currentUser().search_size,
+	      sex: SessionStore.currentUser().search_sex,
+	      about_me: SessionStore.currentUser().about_me,
+	      about_life: SessionStore.currentUser().about_life,
+	      ideal: SessionStore.currentUser().ideal_dog,
+	      imageFile: SessionStore.currentUser().image
 	    });
+	  },
+	
+	  handleFileChange: function (e) {
+	    var file = e.currentTarget.files[0];
+	    var reader = new FileReader();
+	
+	    reader.onloadend = function () {
+	      var result = reader.result;
+	
+	      this.setState({ imageFile: file });
+	      this.handleInput();
+	    }.bind(this);
+	
+	    reader.readAsDataURL(file);
 	  },
 	
 	  handleInput: function (e) {
@@ -24857,6 +24887,7 @@
 	    formData.append("user[about_me]", this.state.about_me);
 	    formData.append("user[about_life]", this.state.about_life);
 	    formData.append("user[ideal_dog]", this.state.ideal);
+	    formData.append("user[image]", this.state.imageFile);
 	
 	    ApiUtil.updateUserProfile(formData, this.state.user.id);
 	  },
@@ -24866,7 +24897,7 @@
 	      return React.createElement('div', null);
 	    }
 	
-	    var name = this.state.user.name;
+	    // debugger;
 	    return React.createElement(
 	      'span',
 	      { className: 'profile-items group' },
@@ -24878,6 +24909,16 @@
 	          null,
 	          'My Profile:'
 	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Image'
+	        ),
+	        React.createElement('input', {
+	          type: 'file',
+	          onChange: this.handleFileChange }),
+	        React.createElement('img', { className: 'preview-image',
+	          src: this.state.user.image }),
 	        React.createElement(
 	          'label',
 	          null,
@@ -25185,36 +25226,41 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(223).Store;
-	var AppDispatcher = __webpack_require__(241);
-	var ProfileConstants = __webpack_require__(244);
+	var SessionConstants = __webpack_require__(241);
+	var AppDispatcher = __webpack_require__(242);
 	
-	var UserStore = new Store(AppDispatcher);
+	var SessionStore = new Store(AppDispatcher);
 	
-	var _user = [];
+	var _currentUser;
+	var _currentUserHasBeenFetched = false;
 	
-	UserStore.currentUser = function () {
-	  return _user[0];
+	SessionStore.currentUser = function () {
+	  return _currentUser;
 	};
 	
-	UserStore.receiveCurrentUser = function (user) {
-	  _user = [];
-	  _user.push(user);
+	SessionStore.isLoggedIn = function () {
+	  return !!_currentUser;
 	};
 	
-	UserStore.__onDispatch = function (payload) {
+	SessionStore.currentUserHasBeenFetched = function () {
+	  return _currentUserHasBeenFetched;
+	};
+	
+	SessionStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
-	    case ProfileConstants.CURRENT_USER_RECEIVED:
-	      UserStore.receiveCurrentUser(payload.user);
-	      UserStore.__emitChange();
-	
+	    case SessionConstants.CURRENT_USER_RECEIVED:
+	      _currentUser = payload.user;
+	      _currentUserHasBeenFetched = true;
+	      SessionStore.__emitChange();
 	      break;
-	
+	    case SessionConstants.LOGOUT:
+	      _currentUser = null;
+	      SessionStore.__emitChange();
+	      break;
 	  }
 	};
 	
-	//on dispatch, reset current user to result of ajax call before emitting change.
-	
-	module.exports = UserStore;
+	module.exports = SessionStore;
 
 /***/ },
 /* 223 */
@@ -31719,13 +31765,22 @@
 
 /***/ },
 /* 241 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	var Dispatcher = __webpack_require__(242).Dispatcher;
-	module.exports = new Dispatcher();
+	module.exports = {
+	  CURRENT_USER_RECEIVED: "CURRENT_USER_RECEIVED",
+	  LOGOUT: "LOGOUT"
+	};
 
 /***/ },
 /* 242 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Dispatcher = __webpack_require__(243).Dispatcher;
+	module.exports = new Dispatcher();
+
+/***/ },
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -31737,11 +31792,11 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Dispatcher = __webpack_require__(243);
+	module.exports.Dispatcher = __webpack_require__(244);
 
 
 /***/ },
-/* 243 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -31978,7 +32033,14 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 244 */
+/* 245 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Dispatcher = __webpack_require__(242);
+	var ProfileConstants = __webpack_require__(246);
+
+/***/ },
+/* 246 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -31986,38 +32048,72 @@
 	};
 
 /***/ },
-/* 245 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Dispatcher = __webpack_require__(241);
-	var ProfileConstants = __webpack_require__(244);
-	
-	module.exports = {
-	  receiveCurrentUser: function (user) {
-	    Dispatcher.dispatch({
-	      actionType: ProfileConstants.CURRENT_USER_RECEIVED,
-	      user: user
-	    });
-	  }
-	};
-
-/***/ },
-/* 246 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ProfileActions = __webpack_require__(245);
+	var SessionActions = __webpack_require__(248);
+	var SessionStore = __webpack_require__(222);
 	
 	ApiUtil = {
-	  fetchCurrentUser: function (id) {
+	  fetchCurrentUser: function (completion) {
 	    $.ajax({
-	      url: "api/users/" + id,
+	      url: "api/session",
 	      type: "GET",
 	      dataType: "json",
-	      success: function (user) {
-	        ProfileActions.receiveCurrentUser(user);
+	      success: function (currentUser) {
+	        SessionActions.receiveCurrentUser(currentUser);
+	      },
+	      complete: function () {
+	        completion && completion();
+	      }
+	    });
+	  },
+	
+	  login: function (credentials, callback) {
+	    $.ajax({
+	      url: "api/session",
+	      type: "POST",
+	      dataType: "json",
+	      data: credentials,
+	      success: function (currentUser) {
+	        SessionActions.receiveCurrentUser(currentUser);
+	        callback && callback();
 	      },
 	      error: function () {
-	        console.log("failed AJAX current user request");
+	        alert("Invalid credentials.");
+	      }
+	    });
+	  },
+	
+	  logout: function () {
+	    $.ajax({
+	      url: "api/session",
+	      type: "DELETE",
+	      dataType: "json",
+	      success: function () {
+	        SessionActions.logout();
+	      },
+	      error: function () {
+	        console.log("error logging out in ajax");
+	      }
+	    });
+	  },
+	
+	  createUser: function (userInfo, callback) {
+	    $.ajax({
+	      url: "api/users",
+	      type: "POST",
+	      dataType: "json",
+	      data: userInfo,
+	      contentType: false,
+	      processData: false,
+	      success: function (currentUser) {
+	        SessionActions.receiveCurrentUser(currentUser);
+	        callback && callback();
+	      },
+	      error: function () {
+	        console.log("failed create ajax call");
 	      }
 	    });
 	  },
@@ -32031,7 +32127,6 @@
 	      contentType: false,
 	      data: formData,
 	      success: function (user) {
-	        // debugger;
 	        ProfileActions.receiveCurrentUser(user);
 	        console.log("success on patch req!");
 	      },
@@ -32045,7 +32140,29 @@
 	module.exports = ApiUtil;
 
 /***/ },
-/* 247 */
+/* 248 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Dispatcher = __webpack_require__(242);
+	var SessionConstants = __webpack_require__(241);
+	
+	module.exports = {
+	  receiveCurrentUser: function (user) {
+	    Dispatcher.dispatch({
+	      actionType: SessionConstants.CURRENT_USER_RECEIVED,
+	      user: user
+	    });
+	  },
+	
+	  logout: function () {
+	    Dispatcher.dispatch({
+	      actionType: SessionConstants.LOGOUT
+	    });
+	  }
+	};
+
+/***/ },
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32061,7 +32178,7 @@
 	      React.createElement(
 	        "a",
 	        { className: "tab", href: "#" },
-	        "Browse tab will go here"
+	        "Browse results will go here"
 	      )
 	    );
 	  }
@@ -32069,6 +32186,439 @@
 	});
 	
 	module.exports = Browse;
+
+/***/ },
+/* 250 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(247);
+	
+	var LoginForm = React.createClass({
+	  displayName: 'LoginForm',
+	
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  getInitialState: function () {
+	    return {
+	      email: "",
+	      password: ""
+	    };
+	  },
+	
+	  updateEmail: function (e) {
+	    this.setState({ email: e.currentTarget.value });
+	  },
+	
+	  updatePassword: function (e) {
+	    this.setState({ password: e.currentTarget.value });
+	  },
+	
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+	    ApiUtil.login(this.state, function () {
+	      this.context.router.push("/");
+	    }.bind(this));
+	  },
+	
+	  goToNewUser: function (e) {
+	    this.context.router.push("/splash");
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'section',
+	      null,
+	      React.createElement(
+	        'header',
+	        { className: 'user-acq-header' },
+	        React.createElement(
+	          'h1',
+	          null,
+	          'Sign in!'
+	        )
+	      ),
+	      React.createElement(
+	        'form',
+	        { className: 'user-acq-form group',
+	          onSubmit: this.handleSubmit },
+	        React.createElement(
+	          'label',
+	          null,
+	          'Email Address'
+	        ),
+	        React.createElement('input', {
+	          className: 'user-acq-input',
+	          type: 'text',
+	          onChange: this.updateEmail,
+	          value: this.state.email
+	        }),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Password'
+	        ),
+	        React.createElement('input', {
+	          className: 'user-acq-input',
+	          type: 'password',
+	          onChange: this.updatePassword,
+	          value: this.state.password
+	        }),
+	        React.createElement('input', {
+	          className: 'user-acq-button',
+	          type: 'submit',
+	          value: 'Sign in!' })
+	      ),
+	      React.createElement(
+	        'button',
+	        {
+	          className: 'toggle-existing-user-button',
+	          onClick: this.goToNewUser },
+	        'New user? Sign up!'
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = LoginForm;
+
+/***/ },
+/* 251 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(247);
+	
+	var SignupForm = React.createClass({
+	  displayName: 'SignupForm',
+	
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+	    var formData = new FormData();
+	    formData.append("user[name]", this.state.name);
+	    formData.append("user[zipcode]", this.state.zipcode);
+	    formData.append("user[email]", this.state.email);
+	    formData.append("user[password]", this.state.password);
+	
+	    ApiUtil.createUser(formData, function () {
+	      this.context.router.push("/");
+	    }.bind(this));
+	  },
+	
+	  getInitialState: function () {
+	    return {
+	      name: "",
+	      zipcode: "",
+	      email: "",
+	      password: ""
+	    };
+	  },
+	
+	  updateName: function (e) {
+	    this.setState({ name: e.currentTarget.value });
+	  },
+	
+	  updateZip: function (e) {
+	    this.setState({ zipcode: e.currentTarget.value });
+	  },
+	
+	  updateEmail: function (e) {
+	    this.setState({ email: e.currentTarget.value });
+	  },
+	
+	  updatePassword: function (e) {
+	    this.setState({ password: e.currentTarget.value });
+	  },
+	
+	  goToExistingUser: function (e) {
+	    this.context.router.push("/login");
+	  },
+	
+	  render: function () {
+	
+	    return React.createElement(
+	      'section',
+	      null,
+	      React.createElement(
+	        'header',
+	        { className: 'user-acq-header' },
+	        React.createElement(
+	          'h1',
+	          null,
+	          'Almost there!'
+	        ),
+	        React.createElement(
+	          'h3',
+	          null,
+	          'Your new best friend is only a few clicks away.'
+	        )
+	      ),
+	      React.createElement(
+	        'form',
+	        { className: 'user-acq-form group', onSubmit: this.handleSubmit },
+	        React.createElement(
+	          'label',
+	          null,
+	          'Name'
+	        ),
+	        React.createElement('input', { className: 'user-acq-input', type: 'text', onChange: this.updateName, value: this.state.name }),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Zip Code'
+	        ),
+	        React.createElement('input', { className: 'user-acq-input', type: 'text', onChange: this.updateZip, value: this.state.zipcode }),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Email Address'
+	        ),
+	        React.createElement('input', { className: 'user-acq-input', type: 'text', onChange: this.updateEmail, value: this.state.email }),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Password'
+	        ),
+	        React.createElement('input', { className: 'user-acq-input', type: 'password', onChange: this.updatePassword, value: this.state.password }),
+	        React.createElement('input', { className: 'user-acq-button', type: 'submit', value: 'Create account!' })
+	      ),
+	      React.createElement(
+	        'button',
+	        {
+	          className: 'toggle-existing-user-button',
+	          onClick: this.goToExistingUser },
+	        'Existing user? Sign in!'
+	      )
+	    );
+	  }
+	
+	  //
+	
+	});
+	
+	module.exports = SignupForm;
+
+/***/ },
+/* 252 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var Splash = React.createClass({
+	  displayName: 'Splash',
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+	    this.context.router.push('/signup');
+	  },
+	
+	  goToExistingUser: function () {
+	    this.context.router.push('/login');
+	  },
+	
+	  render: function () {
+	
+	    return React.createElement(
+	      'section',
+	      null,
+	      React.createElement(
+	        'header',
+	        { className: 'user-acq-header' },
+	        React.createElement(
+	          'h1',
+	          null,
+	          'Find your new best friend in minutes.'
+	        )
+	      ),
+	      React.createElement(
+	        'form',
+	        { className: 'user-acq-form group', onSubmit: this.handleSubmit },
+	        React.createElement(
+	          'h4',
+	          null,
+	          'I am a '
+	        ),
+	        React.createElement(
+	          'select',
+	          null,
+	          React.createElement(
+	            'option',
+	            null,
+	            'Puppy'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            'Dog'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            'Canine'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            'Hound'
+	          )
+	        ),
+	        React.createElement(
+	          'select',
+	          null,
+	          React.createElement(
+	            'option',
+	            null,
+	            'Cuddler'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            'Lover'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            'Enthusiast'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            'Admirer'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            'Nut'
+	          )
+	        ),
+	        React.createElement('input', { className: 'user-acq-button', type: 'submit', value: 'Continue' })
+	      ),
+	      React.createElement(
+	        'button',
+	        {
+	          className: 'toggle-existing-user-button',
+	          onClick: this.goToExistingUser },
+	        'Existing user? Sign in!'
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Splash;
+
+/***/ },
+/* 253 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var SessionStore = __webpack_require__(222);
+	
+	var App = React.createClass({
+	  displayName: 'App',
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  getInitialState: function () {
+	    return {
+	      currentUser: SessionStore.currentUser()
+	    };
+	  },
+	
+	  componentDidMount: function () {
+	    this.sessionStoreToken = SessionStore.addListener(this.handleChange);
+	
+	    this.handleChange();
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.sessionStoreToken.remove();
+	  },
+	
+	  handleChange: function () {
+	    if (SessionStore.isLoggedIn()) {
+	      this.setState({ currentUser: SessionStore.currentUser() });
+	    } else {
+	      this.context.router.push("/login");
+	    }
+	  },
+	
+	  handleProfileClick: function () {
+	    this.context.router.push("/profile");
+	  },
+	
+	  handleBrowseClick: function () {
+	    this.context.router.push("/browse");
+	  },
+	
+	  render: function () {
+	    var button, welcomeMessage;
+	
+	    if (this.state.currentUser) {
+	      welcomeMessage = React.createElement(
+	        'h2',
+	        { className: 'welcome' },
+	        'Welcome, ',
+	        this.state.currentUser.name,
+	        '!'
+	      );
+	      button = React.createElement(
+	        'button',
+	        { className: 'logout', onClick: ApiUtil.logout },
+	        'Logout'
+	      );
+	    }
+	
+	    return React.createElement(
+	      'div',
+	      null,
+	      welcomeMessage,
+	      React.createElement(
+	        'nav',
+	        { className: 'tabs group' },
+	        React.createElement(
+	          'li',
+	          { className: 'root-tab' },
+	          '[Logo]'
+	        ),
+	        React.createElement(
+	          'li',
+	          { className: 'root-tab', onClick: this.handleBrowseClick },
+	          'Browse Dogs'
+	        ),
+	        React.createElement(
+	          'li',
+	          { className: 'root-tab', onClick: this.handleQuickMatchClick },
+	          'QuickMatch'
+	        ),
+	        React.createElement(
+	          'li',
+	          { className: 'root-tab', onClick: this.handleProfileClick },
+	          'Profile'
+	        ),
+	        button
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = App;
 
 /***/ }
 /******/ ]);

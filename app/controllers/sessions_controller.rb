@@ -1,6 +1,6 @@
 class SessionsController < ApplicationController
 
-  def new
+  def show
 
   end
 

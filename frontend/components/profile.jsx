@@ -1,6 +1,6 @@
 var React = require('react');
 var LinkedStateMixin = require('react-addons-linked-state-mixin');
-var UserStore = require('../stores/user');
+var SessionStore = require('../stores/session');
 var ProfileActions = require('../actions/profile_actions');
 var ApiUtil = require('../util/api_util');
 
@@ -9,20 +9,21 @@ var Profile = React.createClass({
 
   getInitialState: function () {
     return({
-      user: UserStore.currentUser(),
+      user: SessionStore.currentUser(),
       age: "",
       size: "",
       sex: "",
       about_me: "",
       about_life: "",
-      ideal: ""
+      ideal: "",
+      imageFile: null
 
     });
   },
 
   componentDidMount: function () {
-    this.userListener = UserStore.addListener(this.onChange);
-    ApiUtil.fetchCurrentUser(currentUserId);
+    this.userListener = SessionStore.addListener(this.onChange);
+    ApiUtil.fetchCurrentUser();
   },
 
   componentWillUnmount: function () {
@@ -31,14 +32,30 @@ var Profile = React.createClass({
 
   onChange: function () {
     this.setState({
-      user: UserStore.currentUser(),
-      age: UserStore.currentUser().search_age,
-      size: UserStore.currentUser().search_size,
-      sex: UserStore.currentUser().search_sex,
-      about_me: UserStore.currentUser().about_me,
-      about_life: UserStore.currentUser().about_life,
-      ideal: UserStore.currentUser().ideal_dog
+      user: SessionStore.currentUser(),
+      age: SessionStore.currentUser().search_age,
+      size: SessionStore.currentUser().search_size,
+      sex: SessionStore.currentUser().search_sex,
+      about_me: SessionStore.currentUser().about_me,
+      about_life: SessionStore.currentUser().about_life,
+      ideal: SessionStore.currentUser().ideal_dog,
+      imageFile: SessionStore.currentUser().image,
     });
+  },
+
+  handleFileChange: function (e) {
+    var file = e.currentTarget.files[0];
+    var reader = new FileReader();
+
+    reader.onloadend = function () {
+      var result = reader.result;
+
+      this.setState({ imageFile: file });
+      this.handleInput();
+    }.bind(this);
+
+    reader.readAsDataURL(file);
+
   },
 
   handleInput: function (e) {
@@ -49,6 +66,7 @@ var Profile = React.createClass({
     formData.append("user[about_me]", this.state.about_me);
     formData.append("user[about_life]", this.state.about_life);
     formData.append("user[ideal_dog]", this.state.ideal);
+    formData.append("user[image]", this.state.imageFile);
 
     ApiUtil.updateUserProfile(formData, this.state.user.id);
   },
@@ -61,12 +79,20 @@ var Profile = React.createClass({
       );
     }
 
-    var name = this.state.user.name;
+    // debugger;
     return(
       <span className="profile-items group">
 
         <form className="profile-form">
           <h3>My Profile:</h3>
+          <label>Image</label>
+            <input
+            type="file"
+            onChange={this.handleFileChange} />
+
+          <img className="preview-image"
+                src={this.state.user.image} />
+
           <label>About Me</label>
             <textarea
             className="profile-param"

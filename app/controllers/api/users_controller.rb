@@ -1,32 +1,32 @@
 class Api::UsersController < ApplicationController
-  def show
-    if current_user
-      @user = current_user
+  def create
+    @user = User.new(user_params)
+    if @user.save
+      log_in!(@user)
       render :show
     else
-      render :nothing => true, :status => 422
+      render json: { message: "Unable to save profile" }, status: 401
     end
   end
 
-  # def edit
-  #   @user = User.find(params[:id])
-  # end
+  def show
+    if logged_in?
+      @user = current_user
+      render :show
+    else
+      render json: { message: "Not logged in" }, status: 401
+    end
+  end
 
   def update
-    # debugger
-    @user = User.find(params[:id].to_i)
-    @user.update!(user_params)
-    render :show
+    current_user.update!(user_params)
+    render json: current_user
   end
-  #
-  # def destroy
-  #   @user = User.find(params[:id])
-  #   @user.destroy
-  #   redirect_to new_session_url
-  # end
+
+
 
   private
   def user_params
-    params.require(:user).permit(:name, :email, :zipcode, :password, :password_digest, :about_me, :about_life, :ideal_dog, :search_size, :search_sex, :search_age, :session_token)
+    params.require(:user).permit(:name, :email, :zipcode, :password, :password_digest, :about_me, :about_life, :ideal_dog, :search_size, :search_sex, :search_age, :image, :session_token)
   end
 end
