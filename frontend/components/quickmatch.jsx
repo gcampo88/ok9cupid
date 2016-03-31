@@ -12,4 +12,4 @@ var QuickMatch = React.createClass({
 });
 
 
-module.exports = Browse;
+module.exports = QuickMatch;

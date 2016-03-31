@@ -22,6 +22,7 @@ var Profile = React.createClass({
   },
 
   componentDidMount: function () {
+    // debugger;
     this.userListener = SessionStore.addListener(this.onChange);
     ApiUtil.fetchCurrentUser();
   },

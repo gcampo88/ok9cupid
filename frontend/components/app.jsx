@@ -22,6 +22,10 @@ var App = React.createClass({
     this.sessionStoreToken.remove();
   },
 
+  componentWillReceiveProps: function () {
+
+  },
+
   handleChange: function () {
     if (SessionStore.isLoggedIn()) {
       this.setState({ currentUser: SessionStore.currentUser() });
@@ -31,11 +35,16 @@ var App = React.createClass({
   },
 
   handleProfileClick: function () {
+    // debugger;
     this.context.router.push("/profile");
   },
 
   handleBrowseClick: function () {
     this.context.router.push("/browse");
+  },
+
+  handleQuickMatchClick: function () {
+    this.context.router.push("/quickmatch");
   },
 
   render: function () {
@@ -56,6 +65,7 @@ var App = React.createClass({
         <li className="root-tab" onClick={this.handleProfileClick} >Profile</li>
         {button}
     </nav>
+    {this.props.children}
     </div>
   );
   }

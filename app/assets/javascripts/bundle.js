@@ -53,13 +53,13 @@
 	var IndexRoute = ReactRouter.IndexRoute;
 	var hashHistory = ReactRouter.hashHistory;
 	
-	var Tabs = __webpack_require__(216);
 	var Profile = __webpack_require__(217);
 	var Browse = __webpack_require__(249);
 	var LoginForm = __webpack_require__(250);
 	var SignupForm = __webpack_require__(251);
 	var Splash = __webpack_require__(252);
 	var App = __webpack_require__(253);
+	var QuickMatch = __webpack_require__(254);
 	var SessionStore = __webpack_require__(222);
 	
 	var router = React.createElement(
@@ -68,9 +68,9 @@
 	  React.createElement(
 	    Route,
 	    { path: '/', component: App, onEnter: _requireLoggedIn },
-	    React.createElement(IndexRoute, { component: Tabs }),
 	    React.createElement(Route, { path: 'profile', component: Profile }),
-	    React.createElement(Route, { path: 'browse', component: Browse })
+	    React.createElement(Route, { path: 'browse', component: Browse }),
+	    React.createElement(Route, { path: 'quickmatch', component: QuickMatch })
 	  ),
 	  React.createElement(Route, { path: '/login', component: LoginForm }),
 	  React.createElement(Route, { path: '/splash', component: Splash }),
@@ -24766,55 +24766,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 216 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Profile = __webpack_require__(217);
-	var Browse = __webpack_require__(249);
-	var SessionStore = __webpack_require__(222);
-	
-	var Tabs = React.createClass({
-	  displayName: 'Tabs',
-	
-	  //   contextTypes: {
-	  //     router: React.PropTypes.object.isRequired
-	  //   },
-	  //
-	  //   handleProfileClick: function () {
-	  //     this.context.router.push("/profile");
-	  //   },
-	  //
-	  //   handleBrowseClick: function () {
-	  //     this.context.router.push("/browse");
-	  //   },
-	  //
-	  render: function () {
-	    return React.createElement('div', null);
-	  }
-	  //     var button;
-	  //
-	  //     if (SessionStore.currentUser()) {
-	  //       button = <button className="logout" onClick={ApiUtil.logout}>Logout</button>
-	  //     }
-	  //
-	  //     // var img = <img src="assets/images/logo.png" alt="logo" />
-	  //     <nav className="tabs group">
-	  //       <li className="root-tab">[Logo]</li>
-	  //       <li className="root-tab" onClick={this.handleBrowseClick} >Browse Dogs</li>
-	  //       <li className="root-tab" onClick={this.handleQuickMatchClick} >QuickMatch</li>
-	  //       <li className="root-tab" onClick={this.handleProfileClick} >Profile</li>
-	  //       {button}
-	  //     </nav>
-	  //     return(<div></div>
-	  // )
-	  //
-	  //   }
-	});
-	
-	module.exports = Tabs;
-
-/***/ },
+/* 216 */,
 /* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -24844,6 +24796,7 @@
 	  },
 	
 	  componentDidMount: function () {
+	    // debugger;
 	    this.userListener = SessionStore.addListener(this.onChange);
 	    ApiUtil.fetchCurrentUser();
 	  },
@@ -32550,6 +32503,8 @@
 	    this.sessionStoreToken.remove();
 	  },
 	
+	  componentWillReceiveProps: function () {},
+	
 	  handleChange: function () {
 	    if (SessionStore.isLoggedIn()) {
 	      this.setState({ currentUser: SessionStore.currentUser() });
@@ -32559,11 +32514,16 @@
 	  },
 	
 	  handleProfileClick: function () {
+	    // debugger;
 	    this.context.router.push("/profile");
 	  },
 	
 	  handleBrowseClick: function () {
 	    this.context.router.push("/browse");
+	  },
+	
+	  handleQuickMatchClick: function () {
+	    this.context.router.push("/quickmatch");
 	  },
 	
 	  render: function () {
@@ -32612,13 +32572,40 @@
 	          'Profile'
 	        ),
 	        button
-	      )
+	      ),
+	      this.props.children
 	    );
 	  }
 	
 	});
 	
 	module.exports = App;
+
+/***/ },
+/* 254 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var QuickMatch = React.createClass({
+	  displayName: "QuickMatch",
+	
+	
+	  render: function () {
+	    return React.createElement(
+	      "div",
+	      null,
+	      React.createElement(
+	        "a",
+	        { className: "tab", href: "#" },
+	        "Quickmatch info will go here"
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = QuickMatch;
 
 /***/ }
 /******/ ]);
