@@ -1,33 +1,30 @@
 
-<header class="signup-header group">
-  <h2>Sign up!</h2>
+<header class="user-acq-header">
+  <h1>Almost there!</h1>
   <h3>Your new best friend is only a few clicks away.</h3>
 </header>
 
-<form class="user-signup form group" action="<%=users_url%>" method="post">
+<form class="user-acq-form group" action="<%=users_url%>" method="post">
   <%= auth_token %>
-  <ul>
-    <li><label>Name
-      <input type="text" name="user[name]" value="<%=@user.name%>">
-    </label></li>
+  <label>Name</label>
+    <input class="user-acq-input" type="text" name="user[name]" value="<%=@user.name%>">
 
-    <li><label>  Zip Code
-      <input type="text" name="user[zipcode]" value="<%=@user.zipcode%>">
-    <li></label></li> <br>
+  <label>Zip Code</label>
+    <input class="user-acq-input" type="text" name="user[zipcode]" value="<%=@user.zipcode%>">
 
-    <li><label>Email Address
-      <input type="text" name="user[email]" value="<%=@user.email%>">
-    </label></li>
+  <label>Email Address</label>
+    <input class="user-acq-input" type="text" name="user[email]" value="<%=@user.email%>">
 
-    <li><label>  Password
-      <input type="password" name="user[password]">
-    </label></li>
+  <label>Password</label>
+    <input class="user-acq-input" type="password" name="user[password]">
 
-  </ul>
-
-  <input type="submit" value="Create account!">
+  <input class="user-acq-button" type="submit" value="Create account!">
 
 </form>
 
-<br><br><br>
-<%= button_to "Existing account? Sign in!", new_session_url, method: :get %>
+<form class="toggle-existing-user-button"
+      action="<%= new_session_url %>"
+      method="get">
+      <input type="submit" value="Existing user? Sign in!">
+
+</form>

@@ -1,24 +1,31 @@
-
-<form action="<%=new_user_url%>" class="splash">
+<header class="user-acq-header">
   <h1>Find your new best friend in minutes.</h1>
+</header>
 
-  <ul class="splash group">
-    <p>I am a </p>
-    <select class="splash-dropdown">
-      <option>Puppy</option>
-      <option>Dog</option>
-      <option>Canine</option>
-    </select>
-    <select class="splash-dropdown">
-      <option>Cuddler</option>
-      <option>Lover</option>
-      <option>Obsessive</option>
-    </select>
+<form class="user-acq-form group" action="<%=new_user_url%>" class="splash">
 
-    <input type="submit" value="Continue">
+  <h4>I am a </h4>
+  <select>
+    <option>Puppy</option>
+    <option>Dog</option>
+    <option>Canine</option>
+    <option>Hound</option>
+  </select>
+  <select>
+    <option>Cuddler</option>
+    <option>Lover</option>
+    <option>Enthusiast</option>
+    <option>Admirer</option>
+    <option>Nut</option>
+  </select>
 
-  </ul>
+  <input class="user-acq-button" type="submit" value="Continue">
+
 </form>
 
-<br><br><br>
-<%= button_to "Existing account? Sign in!", new_session_url, method: :get %>
+
+<form class="toggle-existing-user-button"
+      action="<%= new_session_url %>"
+      method="get">
+  <input type="submit" value="Existing user? Sign in!">
+</form>

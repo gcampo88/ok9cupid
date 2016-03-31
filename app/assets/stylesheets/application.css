@@ -18,8 +18,8 @@
 
 html, body, section, form, ul,
 li, article, header,
-h1, h2, h3, h4, p,
-input, label, div, textarea {
+h1, h2, h3, h4, p, select, option,
+input, button, label, div, textarea {
   margin: 0;
   border: 0;
   padding: 0;
@@ -84,104 +84,132 @@ body {
 }
 
 .logo-header > h1 {
-  float: right;
+  float: left;
+  display: inline-block;;
 }
 
 .logo-header > h1 > em {
   color: darkblue;
 }
 
+.greeting-user {
+  font-size: 18px;
+  padding: 5px;
+  font-weight: lighter;
+  display: inline-block;
+}
 
-/*SIGN-UP PAGE*/
+.sign-out-button {
+  font-size: 18px;
+  display: inline-block;
+  background: darkblue;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 5%;
+}
+/*User Acquisition (splash page, new user, new session)*/
 
-.signup-header {
+
+.user-acq-header {
   margin: auto;
   text-align: center;
   display: block;
 }
 
-.signup-header > h2 {
-  padding: 20px;
-  font-size: 36px;
+.user-acq-header > h1 {
+  margin: 20px;
+  font-size: 48px;
+  text-align: center;
+  font-weight: lighter;
   text-shadow: 1px 1px #7EC9F8;
 }
 
-.signup-header > h3 {
-  margin: 10px;
+.user-acq-header > h3 {
+  padding: 20px;
+  font-size: 32px;
+  font-weight: lighter;
+  text-align: center;
 }
 
-.form {
-  width: 800px;
+.user-acq-form > h4 {
+  display: inline-block;
+  width: auto;
+  font-weight: lighter;
+  color: #7EC9F8;
+  margin: 20px;
+  font-size: 24px;
+  float: left;
+}
+
+.user-acq-form > select {
+  color:
+  margin: 10px;
+  display: inline-block;
+}
+
+
+.user-acq-form {
+  border: 1px solid lightblue;
+  width: 600px;
+  box-sizing: border-box;
+  height: 100%;
   margin: auto;
   padding: 20px;
 }
 
-.signin-input {
+
+.user-acq-form > label {
+  display: block;
+  width: 200px;
+  font-weight: lighter;
+  color: #7EC9F8;
+  margin: 5px 0;
+}
+
+.user-acq-input {
+  cursor: pointer;
+  background: #BFEFFF;
+  color: darkblue;
+  width: 400px;
+  box-sizing: border-box;
+  display: block;
+  border: 1px solid black;
+  padding: 5px;
+}
+
+.user-acq-input:focus {
   background: white;
-  display: block;
 }
 
-.button_to {
-  display: inline;
-}
-
-.form > ul > li {
-  margin: 10px;
-  float: left;
-  display: block;
-}
-
-/*SPLASH PAGE */
-
-.splash {
-  background: #104DA1;
+.user-acq-button {
+  cursor: pointer;
+  background: #00D280;
+  padding: 15px;
+  margin: 10px 0;
   color: white;
-  font-family: sans-serif;
-  text-align: center;
-  width: 700px;
-  margin: auto;
+  font-size: 20px;
 }
 
-.splash > h1 {
-  font-size: 36px;
-  margin: 30px;
+.user-acq-button:hover {
+  color: darkblue;
 }
 
-.splash > ul {
-  text-align: center;
-  margin: auto;
-  width: 450px;
-
-}
-
-.splash > p {
-  font-size: 24px;
-  width: 100px;
-  float: left;
-  margin: 10px 0px;
-}
-
-.splash-dropdown {
-  -webkit-appearance: none;
-  /*-moz-appearance: none;
-  appearance: none;*/
+.toggle-existing-user-button > input {
+  cursor: pointer;
+  display: inline-block;
+  font-weight: lighter;
+  float: right;
+  margin: 30px 10px;
   padding: 10px;
-  /*height: 200px;*/
-  display: block;
   font-size: 16px;
-  text-align: center;
-  float: left;
-  margin: 0px 10px;
+  border: 1px solid lightblue;
 }
 
-.splash > input {
-  /*margin: 10px;*/
-  background: #0c0;
-  padding: 10px;
-  float: left;
-  color: white;
-  font-size: 16px;
+.toggle-existing-user-button:hover {
+  background: light;blue;
 }
+
+
 
 /*tabs*/
 
