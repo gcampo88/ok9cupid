@@ -1,7 +1,6 @@
 var React = require('react');
 var LinkedStateMixin = require('react-addons-linked-state-mixin');
 var SessionStore = require('../stores/session');
-var ProfileActions = require('../actions/profile_actions');
 var ApiUtil = require('../util/api_util');
 
 var Profile = React.createClass({
@@ -9,20 +8,10 @@ var Profile = React.createClass({
 
   getInitialState: function () {
     return SessionStore.currentUser();
-      // age: "",
-      // size: "",
-      // sex: "",
-      // about_me: "",
-      // about_life: "",
-      // ideal: "",
-      // imageFile: null,
-      // imageUrl: ""
-
 
   },
 
   componentDidMount: function () {
-    // debugger;
     this.userListener = SessionStore.addListener(this.onChange);
     ApiUtil.fetchCurrentUser();
   },
@@ -32,9 +21,7 @@ var Profile = React.createClass({
   },
 
   onChange: function () {
-    debugger;
     this.setState({
-      // user: SessionStore.currentUser(),
       age: SessionStore.currentUser().search_age,
       size: SessionStore.currentUser().search_size,
       sex: SessionStore.currentUser().search_sex,
@@ -48,10 +35,8 @@ var Profile = React.createClass({
   handleFileChange: function (e) {
     var file = e.currentTarget.files[0];
     var reader = new FileReader();
-    // debugger;
     reader.onloadend = function () {
       var result = reader.result;
-      debugger
       this.setState({ imageFile: file, imageUrl: result });
       this.handleInput();
     }.bind(this);
@@ -62,7 +47,6 @@ var Profile = React.createClass({
 
   handleInput: function (e) {
 
-    debugger
     var formData = new FormData();
     formData.append("user[search_sex]", this.state.sex);
     formData.append("user[search_size]", this.state.size);
@@ -74,20 +58,18 @@ var Profile = React.createClass({
     if (this.state.imageFile) {
       formData.append("user[image]", this.state.imageFile);
     }
-    
+
     ApiUtil.updateUserProfile(formData, this.state.id);
   },
 
 
   render: function () {
-    debugger
     if (!SessionStore.currentUserHasBeenFetched()) {
       return(
         <div>Loading current user..</div>
       );
     }
 
-    // debugger;
     return(
       <span className="profile-items group">
 

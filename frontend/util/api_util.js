@@ -1,4 +1,3 @@
-var ProfileActions = require('../actions/profile_actions');
 var SessionActions = require('../actions/session_actions');
 var SessionStore = require('../stores/session');
 
@@ -76,7 +75,7 @@ ApiUtil = {
       contentType: false,
       data: formData,
       success: function (user) {
-        ProfileActions.receiveCurrentUser(user);
+        SessionActions.receiveCurrentUser(user);
         console.log("success on patch req!");
       },
       error: function () {

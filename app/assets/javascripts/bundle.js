@@ -24772,7 +24772,6 @@
 	var React = __webpack_require__(1);
 	var LinkedStateMixin = __webpack_require__(217);
 	var SessionStore = __webpack_require__(221);
-	var ProfileActions = __webpack_require__(244);
 	var ApiUtil = __webpack_require__(246);
 	
 	var Profile = React.createClass({
@@ -24782,18 +24781,9 @@
 	
 	  getInitialState: function () {
 	    return SessionStore.currentUser();
-	    // age: "",
-	    // size: "",
-	    // sex: "",
-	    // about_me: "",
-	    // about_life: "",
-	    // ideal: "",
-	    // imageFile: null,
-	    // imageUrl: ""
 	  },
 	
 	  componentDidMount: function () {
-	    // debugger;
 	    this.userListener = SessionStore.addListener(this.onChange);
 	    ApiUtil.fetchCurrentUser();
 	  },
@@ -24803,9 +24793,7 @@
 	  },
 	
 	  onChange: function () {
-	    debugger;
 	    this.setState({
-	      // user: SessionStore.currentUser(),
 	      age: SessionStore.currentUser().search_age,
 	      size: SessionStore.currentUser().search_size,
 	      sex: SessionStore.currentUser().search_sex,
@@ -24819,10 +24807,8 @@
 	  handleFileChange: function (e) {
 	    var file = e.currentTarget.files[0];
 	    var reader = new FileReader();
-	    // debugger;
 	    reader.onloadend = function () {
 	      var result = reader.result;
-	      debugger;
 	      this.setState({ imageFile: file, imageUrl: result });
 	      this.handleInput();
 	    }.bind(this);
@@ -24832,7 +24818,6 @@
 	
 	  handleInput: function (e) {
 	
-	    debugger;
 	    var formData = new FormData();
 	    formData.append("user[search_sex]", this.state.sex);
 	    formData.append("user[search_size]", this.state.size);
@@ -24849,7 +24834,6 @@
 	  },
 	
 	  render: function () {
-	    debugger;
 	    if (!SessionStore.currentUserHasBeenFetched()) {
 	      return React.createElement(
 	        'div',
@@ -24858,7 +24842,6 @@
 	      );
 	    }
 	
-	    // debugger;
 	    return React.createElement(
 	      'span',
 	      { className: 'profile-items group' },
@@ -31990,25 +31973,11 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 244 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Dispatcher = __webpack_require__(241);
-	var ProfileConstants = __webpack_require__(245);
-
-/***/ },
-/* 245 */
-/***/ function(module, exports) {
-
-	module.exports = {
-	  CURRENT_USER_RECEIVED: "CURRENT_USER_RECEIVED"
-	};
-
-/***/ },
+/* 244 */,
+/* 245 */,
 /* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ProfileActions = __webpack_require__(244);
 	var SessionActions = __webpack_require__(247);
 	var SessionStore = __webpack_require__(221);
 	
@@ -32085,7 +32054,7 @@
 	      contentType: false,
 	      data: formData,
 	      success: function (user) {
-	        ProfileActions.receiveCurrentUser(user);
+	        SessionActions.receiveCurrentUser(user);
 	        console.log("success on patch req!");
 	      },
 	      error: function () {
@@ -32519,7 +32488,6 @@
 	  },
 	
 	  handleProfileClick: function () {
-	    // debugger;
 	    this.context.router.push("/profile");
 	  },
 	

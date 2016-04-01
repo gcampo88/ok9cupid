@@ -35,7 +35,6 @@ var App = React.createClass({
   },
 
   handleProfileClick: function () {
-    // debugger;
     this.context.router.push("/profile");
   },
 

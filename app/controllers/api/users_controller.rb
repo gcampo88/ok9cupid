@@ -19,7 +19,6 @@ class Api::UsersController < ApplicationController
   end
 
   def update
-    # debugger
     current_user.update!(user_params)
     render json: current_user
   end
