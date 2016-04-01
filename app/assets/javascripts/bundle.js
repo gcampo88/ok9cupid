@@ -62,6 +62,8 @@
 	var QuickMatch = __webpack_require__(253);
 	var SessionStore = __webpack_require__(221);
 	
+	window.DogUtil = __webpack_require__(254);
+	
 	var router = React.createElement(
 	  Router,
 	  { history: hashHistory },
@@ -24799,7 +24801,7 @@
 	      sex: SessionStore.currentUser().search_sex,
 	      about_me: SessionStore.currentUser().about_me,
 	      about_life: SessionStore.currentUser().about_life,
-	      ideal: SessionStore.currentUser().ideal_dog,
+	      idealdog: SessionStore.currentUser().ideal_dog,
 	      imageUrl: SessionStore.currentUser().imageUrl
 	    });
 	  },
@@ -24816,6 +24818,12 @@
 	    reader.readAsDataURL(file);
 	  },
 	
+	  handleEnter: function (e) {
+	    if (e.charCode === 13) {
+	      this.handleInput();
+	    }
+	  },
+	
 	  handleInput: function (e) {
 	
 	    var formData = new FormData();
@@ -24824,7 +24832,7 @@
 	    formData.append("user[search_age]", this.state.age);
 	    formData.append("user[about_me]", this.state.about_me);
 	    formData.append("user[about_life]", this.state.about_life);
-	    formData.append("user[ideal_dog]", this.state.ideal);
+	    formData.append("user[ideal_dog]", this.state.ideal_dog);
 	
 	    if (this.state.imageFile) {
 	      formData.append("user[image]", this.state.imageFile);
@@ -24868,7 +24876,8 @@
 	        React.createElement('textarea', {
 	          className: 'profile-param',
 	          valueLink: this.linkState('about_me'),
-	          onBlur: this.handleInput }),
+	          onBlur: this.handleInput,
+	          onKeyPress: this.handleEnter }),
 	        React.createElement(
 	          'label',
 	          null,
@@ -24877,16 +24886,18 @@
 	        React.createElement('textarea', {
 	          className: 'profile-param',
 	          valueLink: this.linkState('about_life'),
-	          onBlur: this.handleInput }),
+	          onBlur: this.handleInput,
+	          onKeyPress: this.handleEnter }),
 	        React.createElement(
 	          'label',
 	          null,
-	          'My ideal dog enjoys:'
+	          'My ideal dog is:'
 	        ),
 	        React.createElement('input', { type: 'text',
 	          className: 'profile-param',
-	          valueLink: this.linkState('ideal'),
-	          onBlur: this.handleInput })
+	          valueLink: this.linkState('ideal_dog'),
+	          onBlur: this.handleInput,
+	          onKeyPress: this.handleEnter })
 	      ),
 	      React.createElement(
 	        'form',
@@ -24905,7 +24916,8 @@
 	        React.createElement('input', { type: 'text',
 	          className: 'search-param',
 	          valueLink: this.linkState('age'),
-	          onBlur: this.handleInput }),
+	          onBlur: this.handleInput,
+	          onKeyPress: this.handleEnter }),
 	        React.createElement(
 	          'label',
 	          null,
@@ -24914,7 +24926,8 @@
 	        React.createElement('input', { type: 'text',
 	          className: 'search-param',
 	          valueLink: this.linkState('size'),
-	          onBlur: this.handleInput }),
+	          onBlur: this.handleInput,
+	          onKeyPress: this.handleEnter }),
 	        React.createElement(
 	          'label',
 	          null,
@@ -24923,7 +24936,8 @@
 	        React.createElement('input', { type: 'text',
 	          className: 'search-param',
 	          valueLink: this.linkState('sex'),
-	          onBlur: this.handleInput })
+	          onBlur: this.handleInput,
+	          onKeyPress: this.handleEnter })
 	      )
 	    );
 	  }
@@ -32583,6 +32597,52 @@
 	});
 	
 	module.exports = QuickMatch;
+
+/***/ },
+/* 254 */
+/***/ function(module, exports) {
+
+	var DogUtil = {
+	  fetchManyDogs: function () {
+	    var url = 'http://api.petfinder.com/pet.getRandom?&key=a4994cca2cf214901ee9892d3c1f58bf&output=full&format=json';
+	    $.ajax({
+	      url: url + '&callback=?',
+	      type: "GET",
+	      dataType: "jsonp",
+	      data: {},
+	      succcess: function () {
+	        alert("made it");
+	        console.log("Data retrieved from petfinder API");
+	      },
+	      error: function () {
+	        console.log("error in call to petfinder API");
+	      },
+	      complete: function () {
+	        console.log("completed ajax petfinder call..");
+	      }
+	    });
+	  },
+	
+	  fetchSingleDog: function (id) {
+	    $.ajax({
+	      url: "",
+	      type: "GET",
+	      dataType: "",
+	      data: "",
+	      contentType: false,
+	      processData: false,
+	      succcess: function () {
+	        console.log("Data retrieved from petfinder API");
+	      },
+	      error: function () {
+	        console.log("error in call to petfinder API");
+	      }
+	    });
+	  }
+	
+	};
+	
+	module.exports = DogUtil;
 
 /***/ }
 /******/ ]);

@@ -16,6 +16,8 @@ var App = require('./components/app');
 var QuickMatch = require('./components/quickmatch');
 var SessionStore = require('./stores/session');
 
+window.DogUtil = require('./util/dog_util');
+
 
 var router = (
   <Router history={hashHistory}>

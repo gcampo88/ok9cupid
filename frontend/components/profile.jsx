@@ -27,7 +27,7 @@ var Profile = React.createClass({
       sex: SessionStore.currentUser().search_sex,
       about_me: SessionStore.currentUser().about_me,
       about_life: SessionStore.currentUser().about_life,
-      ideal: SessionStore.currentUser().ideal_dog,
+      idealdog: SessionStore.currentUser().ideal_dog,
       imageUrl: SessionStore.currentUser().imageUrl
     });
   },
@@ -45,6 +45,12 @@ var Profile = React.createClass({
 
   },
 
+  handleEnter: function (e) {
+    if (e.charCode === 13) {
+      this.handleInput();
+    }
+  },
+
   handleInput: function (e) {
 
     var formData = new FormData();
@@ -53,7 +59,7 @@ var Profile = React.createClass({
     formData.append("user[search_age]", this.state.age);
     formData.append("user[about_me]", this.state.about_me);
     formData.append("user[about_life]", this.state.about_life);
-    formData.append("user[ideal_dog]", this.state.ideal);
+    formData.append("user[ideal_dog]", this.state.ideal_dog);
 
     if (this.state.imageFile) {
       formData.append("user[image]", this.state.imageFile);
@@ -89,19 +95,22 @@ var Profile = React.createClass({
             <textarea
             className="profile-param"
             valueLink={this.linkState('about_me')}
-            onBlur={this.handleInput} />
+            onBlur={this.handleInput}
+            onKeyPress={this.handleEnter}/>
 
           <label>What kind of life can I give a pup?</label>
           <textarea
           className="profile-param"
           valueLink={this.linkState('about_life')}
-          onBlur={this.handleInput}   />
+          onBlur={this.handleInput}
+          onKeyPress={this.handleEnter}/>
 
-        <label>My ideal dog enjoys:</label>
+        <label>My ideal dog is:</label>
           <input type="text"
             className="profile-param"
-            valueLink={this.linkState('ideal')}
-            onBlur={this.handleInput} />
+            valueLink={this.linkState('ideal_dog')}
+            onBlur={this.handleInput}
+            onKeyPress={this.handleEnter}/>
         </form>
 
         <form className="profile-search"
@@ -112,19 +121,22 @@ var Profile = React.createClass({
           <input type="text"
             className="search-param"
             valueLink={this.linkState('age')}
-            onBlur={this.handleInput} />
+            onBlur={this.handleInput}
+            onKeyPress={this.handleEnter}/>
 
           <label>Size</label>
           <input type="text"
             className="search-param"
             valueLink={this.linkState('size')}
-            onBlur={this.handleInput}  />
+            onBlur={this.handleInput}
+            onKeyPress={this.handleEnter}/>
 
           <label>Sex</label>
           <input type="text"
             className="search-param"
             valueLink={this.linkState('sex')}
-            onBlur={this.handleInput} />
+            onBlur={this.handleInput}
+            onKeyPress={this.handleEnter}/>
 
         </form>
 
