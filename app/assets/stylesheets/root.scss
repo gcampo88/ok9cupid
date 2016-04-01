@@ -1,0 +1,62 @@
+/*tabs*/
+.welcome {
+  font-weight: lighter;
+  color: lightblue;
+}
+
+.logout {
+  cursor: pointer;
+  display: inline-block;
+  font-weight: lighter;
+  float: right;
+  height: 60px;
+  padding: 10px;
+  font-size: 16px;
+  border-left: 1px dashed lightblue;
+}
+
+.logout:hover {
+  background: lightblue;
+}
+
+.tabs {
+  border-top: 1px solid lightblue;
+  border-bottom: 1px solid lightblue;
+  height: 60px;
+
+}
+
+.root-tab {
+  display: block;
+  height: 60px;
+  width: auto;
+  box-sizing: border-box;
+  border-right: 1px dashed lightblue;
+  padding: 15px 0px;
+  text-align: center;
+  font-weight: lighter;
+  width: 150px;
+  float: left;
+}
+
+.root-tab:hover {
+  cursor: pointer;
+  background: lightblue;
+}
+
+
+.root-tab-logo {
+  background-image: url(asset-path("logo.png"));
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: block;
+  height: 60px;
+  width: auto;
+  box-sizing: border-box;
+  border-right: 1px dashed lightblue;
+  padding: 15px 0px;
+  text-align: center;
+  font-weight: lighter;
+  width: 60px;
+  float: left;
+}

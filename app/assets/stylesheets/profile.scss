@@ -1,0 +1,93 @@
+/*profile*/
+.profile-pic {
+  width: 260px;
+  margin: 0px 20px;
+  border: 2px solid darkblue;
+}
+
+.upload-pic {
+  color: black;
+  font-size: 16px;
+}
+
+.profile-form {
+  background: #104DA1;
+  width: 300px;
+  height: 400px;
+  border: 1px solid lightblue;
+  float: left;
+}
+
+.profile-form {
+  width: 300px;
+  height: auto;
+  border: 1px solid lightblue;
+  float: left;
+  margin: 20px;
+  padding: 10px;
+
+}
+
+.profile-form > h3 {
+  color: pink;
+  margin: 10px;
+}
+
+.profile-form > textarea {
+  width: 280px;
+  cursor: text;
+  min-height: 60px;
+}
+
+
+.profile-param {
+  cursor: text;
+  width: 260px;
+  height: auto;
+  color: lightblue;
+  font-size: 16px;
+  margin: auto;
+  padding: 10px 0;
+}
+
+.profile-param:focus {
+  border: 1px dotted lightblue;
+  background: lightgray;
+  color: black;
+}
+
+
+/*profile search params*/
+.profile-search {
+  width: 200px;
+  height: 250px;
+  border: 1px solid lightblue;
+  float: right;
+  margin: 20px;
+  padding: 10px;
+}
+
+.profile-search > h3 {
+  color: pink;
+  margin: 10px;
+}
+
+.profile-search > label {
+
+}
+
+.search-param {
+  color: lightblue;
+  font-size: 16px;
+  width: 200px;
+  margin: auto;
+  background: #104DA1;
+  cursor: text;
+  padding: 10px 0;
+}
+
+.profile-search > input:focus {
+  border: 1px dotted lightblue;
+  background: lightgray;
+  color: black;
+}

@@ -86,13 +86,13 @@ var Profile = React.createClass({
 
         <form className="profile-form">
           <h3>My Profile:</h3>
-          <label>Image</label>
+          <img className="profile-pic"
+            src={this.state.user.image} />
             <input
+            className="upload-pic"
             type="file"
             onChange={this.handleFileChange} />
 
-          <img className="preview-image"
-                src={this.state.user.image} />
 
           <label>About Me</label>
             <textarea

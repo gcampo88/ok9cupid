@@ -34,13 +34,14 @@ ApiUtil = {
     });
   },
 
-  logout: function () {
+  logout: function (callback) {
     $.ajax({
       url: "api/session",
       type: "DELETE",
       dataType: "json",
       success: function () {
         SessionActions.logout();
+        callback && callback();
       },
       error: function () {
         console.log("error logging out in ajax")

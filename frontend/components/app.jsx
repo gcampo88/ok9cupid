@@ -47,19 +47,25 @@ var App = React.createClass({
     this.context.router.push("/quickmatch");
   },
 
+  logOut: function () {
+    ApiUtil.logout(function () {
+      this.context.router.push("/login");
+    }.bind(this));
+  },
+
   render: function () {
   var button, welcomeMessage;
 
   if (this.state.currentUser) {
     welcomeMessage = <h2 className="welcome">Welcome, {this.state.currentUser.name}!</h2>;
-    button = <button className="logout" onClick={ApiUtil.logout}>Logout</button>
+    button = <button className="logout" onClick={this.logOut}>Logout</button>
   }
 
   return (
     <div>
       {welcomeMessage}
       <nav className="tabs group">
-        <li className="root-tab">[Logo]</li>
+        <div className="root-tab-logo"></div>
         <li className="root-tab" onClick={this.handleBrowseClick} >Browse Dogs</li>
         <li className="root-tab" onClick={this.handleQuickMatchClick} >QuickMatch</li>
         <li className="root-tab" onClick={this.handleProfileClick} >Profile</li>
