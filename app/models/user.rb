@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
   before_validation :ensure_session_token
 
   # has_many: favorites
-  has_attached_file :image, default_url: asset_url("images/default.jpg")
+  has_attached_file :image, default_url: ActionController::Base.helpers.image_url("default.jpg")
   validates_attachment_content_type :image, content_type: /\Aimage\/.*\Z/
 
   def self.find_by_credentials(email, password)
