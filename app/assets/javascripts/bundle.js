@@ -24843,18 +24843,19 @@
 	    }
 	
 	    return React.createElement(
-	      'span',
+	      'section',
 	      { className: 'profile-items group' },
+	      React.createElement('hr', { className: 'breakpoint' }),
 	      React.createElement(
 	        'form',
 	        { className: 'profile-form' },
+	        React.createElement('img', { className: 'profile-pic',
+	          src: this.state.imageUrl }),
 	        React.createElement(
 	          'h3',
 	          null,
-	          'My Profile:'
+	          this.state.name
 	        ),
-	        React.createElement('img', { className: 'profile-pic',
-	          src: this.state.imageUrl }),
 	        React.createElement('input', {
 	          className: 'upload-pic',
 	          type: 'file',

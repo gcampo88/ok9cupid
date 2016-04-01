@@ -71,17 +71,19 @@ var Profile = React.createClass({
     }
 
     return(
-      <span className="profile-items group">
+      <section className="profile-items group">
+        <hr className="breakpoint"/>
 
         <form className="profile-form">
-          <h3>My Profile:</h3>
           <img className="profile-pic"
             src={this.state.imageUrl} />
+
+          <h3>{this.state.name}</h3>
+
             <input
             className="upload-pic"
             type="file"
             onChange={this.handleFileChange} />
-
 
           <label>About Me</label>
             <textarea
@@ -126,7 +128,7 @@ var Profile = React.createClass({
 
         </form>
 
-      </span>);
+      </section>);
   }
 
 });
