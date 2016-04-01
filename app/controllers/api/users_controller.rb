@@ -1,6 +1,6 @@
 class Api::UsersController < ApplicationController
   def create
-    @user = User.new(create_params)
+    @user = User.new(user_params)
     if @user.save
       log_in!(@user)
       render :show
@@ -19,6 +19,7 @@ class Api::UsersController < ApplicationController
   end
 
   def update
+    # debugger
     current_user.update!(user_params)
     render json: current_user
   end
@@ -32,7 +33,5 @@ class Api::UsersController < ApplicationController
     :search_size, :search_sex, :search_age, :image, :session_token)
   end
 
-  def create_params
-    params.require(:user).permit(:name, :email, :zipcode, :password)
-  end
+
 end

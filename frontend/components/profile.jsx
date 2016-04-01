@@ -8,17 +8,17 @@ var Profile = React.createClass({
   mixins: [LinkedStateMixin],
 
   getInitialState: function () {
-    return({
-      user: SessionStore.currentUser(),
-      age: "",
-      size: "",
-      sex: "",
-      about_me: "",
-      about_life: "",
-      ideal: "",
-      imageFile: null
+    return SessionStore.currentUser();
+      // age: "",
+      // size: "",
+      // sex: "",
+      // about_me: "",
+      // about_life: "",
+      // ideal: "",
+      // imageFile: null,
+      // imageUrl: ""
 
-    });
+
   },
 
   componentDidMount: function () {
@@ -32,26 +32,27 @@ var Profile = React.createClass({
   },
 
   onChange: function () {
+    debugger;
     this.setState({
-      user: SessionStore.currentUser(),
+      // user: SessionStore.currentUser(),
       age: SessionStore.currentUser().search_age,
       size: SessionStore.currentUser().search_size,
       sex: SessionStore.currentUser().search_sex,
       about_me: SessionStore.currentUser().about_me,
       about_life: SessionStore.currentUser().about_life,
       ideal: SessionStore.currentUser().ideal_dog,
-      imageFile: SessionStore.currentUser().image,
+      imageUrl: SessionStore.currentUser().image_url
     });
   },
 
   handleFileChange: function (e) {
     var file = e.currentTarget.files[0];
     var reader = new FileReader();
-
+    // debugger;
     reader.onloadend = function () {
       var result = reader.result;
-
-      this.setState({ imageFile: file });
+      debugger
+      this.setState({ imageFile: file, imageUrl: result });
       this.handleInput();
     }.bind(this);
 
@@ -60,6 +61,8 @@ var Profile = React.createClass({
   },
 
   handleInput: function (e) {
+
+    debugger
     var formData = new FormData();
     formData.append("user[search_sex]", this.state.sex);
     formData.append("user[search_size]", this.state.size);
@@ -67,16 +70,20 @@ var Profile = React.createClass({
     formData.append("user[about_me]", this.state.about_me);
     formData.append("user[about_life]", this.state.about_life);
     formData.append("user[ideal_dog]", this.state.ideal);
-    formData.append("user[image]", this.state.imageFile);
 
-    ApiUtil.updateUserProfile(formData, this.state.user.id);
+    if (this.state.imageFile) {
+      formData.append("user[image]", this.state.imageFile);
+    }
+    
+    ApiUtil.updateUserProfile(formData, this.state.id);
   },
 
 
   render: function () {
-    if (!this.state.user) {
+    debugger
+    if (!SessionStore.currentUserHasBeenFetched()) {
       return(
-        <div></div>
+        <div>Loading current user..</div>
       );
     }
 
@@ -87,7 +94,7 @@ var Profile = React.createClass({
         <form className="profile-form">
           <h3>My Profile:</h3>
           <img className="profile-pic"
-            src={this.state.user.image} />
+            src={this.state.imageUrl} />
             <input
             className="upload-pic"
             type="file"
