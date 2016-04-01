@@ -32522,7 +32522,8 @@
 	    this.context.router.push("/quickmatch");
 	  },
 	
-	  logOut: function () {
+	  logOut: function (e) {
+	    e.preventDefault();
 	    ApiUtil.logout(function () {
 	      this.context.router.push("/login");
 	    }.bind(this));

@@ -1,3 +1,102 @@
 // Place all the styles related to the Api::Users controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+/*User Acquisition (splash page, new user, new session)*/
+
+.user-acq-header {
+  margin: auto;
+  text-align: center;
+  display: block;
+}
+
+.user-acq-header > h1 {
+  margin: 20px;
+  font-size: 48px;
+  text-align: center;
+  font-weight: lighter;
+  text-shadow: 1px 1px #7EC9F8;
+}
+
+.user-acq-header > h3 {
+  padding: 20px;
+  font-size: 32px;
+  font-weight: lighter;
+  text-align: center;
+}
+
+.user-acq-form > h4 {
+  display: inline-block;
+  width: auto;
+  font-weight: lighter;
+  color: #7EC9F8;
+  margin: 20px;
+  font-size: 24px;
+  float: left;
+}
+
+.user-acq-form > select {
+  margin: 10px;
+  display: inline-block;
+}
+
+
+.user-acq-form {
+  border: 1px solid lightblue;
+  width: 600px;
+  box-sizing: border-box;
+  height: 100%;
+  margin: auto;
+  padding: 20px;
+}
+
+
+.user-acq-form > label {
+  display: block;
+  width: 200px;
+  font-weight: lighter;
+  color: #7EC9F8;
+  margin: 5px 0;
+}
+
+.user-acq-input {
+  cursor: pointer;
+  background: #BFEFFF;
+  color: darkblue;
+  width: 400px;
+  box-sizing: border-box;
+  display: block;
+  border: 1px solid black;
+  padding: 5px;
+}
+
+.user-acq-input:focus {
+  background: white;
+}
+
+.user-acq-button {
+  cursor: pointer;
+  background: #00D280;
+  padding: 15px;
+  margin: 10px 0;
+  color: white;
+  font-size: 20px;
+}
+
+.user-acq-button:hover {
+  color: darkblue;
+}
+
+.toggle-existing-user-button {
+  cursor: pointer;
+  display: inline-block;
+  font-weight: lighter;
+  float: right;
+  margin: 30px 10px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid lightblue;
+}
+
+.toggle-existing-user-button:hover {
+  background: lightblue;
+}
