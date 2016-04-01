@@ -6,6 +6,7 @@
   height: 100%;
   margin: auto;
   position: relative;
+  border-radius: 3px;
 }
 
 .breakpoint {
@@ -55,13 +56,13 @@
 
 .profile-form > textarea {
   width: 600px;
-  cursor: text;
+  cursor: pointer;
   min-height: 60px;
 }
 
 
 .profile-param {
-  cursor: text;
+  cursor: pointer;
   width: 600px;
   height: auto;
   color: darkblue;
@@ -107,7 +108,7 @@
   display: block;
   font-size: 16px;
   width: 160px;
-  cursor: text;
+  cursor: pointer;
   padding: 10px 0;
 }
 
