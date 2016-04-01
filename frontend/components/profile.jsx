@@ -28,7 +28,7 @@ var Profile = React.createClass({
       about_me: SessionStore.currentUser().about_me,
       about_life: SessionStore.currentUser().about_life,
       ideal: SessionStore.currentUser().ideal_dog,
-      imageUrl: SessionStore.currentUser().image_url
+      imageUrl: SessionStore.currentUser().imageUrl
     });
   },
 

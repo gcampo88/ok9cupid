@@ -20,7 +20,8 @@ class Api::UsersController < ApplicationController
 
   def update
     current_user.update!(user_params)
-    render json: current_user
+    @user = current_user
+    render :show
   end
 
 
