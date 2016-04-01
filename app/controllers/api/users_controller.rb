@@ -4,6 +4,7 @@ class Api::UsersController < ApplicationController
     @user = User.new(create_params)
     if @user.save
       log_in!(@user)
+      debugger
       render :show
     else
       render json: { message: "Unable to save profile" }, status: 401
@@ -13,6 +14,7 @@ class Api::UsersController < ApplicationController
   def show
     if logged_in?
       @user = current_user
+      debugger
       render :show
     else
       render json: { message: "Not logged in" }, status: 401
