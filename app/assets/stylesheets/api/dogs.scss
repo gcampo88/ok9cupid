@@ -1,0 +1,31 @@
+//Dogs Show Page
+
+.dog-show-content {
+  background: #F3F5F9;
+  width: 900px;
+  height: 100%;
+  margin: auto;
+  border-radius: 3px;
+  color: #474D59;
+}
+
+.dog-show-label {
+  display: inline-block;
+  width: 200px;
+}
+
+.dog-show-info {
+  display: block;
+  width: 650px;
+  font-size: 20px;
+  margin: 10px;
+  text-align: justify;
+}
+
+.dog-show-photos > li > img {
+  margin: 10px;
+  border: 1px solid darkblue;
+  width: 200px;
+  float: left;
+  height: auto;
+}

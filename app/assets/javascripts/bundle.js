@@ -32121,11 +32121,6 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(
-	        'a',
-	        { className: 'tab', href: '#' },
-	        'Browse results will go here'
-	      ),
 	      React.createElement(DogsIndex, null)
 	    );
 	  }
@@ -32147,6 +32142,9 @@
 	var DogsIndex = React.createClass({
 	  displayName: 'DogsIndex',
 	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
 	
 	  getInitialState: function () {
 	    return {
@@ -32175,17 +32173,37 @@
 	    });
 	  },
 	
+	  goToDogShow: function (e) {
+	    e.preventDefault();
+	    debugger;
+	    this.context.router.push("/dogs/"); //GIGI NEED TO FIGURE OUT HOW TO PULL OUT DOG ID
+	  },
+	
 	  render: function () {
 	    if (!this.state.dogs) {
 	      return React.createElement('div', null);
 	    }
 	
+	    var photo;
+	
 	    var dogsToShow = this.state.dogs.map(function (dog) {
-	      return React.createElement(DogsIndexItem, { key: dog.id, dog: dog });
+	      for (var i = 0; i < dog.photos.length; i++) {
+	        if (dog.photos[i].$t.includes("-x")) {
+	          photo = React.createElement('img', { src: dog.photos[i].$t, onClick: this.goToDogShow });
+	        }
+	      }
+	      // debugger;
+	
+	      return React.createElement(
+	        'li',
+	        { onClick: this.goToDogShow },
+	        dog.name,
+	        photo
+	      );
 	    });
 	
 	    return React.createElement(
-	      'div',
+	      'ul',
 	      null,
 	      dogsToShow
 	    );
@@ -32681,36 +32699,129 @@
 	    if (!this.props.dog) {
 	      return React.createElement('div', null);
 	    }
-	    // debugger
 	
 	    var photos = this.props.dog.photos.map(function (photoObject) {
-	      return React.createElement('img', { src: photoObject.$t });
+	      if (photoObject.$t.includes("-x")) {
+	        return React.createElement(
+	          'li',
+	          null,
+	          React.createElement('img', { src: photoObject.$t })
+	        );
+	      }
 	    });
 	
-	    // debugger
+	    var breeds;
+	
+	    if (Array.isArray(this.props.dog.breeds)) {
+	      breeds = this.props.dog.breeds.map(function (breedObj) {
+	        return React.createElement(
+	          'div',
+	          null,
+	          breedObj.$t
+	        );
+	      });
+	    } else {
+	      breeds = this.props.dog.breeds.$t;
+	    }
+	
 	    return React.createElement(
-	      'div',
-	      null,
-	      'Name: ',
-	      this.props.dog.name,
-	      'Age: ',
-	      this.props.dog.age,
-	      'Size: ',
-	      this.props.dog.size,
-	      'Sex: ',
-	      this.props.dog.sex,
-	      'Breed(s): ',
-	      this.props.dog.breed,
-	      'About this pup: ',
-	      this.props.dog.description,
-	      'City: ',
-	      this.props.dog.city,
-	      'Zipcode: ',
-	      this.props.dog.zipcode,
-	      'Shelter email: ',
-	      this.props.dog.email,
-	      'Photos: ',
-	      photos
+	      'section',
+	      { className: 'dog-show-content group' },
+	      React.createElement(
+	        'ul',
+	        { className: 'dog-show-photos group' },
+	        photos
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'Name:'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        this.props.dog.name
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'Age:'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        this.props.dog.age
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'Size:'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        this.props.dog.size
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'Sex:'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        this.props.dog.sex
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'Breed(s):'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        breeds
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'About this pup:'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        this.props.dog.description
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'City:'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        this.props.dog.city
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'Zipcode:'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        this.props.dog.zipcode
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'Shelter email:'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        this.props.dog.email
+	      )
 	    );
 	  }
 	});
@@ -32755,18 +32866,17 @@
 	      DogStore.resetDogs();
 	      payload.dogs.forEach(function (dog) {
 	        dogItem = {};
-	        debugger;
 	        dogItem.id = dog.id.$t;
 	        dogItem.name = dog.name.$t;
 	        dogItem.age = dog.age.$t;
 	        dogItem.size = dog.size.$t;
 	        dogItem.sex = dog.sex.$t;
-	        dogItem.breeds = dog.breeds.breed.$t;
+	        dogItem.breeds = dog.breeds.breed;
 	        dogItem.city = dog.contact.city.$t;
 	        dogItem.zipcode = dog.contact.zip.$t;
 	        dogItem.email = dog.contact.email.$t;
-	        dogItem.description = dog.description.$t;
 	        dogItem.photos = dog.media.photos.photo;
+	        dogItem.description = dog.description.$t;
 	        _dogs.push(dogItem);
 	        DogStore.__emitChange();
 	      });
@@ -32805,7 +32915,10 @@
 	      url: url,
 	      type: "GET",
 	      dataType: "jsonp",
-	      data: { location: "10014" },
+	      data: {
+	        location: "10014",
+	        animal: "dog"
+	      },
 	      success: function (petResult) {
 	        //  debugger;
 	        DogActions.receiveDogs(petResult.petfinder.pets.pet);

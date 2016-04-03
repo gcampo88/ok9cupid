@@ -6,6 +6,9 @@ var DogsIndexItem = require('./dogs_index_item');
 
 
 var DogsIndex = React.createClass({
+  contextTypes: {
+    router: React.PropTypes.object.isRequired
+  },
 
   getInitialState: function () {
     return ({
@@ -35,19 +38,39 @@ var DogsIndex = React.createClass({
     });
   },
 
+  goToDogShow: function (e) {
+    e.preventDefault();
+    debugger;
+    this.context.router.push("/dogs/");  //GIGI NEED TO FIGURE OUT HOW TO PULL OUT DOG ID
+  },
+
   render: function () {
     if (!this.state.dogs) {
       return (<div></div>);
     }
 
+    var photo;
+
     var dogsToShow = this.state.dogs.map(function (dog) {
-      return(<DogsIndexItem key={dog.id} dog={dog} />)
+      for (var i = 0; i < dog.photos.length; i++) {
+        if (dog.photos[i].$t.includes("-x")) {
+          photo = (<img src={dog.photos[i].$t} onClick={this.goToDogShow} />);
+        }
+      }
+      // debugger;
+
+      return(
+        <li onClick={this.goToDogShow}>
+          {dog.name}
+          {photo}
+        </li>
+      )
     });
 
     return(
-      <div>
+      <ul>
         {dogsToShow}
-      </div>
+      </ul>
     )
   }
 

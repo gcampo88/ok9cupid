@@ -10,27 +10,62 @@ var DogsIndexItem = React.createClass({
     if (!this.props.dog) {
       return (<div></div>);
     }
-    // debugger
 
     var photos = this.props.dog.photos.map(function (photoObject) {
-      return <img src={photoObject.$t} />
+      if (photoObject.$t.includes("-x")) {
+        return (<li><img src={photoObject.$t} /></li>);
+      }
     });
 
-    // debugger
-    return(
-      <div>
-        Name: {this.props.dog.name}
-        Age: {this.props.dog.age}
-        Size: {this.props.dog.size}
-        Sex: {this.props.dog.sex}
-        Breed(s): {this.props.dog.breed}
-        About this pup: {this.props.dog.description}
-        City: {this.props.dog.city}
-        Zipcode: {this.props.dog.zipcode}
-        Shelter email: {this.props.dog.email}
-        Photos: {photos}
+    var breeds;
 
-      </div>
+    if (Array.isArray(this.props.dog.breeds)) {
+      breeds = this.props.dog.breeds.map(function (breedObj) {
+        return (<div>{breedObj.$t}</div>);
+      });
+    } else {
+      breeds = this.props.dog.breeds.$t;
+    }
+
+
+
+
+
+    return(
+      <section className="dog-show-content group">
+        <ul className="dog-show-photos group">{photos}</ul>
+
+        <label className="dog-show-label">Name:</label>
+         <label className="dog-show-info">{this.props.dog.name}</label>
+
+        <label className="dog-show-label">Age:</label>
+         <label className="dog-show-info">{this.props.dog.age}</label>
+
+        <label className="dog-show-label">Size:</label>
+         <label className="dog-show-info">{this.props.dog.size}</label>
+
+        <label className="dog-show-label">Sex:</label>
+         <label className="dog-show-info">{this.props.dog.sex}</label>
+
+        <label className="dog-show-label">Breed(s):</label>
+         <label className="dog-show-info">{breeds}</label>
+
+        <label className="dog-show-label">About this pup:</label>
+         <label className="dog-show-info">{this.props.dog.description}</label>
+
+        <label className="dog-show-label">City:</label>
+         <label className="dog-show-info">{this.props.dog.city}</label>
+
+        <label className="dog-show-label">Zipcode:</label>
+         <label className="dog-show-info">{this.props.dog.zipcode}</label>
+
+        <label className="dog-show-label">Shelter email:</label>
+         <label className="dog-show-info">{this.props.dog.email}</label>
+
+
+
+
+      </section>
     )
   }
 });

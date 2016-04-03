@@ -7,7 +7,10 @@ var DogUtil = {
      url: url,
      type: "GET",
      dataType: "jsonp",
-     data: { location: "10014" },
+     data: {
+       location: "10014",
+       animal: "dog"
+      },
      success: function (petResult) {
       //  debugger;
        DogActions.receiveDogs(petResult.petfinder.pets.pet);

@@ -32,18 +32,17 @@ DogStore.__onDispatch = function (payload) {
     DogStore.resetDogs();
     payload.dogs.forEach(function (dog) {
       dogItem = {};
-      debugger;
       dogItem.id = dog.id.$t;
       dogItem.name = dog.name.$t;
       dogItem.age = dog.age.$t;
       dogItem.size = dog.size.$t;
       dogItem.sex = dog.sex.$t;
-      dogItem.breeds = dog.breeds.breed.$t;
+      dogItem.breeds = dog.breeds.breed;
       dogItem.city = dog.contact.city.$t;
       dogItem.zipcode = dog.contact.zip.$t;
       dogItem.email = dog.contact.email.$t;
-      dogItem.description = dog.description.$t;
       dogItem.photos = dog.media.photos.photo;
+      dogItem.description = dog.description.$t;
       _dogs.push(dogItem);
       DogStore.__emitChange();
 

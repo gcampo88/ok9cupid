@@ -4,11 +4,7 @@ var DogsIndex = require('./dogs_index');
 var Browse = React.createClass({
 
   render: function () {
-    return(<div>
-      <a  className="tab" href="#">Browse results will go here</a>
-      <DogsIndex />
-
-    </div>)
+    return(<div><DogsIndex /></div>)
   }
 
 });
