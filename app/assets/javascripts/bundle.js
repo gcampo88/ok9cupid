@@ -54,15 +54,16 @@
 	var hashHistory = ReactRouter.hashHistory;
 	
 	var Profile = __webpack_require__(216);
-	var Browse = __webpack_require__(248);
-	var LoginForm = __webpack_require__(249);
-	var SignupForm = __webpack_require__(250);
-	var Splash = __webpack_require__(251);
-	var App = __webpack_require__(252);
-	var QuickMatch = __webpack_require__(253);
-	var SessionStore = __webpack_require__(221);
+	var Browse = __webpack_require__(246);
+	var LoginForm = __webpack_require__(248);
+	var SignupForm = __webpack_require__(249);
+	var Splash = __webpack_require__(250);
+	var App = __webpack_require__(251);
+	var QuickMatch = __webpack_require__(252);
+	var DogsIndexItem = __webpack_require__(253);
+	var DogUtil = __webpack_require__(256);
 	
-	window.DogUtil = __webpack_require__(254);
+	var SessionStore = __webpack_require__(221);
 	
 	var router = React.createElement(
 	  Router,
@@ -71,7 +72,11 @@
 	    Route,
 	    { path: '/', component: App, onEnter: _requireLoggedIn },
 	    React.createElement(Route, { path: 'profile', component: Profile }),
-	    React.createElement(Route, { path: 'browse', component: Browse }),
+	    React.createElement(
+	      Route,
+	      { path: 'browse', component: Browse },
+	      React.createElement(Route, { path: 'dogs/:id', component: DogsIndexItem })
+	    ),
 	    React.createElement(Route, { path: 'quickmatch', component: QuickMatch })
 	  ),
 	  React.createElement(Route, { path: '/login', component: LoginForm }),
@@ -24774,7 +24779,7 @@
 	var React = __webpack_require__(1);
 	var LinkedStateMixin = __webpack_require__(217);
 	var SessionStore = __webpack_require__(221);
-	var ApiUtil = __webpack_require__(246);
+	var ApiUtil = __webpack_require__(244);
 	
 	var Profile = React.createClass({
 	  displayName: 'Profile',
@@ -31988,12 +31993,10 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 244 */,
-/* 245 */,
-/* 246 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var SessionActions = __webpack_require__(247);
+	var SessionActions = __webpack_require__(245);
 	var SessionStore = __webpack_require__(221);
 	
 	ApiUtil = {
@@ -32082,7 +32085,7 @@
 	module.exports = ApiUtil;
 
 /***/ },
-/* 247 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Dispatcher = __webpack_require__(241);
@@ -32104,24 +32107,26 @@
 	};
 
 /***/ },
-/* 248 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var DogsIndex = __webpack_require__(247);
 	
 	var Browse = React.createClass({
-	  displayName: "Browse",
+	  displayName: 'Browse',
 	
 	
 	  render: function () {
 	    return React.createElement(
-	      "div",
+	      'div',
 	      null,
 	      React.createElement(
-	        "a",
-	        { className: "tab", href: "#" },
-	        "Browse results will go here"
-	      )
+	        'a',
+	        { className: 'tab', href: '#' },
+	        'Browse results will go here'
+	      ),
+	      React.createElement(DogsIndex, null)
 	    );
 	  }
 	
@@ -32130,11 +32135,72 @@
 	module.exports = Browse;
 
 /***/ },
-/* 249 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(246);
+	var DogStore = __webpack_require__(254);
+	var SessionStore = __webpack_require__(221);
+	var DogUtil = __webpack_require__(256);
+	var DogsIndexItem = __webpack_require__(253);
+	
+	var DogsIndex = React.createClass({
+	  displayName: 'DogsIndex',
+	
+	
+	  getInitialState: function () {
+	    return {
+	      dogs: DogStore.allFetchedDogs(),
+	      user: SessionStore.currentUser(),
+	      user_params: {
+	        location: SessionStore.currentUser().zipcode,
+	        age: SessionStore.currentUser().search_age,
+	        sex: SessionStore.currentUser().search_sex,
+	        size: SessionStore.currentUser().search_size
+	      }
+	    };
+	  },
+	
+	  componentDidMount: function () {
+	    DogStore.addListener(this._onChange);
+	    this.setState({
+	      dogs: DogUtil.fetchManyDogs()
+	    });
+	  },
+	
+	  _onChange: function () {
+	    this.setState({
+	      dogs: DogStore.allFetchedDogs()
+	      //need to change this to search with user params once i set them up right.
+	    });
+	  },
+	
+	  render: function () {
+	    if (!this.state.dogs) {
+	      return React.createElement('div', null);
+	    }
+	
+	    var dogsToShow = this.state.dogs.map(function (dog) {
+	      return React.createElement(DogsIndexItem, { key: dog.id, dog: dog });
+	    });
+	
+	    return React.createElement(
+	      'div',
+	      null,
+	      dogsToShow
+	    );
+	  }
+	
+	});
+	
+	module.exports = DogsIndex;
+
+/***/ },
+/* 248 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(244);
 	
 	var LoginForm = React.createClass({
 	  displayName: 'LoginForm',
@@ -32229,11 +32295,11 @@
 	module.exports = LoginForm;
 
 /***/ },
-/* 250 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(246);
+	var ApiUtil = __webpack_require__(244);
 	
 	var SignupForm = React.createClass({
 	  displayName: 'SignupForm',
@@ -32350,7 +32416,7 @@
 	module.exports = SignupForm;
 
 /***/ },
-/* 251 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32463,7 +32529,7 @@
 	module.exports = Splash;
 
 /***/ },
-/* 252 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32573,7 +32639,7 @@
 	module.exports = App;
 
 /***/ },
-/* 253 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32599,39 +32665,165 @@
 	module.exports = QuickMatch;
 
 /***/ },
+/* 253 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var DogStore = __webpack_require__(254);
+	var SessionStore = __webpack_require__(221);
+	var DogUtil = __webpack_require__(256);
+	
+	var DogsIndexItem = React.createClass({
+	  displayName: 'DogsIndexItem',
+	
+	
+	  render: function () {
+	    if (!this.props.dog) {
+	      return React.createElement('div', null);
+	    }
+	    // debugger
+	
+	    var photos = this.props.dog.photos.map(function (photoObject) {
+	      return React.createElement('img', { src: photoObject.$t });
+	    });
+	
+	    // debugger
+	    return React.createElement(
+	      'div',
+	      null,
+	      'Name: ',
+	      this.props.dog.name,
+	      'Age: ',
+	      this.props.dog.age,
+	      'Size: ',
+	      this.props.dog.size,
+	      'Sex: ',
+	      this.props.dog.sex,
+	      'Breed(s): ',
+	      this.props.dog.breed,
+	      'About this pup: ',
+	      this.props.dog.description,
+	      'City: ',
+	      this.props.dog.city,
+	      'Zipcode: ',
+	      this.props.dog.zipcode,
+	      'Shelter email: ',
+	      this.props.dog.email,
+	      'Photos: ',
+	      photos
+	    );
+	  }
+	});
+	
+	module.exports = DogsIndexItem;
+
+/***/ },
 /* 254 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(222).Store;
+	var Dispatcher = __webpack_require__(241);
+	var DogConstants = __webpack_require__(255);
+	
+	var DogStore = new Store(Dispatcher);
+	
+	var currentDog;
+	
+	var _dogs = [];
+	
+	DogStore.singleFetchedDog = function () {
+	  return currentDog;
+	};
+	
+	DogStore.allFetchedDogs = function () {
+	  return _dogs;
+	};
+	
+	DogStore.resetDogs = function () {
+	  _dogs = [];
+	};
+	
+	DogStore.resetDog = function (dog) {
+	  currentDog = dog;
+	};
+	
+	var dogItem;
+	
+	DogStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case DogConstants.DOGS_RECEIVED:
+	      DogStore.resetDogs();
+	      payload.dogs.forEach(function (dog) {
+	        dogItem = {};
+	        debugger;
+	        dogItem.id = dog.id.$t;
+	        dogItem.name = dog.name.$t;
+	        dogItem.age = dog.age.$t;
+	        dogItem.size = dog.size.$t;
+	        dogItem.sex = dog.sex.$t;
+	        dogItem.breeds = dog.breeds.breed.$t;
+	        dogItem.city = dog.contact.city.$t;
+	        dogItem.zipcode = dog.contact.zip.$t;
+	        dogItem.email = dog.contact.email.$t;
+	        dogItem.description = dog.description.$t;
+	        dogItem.photos = dog.media.photos.photo;
+	        _dogs.push(dogItem);
+	        DogStore.__emitChange();
+	      });
+	
+	      break;
+	    case DogConstants.DOG_RECEIVED:
+	      DogStore.resetDog(payload.dog);
+	      this.__emitChange();
+	
+	      break;
+	
+	  }
+	};
+	
+	module.exports = DogStore;
+
+/***/ },
+/* 255 */
 /***/ function(module, exports) {
 
+	module.exports = {
+	  DOGS_RECEIVED: "DOGS_RECEIVED",
+	  DOG_RECEIVED: "DOG_RECEIVED"
+	};
+
+/***/ },
+/* 256 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var DogActions = __webpack_require__(257);
+	
 	var DogUtil = {
-	  fetchManyDogs: function () {
-	    var url = 'http://api.petfinder.com/pet.getRandom?&key=a4994cca2cf214901ee9892d3c1f58bf&output=full&format=json';
+	  fetchManyDogs: function (searchParams) {
+	    var url = 'http://api.petfinder.com/pet.find?key=a4994cca2cf214901ee9892d3c1f58bf&output=full&format=json';
 	    $.ajax({
-	      url: url + '&callback=?',
+	      url: url,
 	      type: "GET",
 	      dataType: "jsonp",
-	      data: {},
-	      succcess: function () {
-	        alert("made it");
-	        console.log("Data retrieved from petfinder API");
+	      data: { location: "10014" },
+	      success: function (petResult) {
+	        //  debugger;
+	        DogActions.receiveDogs(petResult.petfinder.pets.pet);
 	      },
 	      error: function () {
 	        console.log("error in call to petfinder API");
-	      },
-	      complete: function () {
-	        console.log("completed ajax petfinder call..");
 	      }
 	    });
 	  },
 	
 	  fetchSingleDog: function (id) {
+	    var url = 'http://api.petfinder.com/pet.find?key=a4994cca2cf214901ee9892d3c1f58bf&output=full&format=json';
 	    $.ajax({
-	      url: "",
+	      url: url,
 	      type: "GET",
-	      dataType: "",
-	      data: "",
-	      contentType: false,
-	      processData: false,
-	      succcess: function () {
+	      dataType: "jsonp",
+	      data: { id: id },
+	      success: function () {
 	        console.log("Data retrieved from petfinder API");
 	      },
 	      error: function () {
@@ -32643,6 +32835,29 @@
 	};
 	
 	module.exports = DogUtil;
+
+/***/ },
+/* 257 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Dispatcher = __webpack_require__(241);
+	var DogConstants = __webpack_require__(255);
+	
+	module.exports = {
+	  receiveDogs: function (dogs) {
+	    Dispatcher.dispatch({
+	      actionType: DogConstants.DOGS_RECEIVED,
+	      dogs: dogs
+	    });
+	  },
+	
+	  receiveSingleDog: function (dog) {
+	    Dispatcher.dispatch({
+	      actionType: DogConstants.DOG_RECEIVED,
+	      dog: dog
+	    });
+	  }
+	};
 
 /***/ }
 /******/ ]);

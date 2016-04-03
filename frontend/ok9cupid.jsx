@@ -14,9 +14,12 @@ var SignupForm = require('./components/signup_form');
 var Splash = require('./components/splash');
 var App = require('./components/app');
 var QuickMatch = require('./components/quickmatch');
+var DogsIndexItem = require('./components/dogs_index_item');
+var DogUtil = require('./util/dog_util');
+
+
 var SessionStore = require('./stores/session');
 
-window.DogUtil = require('./util/dog_util');
 
 
 var router = (
@@ -24,7 +27,10 @@ var router = (
 
     <Route path="/" component={App} onEnter={_requireLoggedIn} >
       <Route path="profile" component={Profile} />
-      <Route path="browse" component={Browse} />
+      <Route path="browse" component={Browse} >
+        <Route path="dogs/:id" component={DogsIndexItem} />
+      </Route>
+
       <Route path="quickmatch" component={QuickMatch} />
     </Route>
 

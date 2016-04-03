@@ -1,34 +1,33 @@
+var DogActions = require('../actions/dog_actions');
+
 var DogUtil = {
- fetchManyDogs: function () {
-   var url = 'http://api.petfinder.com/pet.getRandom?&key=a4994cca2cf214901ee9892d3c1f58bf&output=full&format=json';
+ fetchManyDogs: function (searchParams) {
+   var url = 'http://api.petfinder.com/pet.find?key=a4994cca2cf214901ee9892d3c1f58bf&output=full&format=json';
    $.ajax({
-     url: url+'&callback=?',
+     url: url,
      type: "GET",
      dataType: "jsonp",
-     data: {},
-     succcess: function () {
-       alert("made it");
-       console.log("Data retrieved from petfinder API");
+     data: { location: "10014" },
+     success: function (petResult) {
+      //  debugger;
+       DogActions.receiveDogs(petResult.petfinder.pets.pet);
      },
      error: function () {
        console.log("error in call to petfinder API");
-     },
-     complete: function () {
-       console.log("completed ajax petfinder call..")
      }
    });
 
  },
 
+
  fetchSingleDog: function (id) {
+   var url = 'http://api.petfinder.com/pet.find?key=a4994cca2cf214901ee9892d3c1f58bf&output=full&format=json'
    $.ajax({
-     url: "",
+     url: url,
      type: "GET",
-     dataType: "",
-     data: "",
-     contentType: false,
-     processData: false,
-     succcess: function () {
+     dataType: "jsonp",
+     data: {id: id},
+     success: function () {
        console.log("Data retrieved from petfinder API");
      },
      error: function () {
