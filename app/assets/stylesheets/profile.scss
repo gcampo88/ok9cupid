@@ -34,7 +34,7 @@
 
 .profile-form {
   color: #474D59;
-  width: 600px;
+  width: 500px;
   height: auto;
   float: left;
   margin: 20px;
@@ -51,11 +51,10 @@
 
 .profile-form > label {
   padding: 40px 0;
-  width: 600px;
+  width: 500px;
 }
 
 .profile-form > textarea {
-  width: 600px;
   cursor: pointer;
   min-height: 60px;
 }
@@ -63,7 +62,7 @@
 
 .profile-param {
   cursor: pointer;
-  width: 600px;
+  width: 500px;
   height: auto;
   color: darkblue;
   font-size: 16px;
@@ -116,4 +115,20 @@
   border: 1px dotted lightblue;
   background: lightgray;
   color: black;
+}
+
+.profile-search > button {
+  background: #104DA1;
+  cursor: pointer;
+  background: #00D280;
+  padding: 5px;
+  color: white;
+  margin: 20px 0;
+  text-align: center;
+  font-size: 18px;
+  width: 100%;
+}
+
+.profile-search > button:hover {
+  color: darkblue;
 }

@@ -44,6 +44,30 @@ var DogsIndex = React.createClass({
     this.context.router.push("/dogs/");  //GIGI NEED TO FIGURE OUT HOW TO PULL OUT DOG ID
   },
 
+  // handleSearchSexUpdate: function (e) {
+  //   e.preventDefault();
+  //   this.setState({ sex: e.target.value });
+  // },
+  //
+  // handleSearchSizeUpdate: function (e) {
+  //   e.preventDefault();
+  //   this.setState({ size: e.target.value });
+  // },
+  //
+  // handleSearchAgeUpdate: function (e) {
+  //   e.preventDefault();
+  //   this.setState({ age: e.target.value });
+  // },
+
+  //instead of having all new ones here, just call Profile.handlesearchupdate
+  //methods. and then have an updateSearch method here that redoes search with
+  //updated search params. 
+
+  updateSearch: function (e) {
+    e.preventDefault();
+    // reset user
+  },
+
   render: function () {
     if (!this.state.dogs) {
       return (<div></div>);
@@ -68,9 +92,53 @@ var DogsIndex = React.createClass({
     });
 
     return(
-      <ul>
-        {dogsToShow}
-      </ul>
+      <div>
+
+        <ul>
+          {dogsToShow}
+        </ul>
+        <form className="profile-search"
+          encType="multipart/form-data">
+
+          <h3>My pup search:</h3>
+          <label>Age</label>
+          <select
+            value={this.state.age}
+            onChange={this.handleSearchAgeUpdate}
+            className="search-param">
+            <option>Baby</option>
+            <option>Young</option>
+            <option>Adult</option>
+            <option>Senior</option>
+          </select>
+
+          <label>Size</label>
+          <select
+            value={this.state.size}
+            onChange={this.handleSearchSizeUpdate}
+            className="search-param">
+            <option value="S">Small</option>
+            <option value="M">Medium</option>
+            <option value="L">Large</option>
+            <option value="XL">Very Large</option>
+          </select>
+
+          <label>Sex</label>
+           <select
+              value={this.state.sex}
+              onChange={this.handleSearchSexUpdate}
+              className="search-param">
+              <option value="F">Female</option>
+              <option value="M">Male</option>
+            </select>
+
+          <button
+            onClick={this.handleInput}>
+            Update search!
+          </button>
+
+        </form>
+      </div>
     )
   }
 

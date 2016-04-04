@@ -51,7 +51,23 @@ var Profile = React.createClass({
     }
   },
 
+  handleSearchSexUpdate: function (e) {
+    e.preventDefault();
+    this.setState({ sex: e.target.value });
+  },
+
+  handleSearchSizeUpdate: function (e) {
+    e.preventDefault();
+    this.setState({ size: e.target.value });
+  },
+
+  handleSearchAgeUpdate: function (e) {
+    e.preventDefault();
+    this.setState({ age: e.target.value });
+  },
+
   handleInput: function (e) {
+    e.preventDefault();
 
     var formData = new FormData();
     formData.append("user[search_sex]", this.state.sex);
@@ -75,6 +91,7 @@ var Profile = React.createClass({
         <div>Loading current user..</div>
       );
     }
+
 
     return(
       <section className="profile-items group">
@@ -118,25 +135,40 @@ var Profile = React.createClass({
 
           <h3>My pup search:</h3>
           <label>Age</label>
-          <input type="text"
-            className="search-param"
-            valueLink={this.linkState('age')}
-            onBlur={this.handleInput}
-            onKeyPress={this.handleEnter}/>
+          <select
+            value={this.state.age}
+            onChange={this.handleSearchAgeUpdate}
+            className="search-param">
+            <option>Baby</option>
+            <option>Young</option>
+            <option>Adult</option>
+            <option>Senior</option>
+          </select>
 
           <label>Size</label>
-          <input type="text"
-            className="search-param"
-            valueLink={this.linkState('size')}
-            onBlur={this.handleInput}
-            onKeyPress={this.handleEnter}/>
+          <select
+            value={this.state.size}
+            onChange={this.handleSearchSizeUpdate}
+            className="search-param">
+            <option value="S">Small</option>
+            <option value="M">Medium</option>
+            <option value="L">Large</option>
+            <option value="XL">Very Large</option>
+          </select>
 
           <label>Sex</label>
-          <input type="text"
-            className="search-param"
-            valueLink={this.linkState('sex')}
-            onBlur={this.handleInput}
-            onKeyPress={this.handleEnter}/>
+           <select
+              value={this.state.sex}
+              onChange={this.handleSearchSexUpdate}
+              className="search-param">
+              <option value="F">Female</option>
+              <option value="M">Male</option>
+            </select>
+
+          <button
+            onClick={this.handleInput}>
+            Save updated search
+          </button>
 
         </form>
 
@@ -144,6 +176,8 @@ var Profile = React.createClass({
   }
 
 });
+
+
 
 
 
