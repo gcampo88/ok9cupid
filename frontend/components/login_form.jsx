@@ -33,6 +33,17 @@ var LoginForm = React.createClass({
       this.context.router.push("/splash")
   },
 
+  guestLogin: function () {
+    this.setState({
+      email: "gigi.campo@gmail.com",
+      password: "password"
+    }, function () {
+        ApiUtil.login(this.state, function () {
+        this.context.router.push("/")
+      }.bind(this))
+    })
+  },
+
   render: function () {
     return(
       <section>
@@ -76,6 +87,11 @@ var LoginForm = React.createClass({
         <button
           className="toggle-existing-user-button"
           onClick={this.goToNewUser}>New user? Sign up!
+        </button>
+
+        <button
+          className="toggle-existing-user-button"
+          onClick={this.guestLogin}>Demo login
         </button>
 
 

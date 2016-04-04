@@ -49,6 +49,17 @@ var SignupForm = React.createClass({
       this.context.router.push("/login")
   },
 
+  guestLogin: function () {
+    this.setState({
+      email: "gigi.campo@gmail.com",
+      password: "password"
+    }, function () {
+        ApiUtil.login(this.state, function () {
+        this.context.router.push("/")
+      }.bind(this))
+    })
+  },
+
 
   render: function () {
 
@@ -86,6 +97,12 @@ var SignupForm = React.createClass({
        onClick={this.goToExistingUser}>
        Existing user? Sign in!
      </button>
+
+     <button
+       className="toggle-existing-user-button"
+       onClick={this.guestLogin}>Demo login
+     </button>
+
 
 
     </section>);

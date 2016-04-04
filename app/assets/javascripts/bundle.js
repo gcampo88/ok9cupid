@@ -32875,6 +32875,17 @@
 	    this.context.router.push("/splash");
 	  },
 	
+	  guestLogin: function () {
+	    this.setState({
+	      email: "gigi.campo@gmail.com",
+	      password: "password"
+	    }, function () {
+	      ApiUtil.login(this.state, function () {
+	        this.context.router.push("/");
+	      }.bind(this));
+	    });
+	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      'section',
@@ -32931,6 +32942,13 @@
 	          className: 'toggle-existing-user-button',
 	          onClick: this.goToNewUser },
 	        'New user? Sign up!'
+	      ),
+	      React.createElement(
+	        'button',
+	        {
+	          className: 'toggle-existing-user-button',
+	          onClick: this.guestLogin },
+	        'Demo login'
 	      )
 	    );
 	  }
@@ -32996,6 +33014,17 @@
 	    this.context.router.push("/login");
 	  },
 	
+	  guestLogin: function () {
+	    this.setState({
+	      email: "gigi.campo@gmail.com",
+	      password: "password"
+	    }, function () {
+	      ApiUtil.login(this.state, function () {
+	        this.context.router.push("/");
+	      }.bind(this));
+	    });
+	  },
+	
 	  render: function () {
 	
 	    return React.createElement(
@@ -33056,6 +33085,13 @@
 	          className: 'toggle-existing-user-button',
 	          onClick: this.goToExistingUser },
 	        'Existing user? Sign in!'
+	      ),
+	      React.createElement(
+	        'button',
+	        {
+	          className: 'toggle-existing-user-button',
+	          onClick: this.guestLogin },
+	        'Demo login'
 	      )
 	    );
 	  }
@@ -33086,6 +33122,17 @@
 	
 	  goToExistingUser: function () {
 	    this.context.router.push('/login');
+	  },
+	
+	  guestLogin: function () {
+	    this.setState({
+	      email: "gigi.campo@gmail.com",
+	      password: "password"
+	    }, function () {
+	      ApiUtil.login(this.state, function () {
+	        this.context.router.push("/");
+	      }.bind(this));
+	    });
 	  },
 	
 	  render: function () {
@@ -33171,6 +33218,13 @@
 	          className: 'toggle-existing-user-button',
 	          onClick: this.goToExistingUser },
 	        'Existing user? Sign in!'
+	      ),
+	      React.createElement(
+	        'button',
+	        {
+	          className: 'toggle-existing-user-button',
+	          onClick: this.guestLogin },
+	        'Demo login'
 	      )
 	    );
 	  }
