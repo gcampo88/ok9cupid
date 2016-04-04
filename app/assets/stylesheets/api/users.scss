@@ -100,3 +100,21 @@
 .toggle-existing-user-button:hover {
   background: lightblue;
 }
+
+.facebook-login {
+  background: #47639E;
+  color: #FFFFFF;
+  text-style: none;
+  text-decoration: none;
+  font-size: 24px;
+  padding: 10px;
+  margin: 0 100px;
+  border: 0.5px solid white;
+  display: block;
+  text-align: center;
+  font-family: sans-serif;
+}
+
+.facebook-login > em {
+  font-size: 30px;
+}

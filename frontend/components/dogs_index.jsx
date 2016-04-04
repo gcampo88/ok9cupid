@@ -14,59 +14,81 @@ var DogsIndex = React.createClass({
     return ({
       dogs: DogStore.allFetchedDogs(),
       user: SessionStore.currentUser(),
-      user_params: {
-        location: SessionStore.currentUser().zipcode,
-        age: SessionStore.currentUser().search_age,
-        sex: SessionStore.currentUser().search_sex,
-        size: SessionStore.currentUser().search_size
-      }
+      search_age: SessionStore.currentUser().search_age,
+      search_sex: SessionStore.currentUser().search_sex,
+      search_size: SessionStore.currentUser().search_size,
+      zipcode: SessionStore.currentUser().zipcode
     });
   },
 
   componentDidMount: function () {
-    DogStore.addListener(this._onChange);
-    this.setState({
-      dogs: DogUtil.fetchManyDogs()
-    });
+    this.dogListener = DogStore.addListener(this._onChange);
+    this.sessionListener = SessionStore.addListener(this._onChange);
+    // DogUtil.fetchManyDogs({ location: "10014" });
 
+    // GIGI NOTE THAT YOU COMMENTED OUT ALL THE DOGUTIL CALLS; COMMENT THEM BACK IN AFTER MONDAY!
+  },
+
+  componentWillUnmount: function () {
+    this.dogListener.remove();
+    this.sessionListener.remove();
   },
 
   _onChange: function () {
     this.setState({
-      dogs: DogStore.allFetchedDogs()
-      //need to change this to search with user params once i set them up right.
+      dogs: DogStore.allFetchedDogs(),
+      user: SessionStore.currentUser(),
+      search_age: SessionStore.currentUser().search_age,
+      search_sex: SessionStore.currentUser().search_sex,
+      search_size: SessionStore.currentUser().search_size
     });
   },
 
-  // goToDogShow: function (e) {
-  //   e.preventDefault();
-  //   debugger;
-  //   this.context.router.push("/dogs/");  //GIGI NEED TO FIGURE OUT HOW TO PULL OUT DOG ID
-  // },
+  redoSearch: function () {
+    var user_params =
+    {
+      age: this.state.search_age,
+      sex: this.state.search_sex,
+      size: this.state.search_size,
+      location: this.state.zipcode.toString(),
+      animal: "dog"
 
-  // handleSearchSexUpdate: function (e) {
-  //   e.preventDefault();
-  //   this.setState({ sex: e.target.value });
-  // },
-  //
-  // handleSearchSizeUpdate: function (e) {
-  //   e.preventDefault();
-  //   this.setState({ size: e.target.value });
-  // },
-  //
-  // handleSearchAgeUpdate: function (e) {
-  //   e.preventDefault();
-  //   this.setState({ age: e.target.value });
-  // },
+    }
 
-  //instead of having all new ones here, just call Profile.handlesearchupdate
-  //methods. and then have an updateSearch method here that redoes search with
-  //updated search params.
-  //
-  // updateSearch: function (e) {
-  //   e.preventDefault();
-  //   // reset user
-  // },
+    debugger;
+    // DogUtil.fetchManyDogs(user_params)
+  },
+
+
+  updateSearchParams: function (e) {
+    e.preventDefault();
+    var formData = new FormData();
+
+    formData.append("user[search_sex]", this.state.search_sex);
+    formData.append("user[search_size]", this.state.search_size);
+    formData.append("user[search_age]", this.state.search_age);
+    formData.append("user[zipcode]", this.state.zipcode);
+
+    ApiUtil.updateUserProfile(formData, this.state.user.id);
+
+    this.redoSearch();
+  },
+
+  handleSearchSexUpdate: function (e) {
+    this.setState({ search_sex: e.target.value });
+  },
+
+  handleSearchSizeUpdate: function (e) {
+    this.setState({ search_size: e.target.value });
+  },
+
+  handleSearchAgeUpdate: function (e) {
+    this.setState({ search_age: e.target.value });
+  },
+
+  handleSearchZipUpdate: function (e) {
+    this.setState({ zipcode: e.target.value });
+  },
 
   render: function () {
     if (!this.state.dogs) {
@@ -80,30 +102,30 @@ var DogsIndex = React.createClass({
     var dogsToShow = this.state.dogs.map(function (dog) {
       return(<DogsIndexItem dog={dog} key={dog.id}/>)
     });
+    // debugger;
 
     return(
-      <div>
-        <ul>
+      <div className="browse-items group" >
+        <ul className="dogs-index group">
           {dogsToShow}
         </ul>
-        <form className="profile-search"
-          encType="multipart/form-data">
+        <form className="profile-search">
 
           <h3>My pup search:</h3>
           <label>Age</label>
           <select
-            value={this.state.age}
+            value={this.state.search_age}
             onChange={this.handleSearchAgeUpdate}
             className="search-param">
-            <option>Baby</option>
-            <option>Young</option>
-            <option>Adult</option>
-            <option>Senior</option>
+            <option value="Baby">Baby</option>
+            <option value="Young">Young</option>
+            <option value="Adult">Adult</option>
+            <option value="Senior">Senior</option>
           </select>
 
           <label>Size</label>
           <select
-            value={this.state.size}
+            value={this.state.search_size}
             onChange={this.handleSearchSizeUpdate}
             className="search-param">
             <option value="S">Small</option>
@@ -114,15 +136,25 @@ var DogsIndex = React.createClass({
 
           <label>Sex</label>
            <select
-              value={this.state.sex}
+              value={this.state.search_sex}
               onChange={this.handleSearchSexUpdate}
               className="search-param">
               <option value="F">Female</option>
               <option value="M">Male</option>
             </select>
 
+
+            <label>Zipcode</label>
+             <input
+                type="text"
+                placeholder="zipcode"
+                value={this.state.zipcode}
+                onChange={this.handleSearchZipUpdate}
+                className="search-param">
+              </input>
+
           <button
-            onClick={this.handleInput}>
+            onClick={this.updateSearchParams}>
             Update search!
           </button>
 

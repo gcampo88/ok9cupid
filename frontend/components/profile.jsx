@@ -28,6 +28,7 @@ var Profile = React.createClass({
       about_me: SessionStore.currentUser().about_me,
       about_life: SessionStore.currentUser().about_life,
       idealdog: SessionStore.currentUser().ideal_dog,
+      zipcode: SessionStore.currentUser().zipcode,
       imageUrl: SessionStore.currentUser().imageUrl
     });
   },
@@ -66,6 +67,11 @@ var Profile = React.createClass({
     this.setState({ age: e.target.value });
   },
 
+  handleSearchZipUpdate: function (e) {
+    e.preventDefault();
+    this.setState({ zipcode: e.target.value });
+  },
+
   handleInput: function (e) {
     e.preventDefault();
 
@@ -76,6 +82,7 @@ var Profile = React.createClass({
     formData.append("user[about_me]", this.state.about_me);
     formData.append("user[about_life]", this.state.about_life);
     formData.append("user[ideal_dog]", this.state.ideal_dog);
+    formData.append("user[zipcode]", this.state.zipcode);
 
     if (this.state.imageFile) {
       formData.append("user[image]", this.state.imageFile);
@@ -110,6 +117,7 @@ var Profile = React.createClass({
 
           <label>About Me</label>
             <textarea
+            placeholder="all about me"
             className="profile-param"
             valueLink={this.linkState('about_me')}
             onBlur={this.handleInput}
@@ -117,13 +125,15 @@ var Profile = React.createClass({
 
           <label>What kind of life can I give a pup?</label>
           <textarea
+          placeholder="all about my future pup's life"
           className="profile-param"
           valueLink={this.linkState('about_life')}
           onBlur={this.handleInput}
           onKeyPress={this.handleEnter}/>
 
         <label>My ideal dog is:</label>
-          <input type="text"
+          <textarea
+            placeholder="all about my future pup"
             className="profile-param"
             valueLink={this.linkState('ideal_dog')}
             onBlur={this.handleInput}
@@ -164,6 +174,15 @@ var Profile = React.createClass({
               <option value="F">Female</option>
               <option value="M">Male</option>
             </select>
+
+          <label>Zipcode</label>
+           <input
+              type="text"
+              placeholder="zipcode"
+              value={this.state.zipcode}
+              onChange={this.handleSearchZipUpdate}
+              className="search-param">
+            </input>
 
           <button
             onClick={this.handleInput}>

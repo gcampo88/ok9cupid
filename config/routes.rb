@@ -12,4 +12,6 @@ Rails.application.routes.draw do
 
   end
 
+  get "auth/facebook/callback", to: "omniauth#facebook"
+
 end

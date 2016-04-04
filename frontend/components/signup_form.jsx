@@ -74,14 +74,19 @@ var SignupForm = React.createClass({
 
        <input className="user-acq-button" type="submit" value="Create account!" />
 
-     </form>
+       <a className="facebook-login"
+         href="/auth/facebook">
+         Log in with facebook!
+       </a>
 
+     </form>
 
      <button
        className="toggle-existing-user-button"
        onClick={this.goToExistingUser}>
        Existing user? Sign in!
      </button>
+
 
     </section>);
 

@@ -9,7 +9,7 @@
 
 User.destroy_all
 
-User.create!(name: "Gigi", zipcode: 10014, email: "gigi.campo@gmail.com",
+User.create!(name: "Gigi", zipcode: "10014", email: "gigi.campo@gmail.com",
 search_sex: "F", search_age: 3, search_size: "small", about_me: "I have a pup!",
 about_life: "snuggles and playing fetch", password: "lunapup",
 ideal_dog: "likes to sleep in but is still game to go for a jog. Also loves carrots.")

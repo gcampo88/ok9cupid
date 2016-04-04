@@ -55,12 +55,12 @@
 	
 	var Profile = __webpack_require__(216);
 	var Browse = __webpack_require__(246);
-	var LoginForm = __webpack_require__(253);
-	var SignupForm = __webpack_require__(254);
-	var Splash = __webpack_require__(255);
-	var App = __webpack_require__(256);
-	var QuickMatch = __webpack_require__(257);
-	var DogDetail = __webpack_require__(258);
+	var LoginForm = __webpack_require__(254);
+	var SignupForm = __webpack_require__(255);
+	var Splash = __webpack_require__(256);
+	var App = __webpack_require__(257);
+	var QuickMatch = __webpack_require__(258);
+	var DogDetail = __webpack_require__(253);
 	var DogUtil = __webpack_require__(250);
 	
 	var SessionStore = __webpack_require__(221);
@@ -24804,6 +24804,7 @@
 	      about_me: SessionStore.currentUser().about_me,
 	      about_life: SessionStore.currentUser().about_life,
 	      idealdog: SessionStore.currentUser().ideal_dog,
+	      zipcode: SessionStore.currentUser().zipcode,
 	      imageUrl: SessionStore.currentUser().imageUrl
 	    });
 	  },
@@ -24841,6 +24842,11 @@
 	    this.setState({ age: e.target.value });
 	  },
 	
+	  handleSearchZipUpdate: function (e) {
+	    e.preventDefault();
+	    this.setState({ zipcode: e.target.value });
+	  },
+	
 	  handleInput: function (e) {
 	    e.preventDefault();
 	
@@ -24851,6 +24857,7 @@
 	    formData.append("user[about_me]", this.state.about_me);
 	    formData.append("user[about_life]", this.state.about_life);
 	    formData.append("user[ideal_dog]", this.state.ideal_dog);
+	    formData.append("user[zipcode]", this.state.zipcode);
 	
 	    if (this.state.imageFile) {
 	      formData.append("user[image]", this.state.imageFile);
@@ -24892,6 +24899,7 @@
 	          'About Me'
 	        ),
 	        React.createElement('textarea', {
+	          placeholder: 'all about me',
 	          className: 'profile-param',
 	          valueLink: this.linkState('about_me'),
 	          onBlur: this.handleInput,
@@ -24902,6 +24910,7 @@
 	          'What kind of life can I give a pup?'
 	        ),
 	        React.createElement('textarea', {
+	          placeholder: 'all about my future pup\'s life',
 	          className: 'profile-param',
 	          valueLink: this.linkState('about_life'),
 	          onBlur: this.handleInput,
@@ -24911,7 +24920,8 @@
 	          null,
 	          'My ideal dog is:'
 	        ),
-	        React.createElement('input', { type: 'text',
+	        React.createElement('textarea', {
+	          placeholder: 'all about my future pup',
 	          className: 'profile-param',
 	          valueLink: this.linkState('ideal_dog'),
 	          onBlur: this.handleInput,
@@ -25012,6 +25022,17 @@
 	            'Male'
 	          )
 	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Zipcode'
+	        ),
+	        React.createElement('input', {
+	          type: 'text',
+	          placeholder: 'zipcode',
+	          value: this.state.zipcode,
+	          onChange: this.handleSearchZipUpdate,
+	          className: 'search-param' }),
 	        React.createElement(
 	          'button',
 	          {
@@ -32225,58 +32246,79 @@
 	    return {
 	      dogs: DogStore.allFetchedDogs(),
 	      user: SessionStore.currentUser(),
-	      user_params: {
-	        location: SessionStore.currentUser().zipcode,
-	        age: SessionStore.currentUser().search_age,
-	        sex: SessionStore.currentUser().search_sex,
-	        size: SessionStore.currentUser().search_size
-	      }
+	      search_age: SessionStore.currentUser().search_age,
+	      search_sex: SessionStore.currentUser().search_sex,
+	      search_size: SessionStore.currentUser().search_size,
+	      zipcode: SessionStore.currentUser().zipcode
 	    };
 	  },
 	
 	  componentDidMount: function () {
-	    DogStore.addListener(this._onChange);
-	    this.setState({
-	      dogs: DogUtil.fetchManyDogs()
-	    });
+	    this.dogListener = DogStore.addListener(this._onChange);
+	    this.sessionListener = SessionStore.addListener(this._onChange);
+	    // DogUtil.fetchManyDogs({ location: "10014" });
+	
+	    // GIGI NOTE THAT YOU COMMENTED OUT ALL THE DOGUTIL CALLS; COMMENT THEM BACK IN AFTER MONDAY!
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.dogListener.remove();
+	    this.sessionListener.remove();
 	  },
 	
 	  _onChange: function () {
 	    this.setState({
-	      dogs: DogStore.allFetchedDogs()
-	      //need to change this to search with user params once i set them up right.
+	      dogs: DogStore.allFetchedDogs(),
+	      user: SessionStore.currentUser(),
+	      search_age: SessionStore.currentUser().search_age,
+	      search_sex: SessionStore.currentUser().search_sex,
+	      search_size: SessionStore.currentUser().search_size
 	    });
 	  },
 	
-	  // goToDogShow: function (e) {
-	  //   e.preventDefault();
-	  //   debugger;
-	  //   this.context.router.push("/dogs/");  //GIGI NEED TO FIGURE OUT HOW TO PULL OUT DOG ID
-	  // },
+	  redoSearch: function () {
+	    var user_params = {
+	      age: this.state.search_age,
+	      sex: this.state.search_sex,
+	      size: this.state.search_size,
+	      location: this.state.zipcode.toString(),
+	      animal: "dog"
 	
-	  // handleSearchSexUpdate: function (e) {
-	  //   e.preventDefault();
-	  //   this.setState({ sex: e.target.value });
-	  // },
-	  //
-	  // handleSearchSizeUpdate: function (e) {
-	  //   e.preventDefault();
-	  //   this.setState({ size: e.target.value });
-	  // },
-	  //
-	  // handleSearchAgeUpdate: function (e) {
-	  //   e.preventDefault();
-	  //   this.setState({ age: e.target.value });
-	  // },
+	    };
 	
-	  //instead of having all new ones here, just call Profile.handlesearchupdate
-	  //methods. and then have an updateSearch method here that redoes search with
-	  //updated search params.
-	  //
-	  // updateSearch: function (e) {
-	  //   e.preventDefault();
-	  //   // reset user
-	  // },
+	    debugger;
+	    // DogUtil.fetchManyDogs(user_params)
+	  },
+	
+	  updateSearchParams: function (e) {
+	    e.preventDefault();
+	    var formData = new FormData();
+	
+	    formData.append("user[search_sex]", this.state.search_sex);
+	    formData.append("user[search_size]", this.state.search_size);
+	    formData.append("user[search_age]", this.state.search_age);
+	    formData.append("user[zipcode]", this.state.zipcode);
+	
+	    ApiUtil.updateUserProfile(formData, this.state.user.id);
+	
+	    this.redoSearch();
+	  },
+	
+	  handleSearchSexUpdate: function (e) {
+	    this.setState({ search_sex: e.target.value });
+	  },
+	
+	  handleSearchSizeUpdate: function (e) {
+	    this.setState({ search_size: e.target.value });
+	  },
+	
+	  handleSearchAgeUpdate: function (e) {
+	    this.setState({ search_age: e.target.value });
+	  },
+	
+	  handleSearchZipUpdate: function (e) {
+	    this.setState({ zipcode: e.target.value });
+	  },
 	
 	  render: function () {
 	    if (!this.state.dogs) {
@@ -32290,19 +32332,19 @@
 	    var dogsToShow = this.state.dogs.map(function (dog) {
 	      return React.createElement(DogsIndexItem, { dog: dog, key: dog.id });
 	    });
+	    // debugger;
 	
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'browse-items group' },
 	      React.createElement(
 	        'ul',
-	        null,
+	        { className: 'dogs-index group' },
 	        dogsToShow
 	      ),
 	      React.createElement(
 	        'form',
-	        { className: 'profile-search',
-	          encType: 'multipart/form-data' },
+	        { className: 'profile-search' },
 	        React.createElement(
 	          'h3',
 	          null,
@@ -32316,27 +32358,27 @@
 	        React.createElement(
 	          'select',
 	          {
-	            value: this.state.age,
+	            value: this.state.search_age,
 	            onChange: this.handleSearchAgeUpdate,
 	            className: 'search-param' },
 	          React.createElement(
 	            'option',
-	            null,
+	            { value: 'Baby' },
 	            'Baby'
 	          ),
 	          React.createElement(
 	            'option',
-	            null,
+	            { value: 'Young' },
 	            'Young'
 	          ),
 	          React.createElement(
 	            'option',
-	            null,
+	            { value: 'Adult' },
 	            'Adult'
 	          ),
 	          React.createElement(
 	            'option',
-	            null,
+	            { value: 'Senior' },
 	            'Senior'
 	          )
 	        ),
@@ -32348,7 +32390,7 @@
 	        React.createElement(
 	          'select',
 	          {
-	            value: this.state.size,
+	            value: this.state.search_size,
 	            onChange: this.handleSearchSizeUpdate,
 	            className: 'search-param' },
 	          React.createElement(
@@ -32380,7 +32422,7 @@
 	        React.createElement(
 	          'select',
 	          {
-	            value: this.state.sex,
+	            value: this.state.search_sex,
 	            onChange: this.handleSearchSexUpdate,
 	            className: 'search-param' },
 	          React.createElement(
@@ -32395,9 +32437,20 @@
 	          )
 	        ),
 	        React.createElement(
+	          'label',
+	          null,
+	          'Zipcode'
+	        ),
+	        React.createElement('input', {
+	          type: 'text',
+	          placeholder: 'zipcode',
+	          value: this.state.zipcode,
+	          onChange: this.handleSearchZipUpdate,
+	          className: 'search-param' }),
+	        React.createElement(
 	          'button',
 	          {
-	            onClick: this.handleInput },
+	            onClick: this.updateSearchParams },
 	          'Update search!'
 	        )
 	      )
@@ -32502,15 +32555,14 @@
 	
 	var DogUtil = {
 	  fetchManyDogs: function (searchParams) {
+	
+	    var data = searchParams ? searchParams : { location: "10014", animal: "dog" };
 	    var url = 'http://api.petfinder.com/pet.find?key=a4994cca2cf214901ee9892d3c1f58bf&output=full&format=json';
 	    $.ajax({
 	      url: url,
 	      type: "GET",
 	      dataType: "jsonp",
-	      data: {
-	        location: "10014",
-	        animal: "dog"
-	      },
+	      data: data,
 	      success: function (petResult) {
 	        DogActions.receiveDogs(petResult.petfinder.pets.pet);
 	      },
@@ -32567,7 +32619,7 @@
 	var DogStore = __webpack_require__(248);
 	var SessionStore = __webpack_require__(221);
 	var DogUtil = __webpack_require__(250);
-	var DogDetail = __webpack_require__(258);
+	var DogDetail = __webpack_require__(253);
 	
 	var DogsIndexItem = React.createClass({
 	  displayName: 'DogsIndexItem',
@@ -32595,8 +32647,12 @@
 	
 	    return React.createElement(
 	      'li',
-	      { onClick: this.showDetail, key: this.props.dog.id },
-	      this.props.dog.name,
+	      { className: 'browse-item', onClick: this.showDetail, key: this.props.dog.id },
+	      React.createElement(
+	        'div',
+	        null,
+	        this.props.dog.name
+	      ),
 	      photo
 	    );
 	  }
@@ -32606,475 +32662,6 @@
 
 /***/ },
 /* 253 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(244);
-	
-	var LoginForm = React.createClass({
-	  displayName: 'LoginForm',
-	
-	
-	  contextTypes: {
-	    router: React.PropTypes.object.isRequired
-	  },
-	
-	  getInitialState: function () {
-	    return {
-	      email: "",
-	      password: ""
-	    };
-	  },
-	
-	  updateEmail: function (e) {
-	    this.setState({ email: e.currentTarget.value });
-	  },
-	
-	  updatePassword: function (e) {
-	    this.setState({ password: e.currentTarget.value });
-	  },
-	
-	  handleSubmit: function (e) {
-	    e.preventDefault();
-	    ApiUtil.login(this.state, function () {
-	      this.context.router.push("/");
-	    }.bind(this));
-	  },
-	
-	  goToNewUser: function (e) {
-	    this.context.router.push("/splash");
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'section',
-	      null,
-	      React.createElement(
-	        'header',
-	        { className: 'user-acq-header' },
-	        React.createElement(
-	          'h1',
-	          null,
-	          'Sign in!'
-	        )
-	      ),
-	      React.createElement(
-	        'form',
-	        { className: 'user-acq-form group',
-	          onSubmit: this.handleSubmit },
-	        React.createElement(
-	          'label',
-	          null,
-	          'Email Address'
-	        ),
-	        React.createElement('input', {
-	          className: 'user-acq-input',
-	          type: 'text',
-	          onChange: this.updateEmail,
-	          value: this.state.email
-	        }),
-	        React.createElement(
-	          'label',
-	          null,
-	          'Password'
-	        ),
-	        React.createElement('input', {
-	          className: 'user-acq-input',
-	          type: 'password',
-	          onChange: this.updatePassword,
-	          value: this.state.password
-	        }),
-	        React.createElement('input', {
-	          className: 'user-acq-button',
-	          type: 'submit',
-	          value: 'Sign in!' })
-	      ),
-	      React.createElement(
-	        'button',
-	        {
-	          className: 'toggle-existing-user-button',
-	          onClick: this.goToNewUser },
-	        'New user? Sign up!'
-	      )
-	    );
-	  }
-	
-	});
-	
-	module.exports = LoginForm;
-
-/***/ },
-/* 254 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(244);
-	
-	var SignupForm = React.createClass({
-	  displayName: 'SignupForm',
-	
-	
-	  contextTypes: {
-	    router: React.PropTypes.object.isRequired
-	  },
-	
-	  handleSubmit: function (e) {
-	    e.preventDefault();
-	    var formData = new FormData();
-	    formData.append("user[name]", this.state.name);
-	    formData.append("user[zipcode]", this.state.zipcode);
-	    formData.append("user[email]", this.state.email);
-	    formData.append("user[password]", this.state.password);
-	
-	    ApiUtil.createUser(formData, function () {
-	      this.context.router.push("/");
-	    }.bind(this));
-	  },
-	
-	  getInitialState: function () {
-	    return {
-	      name: "",
-	      zipcode: "",
-	      email: "",
-	      password: ""
-	    };
-	  },
-	
-	  updateName: function (e) {
-	    this.setState({ name: e.currentTarget.value });
-	  },
-	
-	  updateZip: function (e) {
-	    this.setState({ zipcode: e.currentTarget.value });
-	  },
-	
-	  updateEmail: function (e) {
-	    this.setState({ email: e.currentTarget.value });
-	  },
-	
-	  updatePassword: function (e) {
-	    this.setState({ password: e.currentTarget.value });
-	  },
-	
-	  goToExistingUser: function (e) {
-	    this.context.router.push("/login");
-	  },
-	
-	  render: function () {
-	
-	    return React.createElement(
-	      'section',
-	      null,
-	      React.createElement(
-	        'header',
-	        { className: 'user-acq-header' },
-	        React.createElement(
-	          'h1',
-	          null,
-	          'Almost there!'
-	        ),
-	        React.createElement(
-	          'h3',
-	          null,
-	          'Your new best friend is only a few clicks away.'
-	        )
-	      ),
-	      React.createElement(
-	        'form',
-	        { className: 'user-acq-form group', onSubmit: this.handleSubmit },
-	        React.createElement(
-	          'label',
-	          null,
-	          'Name'
-	        ),
-	        React.createElement('input', { className: 'user-acq-input', type: 'text', onChange: this.updateName, value: this.state.name }),
-	        React.createElement(
-	          'label',
-	          null,
-	          'Zip Code'
-	        ),
-	        React.createElement('input', { className: 'user-acq-input', type: 'text', onChange: this.updateZip, value: this.state.zipcode }),
-	        React.createElement(
-	          'label',
-	          null,
-	          'Email Address'
-	        ),
-	        React.createElement('input', { className: 'user-acq-input', type: 'text', onChange: this.updateEmail, value: this.state.email }),
-	        React.createElement(
-	          'label',
-	          null,
-	          'Password'
-	        ),
-	        React.createElement('input', { className: 'user-acq-input', type: 'password', onChange: this.updatePassword, value: this.state.password }),
-	        React.createElement('input', { className: 'user-acq-button', type: 'submit', value: 'Create account!' })
-	      ),
-	      React.createElement(
-	        'button',
-	        {
-	          className: 'toggle-existing-user-button',
-	          onClick: this.goToExistingUser },
-	        'Existing user? Sign in!'
-	      )
-	    );
-	  }
-	
-	  //
-	
-	});
-	
-	module.exports = SignupForm;
-
-/***/ },
-/* 255 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	
-	var Splash = React.createClass({
-	  displayName: 'Splash',
-	
-	  contextTypes: {
-	    router: React.PropTypes.object.isRequired
-	  },
-	
-	  handleSubmit: function (e) {
-	    e.preventDefault();
-	    this.context.router.push('/signup');
-	  },
-	
-	  goToExistingUser: function () {
-	    this.context.router.push('/login');
-	  },
-	
-	  render: function () {
-	
-	    return React.createElement(
-	      'section',
-	      null,
-	      React.createElement(
-	        'header',
-	        { className: 'user-acq-header' },
-	        React.createElement(
-	          'h1',
-	          null,
-	          'Find your new best friend in minutes.'
-	        )
-	      ),
-	      React.createElement(
-	        'form',
-	        { className: 'user-acq-form group', onSubmit: this.handleSubmit },
-	        React.createElement(
-	          'h4',
-	          null,
-	          'I am a '
-	        ),
-	        React.createElement(
-	          'select',
-	          null,
-	          React.createElement(
-	            'option',
-	            null,
-	            'Puppy'
-	          ),
-	          React.createElement(
-	            'option',
-	            null,
-	            'Dog'
-	          ),
-	          React.createElement(
-	            'option',
-	            null,
-	            'Canine'
-	          ),
-	          React.createElement(
-	            'option',
-	            null,
-	            'Hound'
-	          )
-	        ),
-	        React.createElement(
-	          'select',
-	          null,
-	          React.createElement(
-	            'option',
-	            null,
-	            'Cuddler'
-	          ),
-	          React.createElement(
-	            'option',
-	            null,
-	            'Lover'
-	          ),
-	          React.createElement(
-	            'option',
-	            null,
-	            'Enthusiast'
-	          ),
-	          React.createElement(
-	            'option',
-	            null,
-	            'Admirer'
-	          ),
-	          React.createElement(
-	            'option',
-	            null,
-	            'Nut'
-	          )
-	        ),
-	        React.createElement('input', { className: 'user-acq-button', type: 'submit', value: 'Continue' })
-	      ),
-	      React.createElement(
-	        'button',
-	        {
-	          className: 'toggle-existing-user-button',
-	          onClick: this.goToExistingUser },
-	        'Existing user? Sign in!'
-	      )
-	    );
-	  }
-	
-	});
-	
-	module.exports = Splash;
-
-/***/ },
-/* 256 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var SessionStore = __webpack_require__(221);
-	
-	var App = React.createClass({
-	  displayName: 'App',
-	
-	  contextTypes: {
-	    router: React.PropTypes.object.isRequired
-	  },
-	
-	  getInitialState: function () {
-	    return {
-	      currentUser: SessionStore.currentUser()
-	    };
-	  },
-	
-	  componentDidMount: function () {
-	    this.sessionStoreToken = SessionStore.addListener(this.handleChange);
-	
-	    this.handleChange();
-	  },
-	
-	  componentWillUnmount: function () {
-	    this.sessionStoreToken.remove();
-	  },
-	
-	  componentWillReceiveProps: function () {},
-	
-	  handleChange: function () {
-	    if (SessionStore.isLoggedIn()) {
-	      this.setState({ currentUser: SessionStore.currentUser() });
-	    } else {
-	      this.context.router.push("/login");
-	    }
-	  },
-	
-	  handleProfileClick: function () {
-	    this.context.router.push("/profile");
-	  },
-	
-	  handleBrowseClick: function () {
-	    this.context.router.push("/browse");
-	  },
-	
-	  handleQuickMatchClick: function () {
-	    this.context.router.push("/quickmatch");
-	  },
-	
-	  logOut: function (e) {
-	    e.preventDefault();
-	    ApiUtil.logout(function () {
-	      this.context.router.push("/login");
-	    }.bind(this));
-	  },
-	
-	  render: function () {
-	    var button, welcomeMessage;
-	
-	    if (this.state.currentUser) {
-	      welcomeMessage = React.createElement(
-	        'h2',
-	        { className: 'welcome' },
-	        'Welcome, ',
-	        this.state.currentUser.name,
-	        '!'
-	      );
-	      button = React.createElement(
-	        'button',
-	        { className: 'logout', onClick: this.logOut },
-	        'Logout'
-	      );
-	    }
-	
-	    return React.createElement(
-	      'div',
-	      null,
-	      welcomeMessage,
-	      React.createElement(
-	        'nav',
-	        { className: 'tabs group' },
-	        React.createElement('div', { className: 'root-tab-logo' }),
-	        React.createElement(
-	          'li',
-	          { className: 'root-tab', onClick: this.handleBrowseClick },
-	          'Browse Dogs'
-	        ),
-	        React.createElement(
-	          'li',
-	          { className: 'root-tab', onClick: this.handleQuickMatchClick },
-	          'QuickMatch'
-	        ),
-	        React.createElement(
-	          'li',
-	          { className: 'root-tab', onClick: this.handleProfileClick },
-	          'Profile'
-	        ),
-	        button
-	      ),
-	      this.props.children
-	    );
-	  }
-	
-	});
-	
-	module.exports = App;
-
-/***/ },
-/* 257 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	
-	var QuickMatch = React.createClass({
-	  displayName: "QuickMatch",
-	
-	
-	  render: function () {
-	    return React.createElement(
-	      "div",
-	      null,
-	      React.createElement(
-	        "a",
-	        { className: "tab", href: "#" },
-	        "Quickmatch info will go here"
-	      )
-	    );
-	  }
-	
-	});
-	
-	module.exports = QuickMatch;
-
-/***/ },
-/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -33246,6 +32833,487 @@
 	});
 	
 	module.exports = DogDetail;
+
+/***/ },
+/* 254 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(244);
+	
+	var LoginForm = React.createClass({
+	  displayName: 'LoginForm',
+	
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  getInitialState: function () {
+	    return {
+	      email: "",
+	      password: ""
+	    };
+	  },
+	
+	  updateEmail: function (e) {
+	    this.setState({ email: e.currentTarget.value });
+	  },
+	
+	  updatePassword: function (e) {
+	    this.setState({ password: e.currentTarget.value });
+	  },
+	
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+	    ApiUtil.login(this.state, function () {
+	      this.context.router.push("/");
+	    }.bind(this));
+	  },
+	
+	  goToNewUser: function (e) {
+	    this.context.router.push("/splash");
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'section',
+	      null,
+	      React.createElement(
+	        'header',
+	        { className: 'user-acq-header' },
+	        React.createElement(
+	          'h1',
+	          null,
+	          'Sign in!'
+	        )
+	      ),
+	      React.createElement(
+	        'form',
+	        { className: 'user-acq-form group',
+	          onSubmit: this.handleSubmit },
+	        React.createElement(
+	          'label',
+	          null,
+	          'Email Address'
+	        ),
+	        React.createElement('input', {
+	          className: 'user-acq-input',
+	          type: 'text',
+	          onChange: this.updateEmail,
+	          value: this.state.email
+	        }),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Password'
+	        ),
+	        React.createElement('input', {
+	          className: 'user-acq-input',
+	          type: 'password',
+	          onChange: this.updatePassword,
+	          value: this.state.password
+	        }),
+	        React.createElement('input', {
+	          className: 'user-acq-button',
+	          type: 'submit',
+	          value: 'Sign in!' }),
+	        React.createElement(
+	          'a',
+	          { className: 'facebook-login',
+	            href: '/auth/facebook' },
+	          'Log in with facebook!'
+	        )
+	      ),
+	      React.createElement(
+	        'button',
+	        {
+	          className: 'toggle-existing-user-button',
+	          onClick: this.goToNewUser },
+	        'New user? Sign up!'
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = LoginForm;
+
+/***/ },
+/* 255 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(244);
+	
+	var SignupForm = React.createClass({
+	  displayName: 'SignupForm',
+	
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+	    var formData = new FormData();
+	    formData.append("user[name]", this.state.name);
+	    formData.append("user[zipcode]", this.state.zipcode);
+	    formData.append("user[email]", this.state.email);
+	    formData.append("user[password]", this.state.password);
+	
+	    ApiUtil.createUser(formData, function () {
+	      this.context.router.push("/");
+	    }.bind(this));
+	  },
+	
+	  getInitialState: function () {
+	    return {
+	      name: "",
+	      zipcode: "",
+	      email: "",
+	      password: ""
+	    };
+	  },
+	
+	  updateName: function (e) {
+	    this.setState({ name: e.currentTarget.value });
+	  },
+	
+	  updateZip: function (e) {
+	    this.setState({ zipcode: e.currentTarget.value });
+	  },
+	
+	  updateEmail: function (e) {
+	    this.setState({ email: e.currentTarget.value });
+	  },
+	
+	  updatePassword: function (e) {
+	    this.setState({ password: e.currentTarget.value });
+	  },
+	
+	  goToExistingUser: function (e) {
+	    this.context.router.push("/login");
+	  },
+	
+	  render: function () {
+	
+	    return React.createElement(
+	      'section',
+	      null,
+	      React.createElement(
+	        'header',
+	        { className: 'user-acq-header' },
+	        React.createElement(
+	          'h1',
+	          null,
+	          'Almost there!'
+	        ),
+	        React.createElement(
+	          'h3',
+	          null,
+	          'Your new best friend is only a few clicks away.'
+	        )
+	      ),
+	      React.createElement(
+	        'form',
+	        { className: 'user-acq-form group', onSubmit: this.handleSubmit },
+	        React.createElement(
+	          'label',
+	          null,
+	          'Name'
+	        ),
+	        React.createElement('input', { className: 'user-acq-input', type: 'text', onChange: this.updateName, value: this.state.name }),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Zip Code'
+	        ),
+	        React.createElement('input', { className: 'user-acq-input', type: 'text', onChange: this.updateZip, value: this.state.zipcode }),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Email Address'
+	        ),
+	        React.createElement('input', { className: 'user-acq-input', type: 'text', onChange: this.updateEmail, value: this.state.email }),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Password'
+	        ),
+	        React.createElement('input', { className: 'user-acq-input', type: 'password', onChange: this.updatePassword, value: this.state.password }),
+	        React.createElement('input', { className: 'user-acq-button', type: 'submit', value: 'Create account!' }),
+	        React.createElement(
+	          'a',
+	          { className: 'facebook-login',
+	            href: '/auth/facebook' },
+	          'Log in with facebook!'
+	        )
+	      ),
+	      React.createElement(
+	        'button',
+	        {
+	          className: 'toggle-existing-user-button',
+	          onClick: this.goToExistingUser },
+	        'Existing user? Sign in!'
+	      )
+	    );
+	  }
+	
+	  //
+	
+	});
+	
+	module.exports = SignupForm;
+
+/***/ },
+/* 256 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var Splash = React.createClass({
+	  displayName: 'Splash',
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+	    this.context.router.push('/signup');
+	  },
+	
+	  goToExistingUser: function () {
+	    this.context.router.push('/login');
+	  },
+	
+	  render: function () {
+	
+	    return React.createElement(
+	      'section',
+	      null,
+	      React.createElement(
+	        'header',
+	        { className: 'user-acq-header' },
+	        React.createElement(
+	          'h1',
+	          null,
+	          'Find your new best friend in minutes.'
+	        )
+	      ),
+	      React.createElement(
+	        'form',
+	        { className: 'user-acq-form group', onSubmit: this.handleSubmit },
+	        React.createElement(
+	          'h4',
+	          null,
+	          'I am a '
+	        ),
+	        React.createElement(
+	          'select',
+	          null,
+	          React.createElement(
+	            'option',
+	            null,
+	            'Puppy'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            'Dog'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            'Canine'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            'Hound'
+	          )
+	        ),
+	        React.createElement(
+	          'select',
+	          null,
+	          React.createElement(
+	            'option',
+	            null,
+	            'Cuddler'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            'Lover'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            'Enthusiast'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            'Admirer'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            'Nut'
+	          )
+	        ),
+	        React.createElement('input', { className: 'user-acq-button', type: 'submit', value: 'Continue' })
+	      ),
+	      React.createElement(
+	        'button',
+	        {
+	          className: 'toggle-existing-user-button',
+	          onClick: this.goToExistingUser },
+	        'Existing user? Sign in!'
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Splash;
+
+/***/ },
+/* 257 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var SessionStore = __webpack_require__(221);
+	
+	var App = React.createClass({
+	  displayName: 'App',
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  getInitialState: function () {
+	    return {
+	      currentUser: SessionStore.currentUser()
+	    };
+	  },
+	
+	  componentDidMount: function () {
+	    this.sessionStoreToken = SessionStore.addListener(this.handleChange);
+	
+	    this.handleChange();
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.sessionStoreToken.remove();
+	  },
+	
+	  componentWillReceiveProps: function () {},
+	
+	  handleChange: function () {
+	    if (SessionStore.isLoggedIn()) {
+	      this.setState({ currentUser: SessionStore.currentUser() });
+	    } else {
+	      this.context.router.push("/login");
+	    }
+	  },
+	
+	  handleProfileClick: function () {
+	    this.context.router.push("/profile");
+	  },
+	
+	  handleBrowseClick: function () {
+	    this.context.router.push("/browse");
+	  },
+	
+	  handleQuickMatchClick: function () {
+	    this.context.router.push("/quickmatch");
+	  },
+	
+	  logOut: function (e) {
+	    e.preventDefault();
+	    ApiUtil.logout(function () {
+	      this.context.router.push("/login");
+	    }.bind(this));
+	  },
+	
+	  render: function () {
+	    var button, welcomeMessage;
+	
+	    if (this.state.currentUser) {
+	      welcomeMessage = React.createElement(
+	        'h2',
+	        { className: 'welcome' },
+	        'Welcome, ',
+	        this.state.currentUser.name,
+	        '!'
+	      );
+	      button = React.createElement(
+	        'button',
+	        { className: 'logout', onClick: this.logOut },
+	        'Logout'
+	      );
+	    }
+	
+	    return React.createElement(
+	      'div',
+	      null,
+	      welcomeMessage,
+	      React.createElement(
+	        'nav',
+	        { className: 'tabs group' },
+	        React.createElement('div', { className: 'root-tab-logo' }),
+	        React.createElement(
+	          'li',
+	          { className: 'root-tab', onClick: this.handleBrowseClick },
+	          'Browse Dogs'
+	        ),
+	        React.createElement(
+	          'li',
+	          { className: 'root-tab', onClick: this.handleQuickMatchClick },
+	          'QuickMatch'
+	        ),
+	        React.createElement(
+	          'li',
+	          { className: 'root-tab', onClick: this.handleProfileClick },
+	          'Profile'
+	        ),
+	        button
+	      ),
+	      this.props.children
+	    );
+	  }
+	
+	});
+	
+	module.exports = App;
+
+/***/ },
+/* 258 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var QuickMatch = React.createClass({
+	  displayName: "QuickMatch",
+	
+	
+	  render: function () {
+	    return React.createElement(
+	      "div",
+	      null,
+	      React.createElement(
+	        "a",
+	        { className: "tab", href: "#" },
+	        "Quickmatch info will go here"
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = QuickMatch;
 
 /***/ }
 /******/ ]);

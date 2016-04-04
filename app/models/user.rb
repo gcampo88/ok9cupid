@@ -1,8 +1,8 @@
 class User < ActiveRecord::Base
   attr_reader :password
-  validates :name, :password_digest, :zipcode, :email, presence: true
-  validates :email, uniqueness: true
-  validates :password, length: { minimum: 6, allow_nil: true }
+  # validates :name, :password_digest, :zipcode, :email, presence: true
+  # validates :email, uniqueness: true
+  # validates :password, length: { minimum: 6, allow_nil: true }
 
   before_validation :ensure_session_token
 
@@ -19,6 +19,27 @@ class User < ActiveRecord::Base
 
   def self.generate_session_token
     SecureRandom.base64
+  end
+
+  def self.find_or_create_by_auth_hash(auth_hash)
+    provider = auth_hash[:provider]
+    uid = auth_hash[:uid]
+
+    user = User.find_by(provider: provider, uid: uid)
+    return user if user
+
+    name = auth_hash[:info][:name]
+    email = auth_hash[:info][:email]
+
+    user = User.create!(
+      provider: provider,
+      uid: uid,
+      name: name,
+      email: email
+      )
+
+    return user
+
   end
 
   def reset_session_token!

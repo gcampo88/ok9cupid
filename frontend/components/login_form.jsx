@@ -65,6 +65,11 @@ var LoginForm = React.createClass({
             type="submit"
             value="Sign in!" />
 
+          <a className="facebook-login"
+            href="/auth/facebook">
+            Log in with facebook!
+          </a>
+
         </form>
 
 
@@ -72,6 +77,7 @@ var LoginForm = React.createClass({
           className="toggle-existing-user-button"
           onClick={this.goToNewUser}>New user? Sign up!
         </button>
+
 
       </section>
 

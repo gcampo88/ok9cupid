@@ -43,7 +43,7 @@ ApiUtil = {
         callback && callback();
       },
       error: function () {
-        console.log("error logging out in ajax")
+        console.log("error logging out in ajax");
       }
     });
   },
