@@ -24,9 +24,12 @@ var DogsIndex = React.createClass({
   componentDidMount: function () {
     this.dogListener = DogStore.addListener(this._onChange);
     this.sessionListener = SessionStore.addListener(this._onChange);
-    // DogUtil.fetchManyDogs({ location: "10014" });
+    DogUtil.fetchManyDogs({ location: "10014" });
 
     // GIGI NOTE THAT YOU COMMENTED OUT ALL THE DOGUTIL CALLS; COMMENT THEM BACK IN AFTER MONDAY!
+    //nextPage will redo search with offset argument of lastOffset (figure out how to pull that out)
+    //of query results... in onDispatch, set lastOffset var to payload.lastOffset
+    //follow tommy's demo for pgsearch pagination. use kaminari? in that case do i use "page" keyword? yes. 
   },
 
   componentWillUnmount: function () {
