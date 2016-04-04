@@ -60,7 +60,7 @@
 	var Splash = __webpack_require__(255);
 	var App = __webpack_require__(256);
 	var QuickMatch = __webpack_require__(257);
-	var DogsIndexItem = __webpack_require__(252);
+	var DogDetail = __webpack_require__(258);
 	var DogUtil = __webpack_require__(250);
 	
 	var SessionStore = __webpack_require__(221);
@@ -72,11 +72,8 @@
 	    Route,
 	    { path: '/', component: App, onEnter: _requireLoggedIn },
 	    React.createElement(Route, { path: 'profile', component: Profile }),
-	    React.createElement(
-	      Route,
-	      { path: 'browse', component: Browse },
-	      React.createElement(Route, { path: 'dogs/:id', component: DogsIndexItem })
-	    ),
+	    React.createElement(Route, { path: 'browse', component: Browse }),
+	    React.createElement(Route, { path: 'dogs/:dogId', component: DogDetail }),
 	    React.createElement(Route, { path: 'quickmatch', component: QuickMatch })
 	  ),
 	  React.createElement(Route, { path: '/login', component: LoginForm }),
@@ -32251,11 +32248,11 @@
 	    });
 	  },
 	
-	  goToDogShow: function (e) {
-	    e.preventDefault();
-	    debugger;
-	    this.context.router.push("/dogs/"); //GIGI NEED TO FIGURE OUT HOW TO PULL OUT DOG ID
-	  },
+	  // goToDogShow: function (e) {
+	  //   e.preventDefault();
+	  //   debugger;
+	  //   this.context.router.push("/dogs/");  //GIGI NEED TO FIGURE OUT HOW TO PULL OUT DOG ID
+	  // },
 	
 	  // handleSearchSexUpdate: function (e) {
 	  //   e.preventDefault();
@@ -32275,11 +32272,11 @@
 	  //instead of having all new ones here, just call Profile.handlesearchupdate
 	  //methods. and then have an updateSearch method here that redoes search with
 	  //updated search params.
-	
-	  updateSearch: function (e) {
-	    e.preventDefault();
-	    // reset user
-	  },
+	  //
+	  // updateSearch: function (e) {
+	  //   e.preventDefault();
+	  //   // reset user
+	  // },
 	
 	  render: function () {
 	    if (!this.state.dogs) {
@@ -32288,20 +32285,10 @@
 	
 	    var photo;
 	
-	    var dogsToShow = this.state.dogs.map(function (dog) {
-	      for (var i = 0; i < dog.photos.length; i++) {
-	        if (dog.photos[i].$t.includes("-x")) {
-	          photo = React.createElement('img', { src: dog.photos[i].$t, onClick: this.goToDogShow });
-	        }
-	      }
-	      // debugger;
+	    var that = this;
 	
-	      return React.createElement(
-	        'li',
-	        { onClick: this.goToDogShow },
-	        dog.name,
-	        photo
-	      );
+	    var dogsToShow = this.state.dogs.map(function (dog) {
+	      return React.createElement(DogsIndexItem, { dog: dog, key: dog.id });
 	    });
 	
 	    return React.createElement(
@@ -32476,7 +32463,19 @@
 	
 	      break;
 	    case DogConstants.DOG_RECEIVED:
-	      DogStore.resetDog(payload.dog);
+	      receivedDog = {};
+	      receivedDog.id = payload.dog.id.$t;
+	      receivedDog.name = payload.dog.name.$t;
+	      receivedDog.age = payload.dog.age.$t;
+	      receivedDog.size = payload.dog.size.$t;
+	      receivedDog.sex = payload.dog.sex.$t;
+	      receivedDog.breeds = payload.dog.breeds.breed;
+	      receivedDog.city = payload.dog.contact.city.$t;
+	      receivedDog.zipcode = payload.dog.contact.zip.$t;
+	      receivedDog.email = payload.dog.contact.email.$t;
+	      receivedDog.photos = payload.dog.media.photos.photo;
+	      receivedDog.description = payload.dog.description.$t;
+	      DogStore.resetDog(receivedDog);
 	      this.__emitChange();
 	
 	      break;
@@ -32513,28 +32512,23 @@
 	        animal: "dog"
 	      },
 	      success: function (petResult) {
-	        //  debugger;
 	        DogActions.receiveDogs(petResult.petfinder.pets.pet);
 	      },
-	      error: function () {
-	        console.log("error in call to petfinder API");
-	      }
+	      error: function () {}
 	    });
 	  },
 	
 	  fetchSingleDog: function (id) {
-	    var url = 'http://api.petfinder.com/pet.find?key=a4994cca2cf214901ee9892d3c1f58bf&output=full&format=json';
+	    var url = 'http://api.petfinder.com/pet.get?key=a4994cca2cf214901ee9892d3c1f58bf&format=json';
 	    $.ajax({
 	      url: url,
 	      type: "GET",
 	      dataType: "jsonp",
 	      data: { id: id },
-	      success: function () {
-	        console.log("Data retrieved from petfinder API");
+	      success: function (petResult) {
+	        DogActions.receiveSingleDog(petResult.petfinder.pet);
 	      },
-	      error: function () {
-	        console.log("error in call to petfinder API");
-	      }
+	      error: function () {}
 	    });
 	  }
 	
@@ -32573,138 +32567,37 @@
 	var DogStore = __webpack_require__(248);
 	var SessionStore = __webpack_require__(221);
 	var DogUtil = __webpack_require__(250);
+	var DogDetail = __webpack_require__(258);
 	
 	var DogsIndexItem = React.createClass({
 	  displayName: 'DogsIndexItem',
 	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  showDetail: function () {
+	    this.context.router.push("/dogs/" + this.props.dog.id);
+	  },
 	
 	  render: function () {
 	    if (!this.props.dog) {
 	      return React.createElement('div', null);
 	    }
 	
-	    var photos = this.props.dog.photos.map(function (photoObject) {
-	      if (photoObject.$t.includes("-x")) {
-	        return React.createElement(
-	          'li',
-	          null,
-	          React.createElement('img', { src: photoObject.$t })
-	        );
+	    var photo;
+	
+	    for (var i = 0; i < this.props.dog.photos.length; i++) {
+	      if (this.props.dog.photos[i].$t.includes("-x")) {
+	        photo = React.createElement('img', { src: this.props.dog.photos[i].$t });
 	      }
-	    });
-	
-	    var breeds;
-	
-	    if (Array.isArray(this.props.dog.breeds)) {
-	      breeds = this.props.dog.breeds.map(function (breedObj) {
-	        return React.createElement(
-	          'div',
-	          null,
-	          breedObj.$t
-	        );
-	      });
-	    } else {
-	      breeds = this.props.dog.breeds.$t;
 	    }
 	
 	    return React.createElement(
-	      'section',
-	      { className: 'dog-show-content group' },
-	      React.createElement(
-	        'ul',
-	        { className: 'dog-show-photos group' },
-	        photos
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-label' },
-	        'Name:'
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-info' },
-	        this.props.dog.name
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-label' },
-	        'Age:'
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-info' },
-	        this.props.dog.age
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-label' },
-	        'Size:'
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-info' },
-	        this.props.dog.size
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-label' },
-	        'Sex:'
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-info' },
-	        this.props.dog.sex
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-label' },
-	        'Breed(s):'
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-info' },
-	        breeds
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-label' },
-	        'About this pup:'
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-info' },
-	        this.props.dog.description
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-label' },
-	        'City:'
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-info' },
-	        this.props.dog.city
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-label' },
-	        'Zipcode:'
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-info' },
-	        this.props.dog.zipcode
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-label' },
-	        'Shelter email:'
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-info' },
-	        this.props.dog.email
-	      )
+	      'li',
+	      { onClick: this.showDetail, key: this.props.dog.id },
+	      this.props.dog.name,
+	      photo
 	    );
 	  }
 	});
@@ -33179,6 +33072,180 @@
 	});
 	
 	module.exports = QuickMatch;
+
+/***/ },
+/* 258 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var DogStore = __webpack_require__(248);
+	var DogUtil = __webpack_require__(250);
+	
+	var DogDetail = React.createClass({
+	  displayName: 'DogDetail',
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  getInitialState: function () {
+	    return this.getStateFromDogStore();
+	  },
+	
+	  getStateFromDogStore: function () {
+	    var currentDog = DogStore.singleFetchedDog();;
+	    return { dog: currentDog };
+	  },
+	
+	  _onChange: function () {
+	    this.setState(this.getStateFromDogStore());
+	  },
+	
+	  componentDidMount: function () {
+	    this.dogListener = DogStore.addListener(this._onChange);
+	    DogUtil.fetchSingleDog(parseInt(this.props.params.dogId));
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.dogListener.remove();
+	  },
+	
+	  componentWillReceiveProps: function (newProps) {
+	    this._onChange();
+	  },
+	
+	  render: function () {
+	    if (!this.state.dog) {
+	      return React.createElement('div', null);
+	    }
+	
+	    var photos = this.state.dog.photos.map(function (photoObject) {
+	      if (photoObject.$t.includes("-x")) {
+	        return React.createElement(
+	          'li',
+	          null,
+	          React.createElement('img', { src: photoObject.$t })
+	        );
+	      }
+	    });
+	
+	    var breeds;
+	
+	    if (Array.isArray(this.state.dog.breeds)) {
+	      breeds = this.state.dog.breeds.map(function (breedObj) {
+	        return React.createElement(
+	          'div',
+	          null,
+	          breedObj.$t
+	        );
+	      });
+	    } else {
+	      breeds = this.state.dog.breeds.$t;
+	    }
+	
+	    return React.createElement(
+	      'section',
+	      { className: 'dog-show-content group' },
+	      React.createElement(
+	        'ul',
+	        { className: 'dog-show-photos group' },
+	        photos
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'Name:'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        this.state.dog.name
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'Age:'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        this.state.dog.age
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'Size:'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        this.state.dog.size
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'Sex:'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        this.state.dog.sex
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'Breed(s):'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        breeds
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'About this pup:'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        this.state.dog.description
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'City:'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        this.state.dog.city
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'Zipcode:'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        this.state.dog.zipcode
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'Shelter email:'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        this.state.dog.email
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = DogDetail;
 
 /***/ }
 /******/ ]);

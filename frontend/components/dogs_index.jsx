@@ -38,11 +38,11 @@ var DogsIndex = React.createClass({
     });
   },
 
-  goToDogShow: function (e) {
-    e.preventDefault();
-    debugger;
-    this.context.router.push("/dogs/");  //GIGI NEED TO FIGURE OUT HOW TO PULL OUT DOG ID
-  },
+  // goToDogShow: function (e) {
+  //   e.preventDefault();
+  //   debugger;
+  //   this.context.router.push("/dogs/");  //GIGI NEED TO FIGURE OUT HOW TO PULL OUT DOG ID
+  // },
 
   // handleSearchSexUpdate: function (e) {
   //   e.preventDefault();
@@ -61,12 +61,12 @@ var DogsIndex = React.createClass({
 
   //instead of having all new ones here, just call Profile.handlesearchupdate
   //methods. and then have an updateSearch method here that redoes search with
-  //updated search params. 
-
-  updateSearch: function (e) {
-    e.preventDefault();
-    // reset user
-  },
+  //updated search params.
+  //
+  // updateSearch: function (e) {
+  //   e.preventDefault();
+  //   // reset user
+  // },
 
   render: function () {
     if (!this.state.dogs) {
@@ -75,25 +75,14 @@ var DogsIndex = React.createClass({
 
     var photo;
 
-    var dogsToShow = this.state.dogs.map(function (dog) {
-      for (var i = 0; i < dog.photos.length; i++) {
-        if (dog.photos[i].$t.includes("-x")) {
-          photo = (<img src={dog.photos[i].$t} onClick={this.goToDogShow} />);
-        }
-      }
-      // debugger;
+    var that = this;
 
-      return(
-        <li onClick={this.goToDogShow}>
-          {dog.name}
-          {photo}
-        </li>
-      )
+    var dogsToShow = this.state.dogs.map(function (dog) {
+      return(<DogsIndexItem dog={dog} key={dog.id}/>)
     });
 
     return(
       <div>
-
         <ul>
           {dogsToShow}
         </ul>

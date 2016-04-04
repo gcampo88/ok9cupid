@@ -51,7 +51,19 @@ DogStore.__onDispatch = function (payload) {
 
       break;
     case DogConstants.DOG_RECEIVED:
-      DogStore.resetDog(payload.dog);
+      receivedDog = {};
+      receivedDog.id = payload.dog.id.$t;
+      receivedDog.name = payload.dog.name.$t;
+      receivedDog.age = payload.dog.age.$t;
+      receivedDog.size = payload.dog.size.$t;
+      receivedDog.sex = payload.dog.sex.$t;
+      receivedDog.breeds = payload.dog.breeds.breed;
+      receivedDog.city = payload.dog.contact.city.$t;
+      receivedDog.zipcode = payload.dog.contact.zip.$t;
+      receivedDog.email = payload.dog.contact.email.$t;
+      receivedDog.photos = payload.dog.media.photos.photo;
+      receivedDog.description = payload.dog.description.$t;
+      DogStore.resetDog(receivedDog);
       this.__emitChange();
 
       break;
