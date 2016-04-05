@@ -60,9 +60,9 @@ var QuickMatch = React.createClass({
 
     var photos;
     if (this.state.dog.photos) {
-      photos = this.state.dog.photos.map(function (photoObject) {
+      photos = this.state.dog.photos.map(function (photoObject, index) {
         if (photoObject.$t.includes("-x")) {
-          return (<li><img src={photoObject.$t} /></li>);
+          return (<li key={index}><img src={photoObject.$t} /></li>);
         }
       });
     }
@@ -70,8 +70,8 @@ var QuickMatch = React.createClass({
     var breeds;
 
     if (Array.isArray(this.state.dog.breeds)) {
-      breeds = this.state.dog.breeds.map(function (breedObj) {
-        return (<div>{breedObj.$t}</div>);
+      breeds = this.state.dog.breeds.map(function (breedObj, index) {
+        return (<div key={index}>{breedObj.$t}</div>);
       });
     } else {
       breeds = this.state.dog.breeds.$t;

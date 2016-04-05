@@ -32802,12 +32802,12 @@
 	
 	    var photos;
 	    if (this.state.dog.photos) {
-	      photos = this.state.dog.photos.map(function (photoObject) {
+	      photos = this.state.dog.photos.map(function (photoObject, index) {
 	        if (photoObject.$t.includes("-x")) {
 	          return React.createElement(
 	            'li',
 	            null,
-	            React.createElement('img', { src: photoObject.$t })
+	            React.createElement('img', { src: photoObject.$t, key: index })
 	          );
 	        }
 	      });
@@ -32816,10 +32816,10 @@
 	    var breeds;
 	
 	    if (Array.isArray(this.state.dog.breeds)) {
-	      breeds = this.state.dog.breeds.map(function (breedObj) {
+	      breeds = this.state.dog.breeds.map(function (breedObj, index) {
 	        return React.createElement(
 	          'div',
-	          null,
+	          { key: index },
 	          breedObj.$t
 	        );
 	      });
@@ -33507,11 +33507,11 @@
 	
 	    var photos;
 	    if (this.state.dog.photos) {
-	      photos = this.state.dog.photos.map(function (photoObject) {
+	      photos = this.state.dog.photos.map(function (photoObject, index) {
 	        if (photoObject.$t.includes("-x")) {
 	          return React.createElement(
 	            'li',
-	            null,
+	            { key: index },
 	            React.createElement('img', { src: photoObject.$t })
 	          );
 	        }
@@ -33521,10 +33521,10 @@
 	    var breeds;
 	
 	    if (Array.isArray(this.state.dog.breeds)) {
-	      breeds = this.state.dog.breeds.map(function (breedObj) {
+	      breeds = this.state.dog.breeds.map(function (breedObj, index) {
 	        return React.createElement(
 	          'div',
-	          null,
+	          { key: index },
 	          breedObj.$t
 	        );
 	      });

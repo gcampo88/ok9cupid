@@ -42,9 +42,9 @@ var DogDetail = React.createClass({
 
     var photos;
     if (this.state.dog.photos) {
-      photos = this.state.dog.photos.map(function (photoObject) {
+      photos = this.state.dog.photos.map(function (photoObject, index) {
         if (photoObject.$t.includes("-x")) {
-          return (<li><img src={photoObject.$t} /></li>);
+          return (<li><img src={photoObject.$t} key={index} /></li>);
         }
       });
     }
@@ -52,8 +52,8 @@ var DogDetail = React.createClass({
     var breeds;
 
     if (Array.isArray(this.state.dog.breeds)) {
-      breeds = this.state.dog.breeds.map(function (breedObj) {
-        return (<div>{breedObj.$t}</div>);
+      breeds = this.state.dog.breeds.map(function (breedObj, index) {
+        return (<div key={index}>{breedObj.$t}</div>);
       });
     } else {
       breeds = this.state.dog.breeds.$t;
@@ -65,7 +65,7 @@ var DogDetail = React.createClass({
 
         <label className="dog-show-label">Name:</label>
          <label className="dog-show-info">{this.state.dog.name}</label>
-         
+
          <ul className="dog-show-photos group">{photos}</ul>
 
         <label className="dog-show-label">Age:</label>
