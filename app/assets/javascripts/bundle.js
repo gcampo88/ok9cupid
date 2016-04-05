@@ -32271,13 +32271,7 @@
 	  componentDidMount: function () {
 	    this.dogListener = DogStore.addListener(this._onChange);
 	    this.sessionListener = SessionStore.addListener(this._onChange);
-	    debugger;
 	    this.redoSearch();
-	
-	    // GIGI NOTE THAT YOU COMMENTED OUT ALL THE DOGUTIL CALLS; COMMENT THEM BACK IN AFTER MONDAY!
-	    //nextPage will redo search with offset argument of lastOffset (figure out how to pull that out)
-	    //of query results... in onDispatch, set lastOffset var to payload.lastOffset
-	    //follow tommy's demo for pgsearch pagination. use kaminari? in that case do i use "page" keyword? yes.
 	  },
 	
 	  componentWillUnmount: function () {
@@ -32608,7 +32602,9 @@
 	      receivedDog.city = payload.dog.contact.city.$t;
 	      receivedDog.zipcode = payload.dog.contact.zip.$t;
 	      receivedDog.email = payload.dog.contact.email.$t;
-	      receivedDog.photos = payload.dog.media.photos.photo;
+	      if (payload.dog.media.photos) {
+	        receivedDog.photos = payload.dog.media.photos.photo;
+	      }
 	      receivedDog.description = payload.dog.description.$t;
 	      DogStore.resetDog(receivedDog);
 	      this.__emitChange();
@@ -32645,7 +32641,6 @@
 	      dataType: "jsonp",
 	      data: data,
 	      success: function (petResult) {
-	        //  debugger;
 	        DogActions.receiveDogs(petResult.petfinder.pets.pet, petResult.petfinder.lastOffset.$t);
 	      },
 	      error: function () {}
@@ -32659,6 +32654,20 @@
 	      type: "GET",
 	      dataType: "jsonp",
 	      data: { id: id },
+	      success: function (petResult) {
+	        DogActions.receiveSingleDog(petResult.petfinder.pet);
+	      },
+	      error: function () {}
+	    });
+	  },
+	
+	  fetchRandomDog: function (searchParams) {
+	    var url = 'http://api.petfinder.com/pet.getRandom?key=a4994cca2cf214901ee9892d3c1f58bf&format=json&output=full';
+	    $.ajax({
+	      url: url,
+	      type: "GET",
+	      dataType: "jsonp",
+	      data: searchParams,
 	      success: function (petResult) {
 	        DogActions.receiveSingleDog(petResult.petfinder.pet);
 	      },
@@ -32765,7 +32774,7 @@
 	  },
 	
 	  getStateFromDogStore: function () {
-	    var currentDog = DogStore.singleFetchedDog();;
+	    var currentDog = DogStore.singleFetchedDog();
 	    return { dog: currentDog };
 	  },
 	
@@ -32822,11 +32831,6 @@
 	      'section',
 	      { className: 'dog-show-content group' },
 	      React.createElement(
-	        'ul',
-	        { className: 'dog-show-photos group' },
-	        photos
-	      ),
-	      React.createElement(
 	        'label',
 	        { className: 'dog-show-label' },
 	        'Name:'
@@ -32835,6 +32839,11 @@
 	        'label',
 	        { className: 'dog-show-info' },
 	        this.state.dog.name
+	      ),
+	      React.createElement(
+	        'ul',
+	        { className: 'dog-show-photos group' },
+	        photos
 	      ),
 	      React.createElement(
 	        'label',
@@ -33436,23 +33445,190 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var DogStore = __webpack_require__(248);
+	var SessionStore = __webpack_require__(221);
+	var DogUtil = __webpack_require__(250);
 	
 	var QuickMatch = React.createClass({
-	  displayName: "QuickMatch",
+	  displayName: 'QuickMatch',
 	
+	
+	  getInitialState: function () {
+	    return this.getStateFromDogStore();
+	  },
+	
+	  getStateFromDogStore: function () {
+	    var currentDog = DogStore.singleFetchedDog();;
+	    return { dog: currentDog };
+	  },
+	
+	  _onChange: function () {
+	    this.setState(this.getStateFromDogStore());
+	  },
+	
+	  componentDidMount: function () {
+	    this.dogListener = DogStore.addListener(this._onChange);
+	
+	    var user_params = {
+	      location: SessionStore.currentUser().zipcode.toString(),
+	      animal: "dog"
+	    };
+	
+	    if (SessionStore.currentUser().search_age !== "Any") {
+	      user_params.age = SessionStore.currentUser().search_age;
+	    }
+	
+	    if (SessionStore.currentUser().search_sex !== "Any") {
+	      user_params.sex = SessionStore.currentUser().search_sex;
+	    }
+	
+	    if (SessionStore.currentUser().search_size !== "Any") {
+	      user_params.size = SessionStore.currentUser().search_size;
+	    }
+	
+	    DogUtil.fetchRandomDog(user_params);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.dogListener.remove();
+	  },
+	
+	  componentWillReceiveProps: function (newProps) {
+	    this._onChange();
+	  },
 	
 	  render: function () {
+	    if (!this.state.dog) {
+	      return React.createElement('div', null);
+	    }
+	
+	    var photos;
+	    if (this.state.dog.photos) {
+	      photos = this.state.dog.photos.map(function (photoObject) {
+	        if (photoObject.$t.includes("-x")) {
+	          return React.createElement(
+	            'li',
+	            null,
+	            React.createElement('img', { src: photoObject.$t })
+	          );
+	        }
+	      });
+	    }
+	
+	    var breeds;
+	
+	    if (Array.isArray(this.state.dog.breeds)) {
+	      breeds = this.state.dog.breeds.map(function (breedObj) {
+	        return React.createElement(
+	          'div',
+	          null,
+	          breedObj.$t
+	        );
+	      });
+	    } else {
+	      breeds = this.state.dog.breeds.$t;
+	    }
+	
 	    return React.createElement(
-	      "div",
-	      null,
+	      'section',
+	      { className: 'dog-show-content group' },
 	      React.createElement(
-	        "a",
-	        { className: "tab", href: "#" },
-	        "Quickmatch info will go here"
+	        'label',
+	        { className: 'dog-show-label' },
+	        'Name:'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        this.state.dog.name
+	      ),
+	      React.createElement(
+	        'ul',
+	        { className: 'dog-show-photos group' },
+	        photos
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'Age:'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        this.state.dog.age
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'Size:'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        this.state.dog.size
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'Sex:'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        this.state.dog.sex
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'Breed(s):'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        breeds
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'About this pup:'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        this.state.dog.description
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'City:'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        this.state.dog.city
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'Zipcode:'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        this.state.dog.zipcode
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-label' },
+	        'Shelter email:'
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'dog-show-info' },
+	        this.state.dog.email
 	      )
 	    );
 	  }
-	
 	});
 	
 	module.exports = QuickMatch;

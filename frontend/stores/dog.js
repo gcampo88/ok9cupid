@@ -73,7 +73,9 @@ DogStore.__onDispatch = function (payload) {
       receivedDog.city = payload.dog.contact.city.$t;
       receivedDog.zipcode = payload.dog.contact.zip.$t;
       receivedDog.email = payload.dog.contact.email.$t;
-      receivedDog.photos = payload.dog.media.photos.photo;
+      if (payload.dog.media.photos) {
+        receivedDog.photos = payload.dog.media.photos.photo;
+      }
       receivedDog.description = payload.dog.description.$t;
       DogStore.resetDog(receivedDog);
       this.__emitChange();

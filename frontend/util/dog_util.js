@@ -10,7 +10,6 @@ var DogUtil = {
      dataType: "jsonp",
      data: data,
      success: function (petResult) {
-      //  debugger;
        DogActions.receiveDogs(petResult.petfinder.pets.pet, petResult.petfinder.lastOffset.$t);
      },
      error: function () {
@@ -19,7 +18,6 @@ var DogUtil = {
 
  },
 
-
  fetchSingleDog: function (id) {
    var url = 'http://api.petfinder.com/pet.get?key=a4994cca2cf214901ee9892d3c1f58bf&format=json';
    $.ajax({
@@ -27,6 +25,22 @@ var DogUtil = {
      type: "GET",
      dataType: "jsonp",
      data: {id: id},
+     success: function (petResult) {
+       DogActions.receiveSingleDog(petResult.petfinder.pet);
+     },
+     error: function () {
+     }
+   });
+
+ },
+
+ fetchRandomDog: function (searchParams) {
+   var url = 'http://api.petfinder.com/pet.getRandom?key=a4994cca2cf214901ee9892d3c1f58bf&format=json&output=full';
+   $.ajax({
+     url: url,
+     type: "GET",
+     dataType: "jsonp",
+     data: searchParams,
      success: function (petResult) {
        DogActions.receiveSingleDog(petResult.petfinder.pet);
      },

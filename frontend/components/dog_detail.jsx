@@ -12,7 +12,7 @@ var DogDetail = React.createClass({
   },
 
   getStateFromDogStore: function () {
-    var currentDog = DogStore.singleFetchedDog();;
+    var currentDog = DogStore.singleFetchedDog();
     return({ dog: currentDog })
   },
 
@@ -62,10 +62,11 @@ var DogDetail = React.createClass({
 
     return(
       <section className="dog-show-content group">
-        <ul className="dog-show-photos group">{photos}</ul>
 
         <label className="dog-show-label">Name:</label>
          <label className="dog-show-info">{this.state.dog.name}</label>
+         
+         <ul className="dog-show-photos group">{photos}</ul>
 
         <label className="dog-show-label">Age:</label>
          <label className="dog-show-info">{this.state.dog.age}</label>
@@ -90,6 +91,7 @@ var DogDetail = React.createClass({
 
         <label className="dog-show-label">Shelter email:</label>
          <label className="dog-show-info">{this.state.dog.email}</label>
+
 
       </section>
     )
