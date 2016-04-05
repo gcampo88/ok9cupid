@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Ok9cupidApp</title>
+  <title>ok9cupid</title>
   <%= stylesheet_link_tag    'application', media: 'all' %>
   <%= javascript_include_tag 'application' %>
   <%= csrf_meta_tags %>
+  <%= favicon_link_tag image_url('favicon.ico') %>
 </head>
 <body>
+
+
 
 <% if flash[:messages] %>
   <% flash[:messages].each do |msg| %>
