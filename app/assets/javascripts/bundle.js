@@ -33468,7 +33468,18 @@
 	
 	  componentDidMount: function () {
 	    this.dogListener = DogStore.addListener(this._onChange);
+	    this.redoSearch();
+	  },
 	
+	  componentWillUnmount: function () {
+	    this.dogListener.remove();
+	  },
+	
+	  componentWillReceiveProps: function (newProps) {
+	    this.redoSearch();
+	  },
+	
+	  redoSearch: function () {
 	    var user_params = {
 	      location: SessionStore.currentUser().zipcode.toString(),
 	      animal: "dog"
@@ -33487,14 +33498,6 @@
 	    }
 	
 	    DogUtil.fetchRandomDog(user_params);
-	  },
-	
-	  componentWillUnmount: function () {
-	    this.dogListener.remove();
-	  },
-	
-	  componentWillReceiveProps: function (newProps) {
-	    this._onChange();
 	  },
 	
 	  render: function () {
@@ -33626,6 +33629,13 @@
 	        'label',
 	        { className: 'dog-show-info' },
 	        this.state.dog.email
+	      ),
+	      React.createElement(
+	        'button',
+	        {
+	          className: 'next-page',
+	          onClick: this.redoSearch },
+	        'Match me again!'
 	      )
 	    );
 	  }

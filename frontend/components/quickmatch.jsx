@@ -20,7 +20,18 @@ var QuickMatch = React.createClass({
 
   componentDidMount: function () {
     this.dogListener = DogStore.addListener(this._onChange);
+    this.redoSearch();
+  },
 
+  componentWillUnmount: function () {
+    this.dogListener.remove();
+  },
+
+  componentWillReceiveProps: function (newProps) {
+    this.redoSearch();
+  },
+
+  redoSearch: function () {
     var user_params = {
       location: SessionStore.currentUser().zipcode.toString(),
       animal: "dog"
@@ -39,15 +50,6 @@ var QuickMatch = React.createClass({
     }
 
     DogUtil.fetchRandomDog(user_params);
-
-  },
-
-  componentWillUnmount: function () {
-    this.dogListener.remove();
-  },
-
-  componentWillReceiveProps: function (newProps) {
-    this._onChange();
   },
 
   render: function () {
@@ -107,6 +109,13 @@ var QuickMatch = React.createClass({
 
         <label className="dog-show-label">Shelter email:</label>
          <label className="dog-show-info">{this.state.dog.email}</label>
+
+       <button
+         className="next-page"
+         onClick={this.redoSearch}>
+         Match me again!
+       </button>
+
 
       </section>
     )
