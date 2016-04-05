@@ -24,7 +24,7 @@ var DogsIndex = React.createClass({
   componentDidMount: function () {
     this.dogListener = DogStore.addListener(this._onChange);
     this.sessionListener = SessionStore.addListener(this._onChange);
-    // debugger;
+    debugger;
     this.redoSearch();
 
     // GIGI NOTE THAT YOU COMMENTED OUT ALL THE DOGUTIL CALLS; COMMENT THEM BACK IN AFTER MONDAY!
@@ -101,7 +101,27 @@ var DogsIndex = React.createClass({
   },
 
   nextPage: function (e) {
+    var user_params = {
+      location: this.state.zipcode.toString(),
+      animal: "dog"
+    };
+
+    if (this.state.search_age !== "Any") {
+      user_params.age = this.state.search_age;
+    }
+
+    if (this.state.search_sex !== "Any") {
+      user_params.sex = this.state.search_sex;
+    }
+
+    if (this.state.search_size!== "Any") {
+      user_params.size = this.state.search_size;
+    }
+
+    user_params.offset = DogStore.offset();
+
     debugger;
+    DogUtil.fetchManyDogs(user_params)
   },
 
   render: function () {

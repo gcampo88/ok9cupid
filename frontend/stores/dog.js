@@ -4,12 +4,14 @@ var DogConstants = require('../constants/dog_constants');
 
 var DogStore = new Store(Dispatcher);
 
-var currentDog;
+var _currentDog;
+
+var _offset = 0;
 
 var _dogs = [];
 
 DogStore.singleFetchedDog = function () {
-  return currentDog;
+  return _currentDog;
 };
 
 DogStore.allFetchedDogs = function () {
@@ -21,7 +23,15 @@ DogStore.resetDogs = function () {
 };
 
 DogStore.resetDog = function (dog) {
-  currentDog = dog;
+  _currentDog = dog;
+};
+
+DogStore.offset = function () {
+  return _offset;
+} ;
+
+DogStore.resetOffset = function (offset) {
+  _offset = parseInt(offset);
 };
 
 var dogItem;
@@ -29,26 +39,26 @@ var dogItem;
 DogStore.__onDispatch = function (payload) {
   switch (payload.actionType) {
     case DogConstants.DOGS_RECEIVED:
-    DogStore.resetDogs();
-    payload.dogs.forEach(function (dog) {
-      dogItem = {};
-      dogItem.id = dog.id.$t;
-      dogItem.name = dog.name.$t;
-      dogItem.age = dog.age.$t;
-      dogItem.size = dog.size.$t;
-      dogItem.sex = dog.sex.$t;
-      dogItem.breeds = dog.breeds.breed;
-      dogItem.city = dog.contact.city.$t;
-      dogItem.zipcode = dog.contact.zip.$t;
-      dogItem.email = dog.contact.email.$t;
-      if (dog.media.photos) {
-        dogItem.photos = dog.media.photos.photo;
-      }
-      dogItem.description = dog.description.$t;
-      _dogs.push(dogItem);
+      DogStore.resetDogs();
+      DogStore.resetOffset(payload.offset)
+      payload.dogs.forEach(function (dog) {
+        dogItem = {};
+        dogItem.id = dog.id.$t;
+        dogItem.name = dog.name.$t;
+        dogItem.age = dog.age.$t;
+        dogItem.size = dog.size.$t;
+        dogItem.sex = dog.sex.$t;
+        dogItem.breeds = dog.breeds.breed;
+        dogItem.city = dog.contact.city.$t;
+        dogItem.zipcode = dog.contact.zip.$t;
+        dogItem.email = dog.contact.email.$t;
+        if (dog.media.photos) {
+          dogItem.photos = dog.media.photos.photo;
+        }
+        dogItem.description = dog.description.$t;
+        _dogs.push(dogItem);
+      });
       DogStore.__emitChange();
-
-    });
 
 
       break;

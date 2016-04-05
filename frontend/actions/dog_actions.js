@@ -3,10 +3,11 @@ var DogConstants = require('../constants/dog_constants');
 
 
 module.exports = {
-  receiveDogs: function (dogs) {
+  receiveDogs: function (dogs, offset) {
     Dispatcher.dispatch({
       actionType: DogConstants.DOGS_RECEIVED,
-      dogs: dogs
+      dogs: dogs,
+      offset: offset
     });
   },
 

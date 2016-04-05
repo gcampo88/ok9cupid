@@ -32271,7 +32271,7 @@
 	  componentDidMount: function () {
 	    this.dogListener = DogStore.addListener(this._onChange);
 	    this.sessionListener = SessionStore.addListener(this._onChange);
-	    // debugger;
+	    debugger;
 	    this.redoSearch();
 	
 	    // GIGI NOTE THAT YOU COMMENTED OUT ALL THE DOGUTIL CALLS; COMMENT THEM BACK IN AFTER MONDAY!
@@ -32347,7 +32347,27 @@
 	  },
 	
 	  nextPage: function (e) {
+	    var user_params = {
+	      location: this.state.zipcode.toString(),
+	      animal: "dog"
+	    };
+	
+	    if (this.state.search_age !== "Any") {
+	      user_params.age = this.state.search_age;
+	    }
+	
+	    if (this.state.search_sex !== "Any") {
+	      user_params.sex = this.state.search_sex;
+	    }
+	
+	    if (this.state.search_size !== "Any") {
+	      user_params.size = this.state.search_size;
+	    }
+	
+	    user_params.offset = DogStore.offset();
+	
 	    debugger;
+	    DogUtil.fetchManyDogs(user_params);
 	  },
 	
 	  render: function () {
@@ -32520,12 +32540,14 @@
 	
 	var DogStore = new Store(Dispatcher);
 	
-	var currentDog;
+	var _currentDog;
+	
+	var _offset = 0;
 	
 	var _dogs = [];
 	
 	DogStore.singleFetchedDog = function () {
-	  return currentDog;
+	  return _currentDog;
 	};
 	
 	DogStore.allFetchedDogs = function () {
@@ -32537,7 +32559,15 @@
 	};
 	
 	DogStore.resetDog = function (dog) {
-	  currentDog = dog;
+	  _currentDog = dog;
+	};
+	
+	DogStore.offset = function () {
+	  return _offset;
+	};
+	
+	DogStore.resetOffset = function (offset) {
+	  _offset = parseInt(offset);
 	};
 	
 	var dogItem;
@@ -32546,6 +32576,7 @@
 	  switch (payload.actionType) {
 	    case DogConstants.DOGS_RECEIVED:
 	      DogStore.resetDogs();
+	      DogStore.resetOffset(payload.offset);
 	      payload.dogs.forEach(function (dog) {
 	        dogItem = {};
 	        dogItem.id = dog.id.$t;
@@ -32562,8 +32593,8 @@
 	        }
 	        dogItem.description = dog.description.$t;
 	        _dogs.push(dogItem);
-	        DogStore.__emitChange();
 	      });
+	      DogStore.__emitChange();
 	
 	      break;
 	    case DogConstants.DOG_RECEIVED:
@@ -32606,7 +32637,6 @@
 	
 	var DogUtil = {
 	  fetchManyDogs: function (searchParams) {
-	
 	    var data = searchParams ? searchParams : { location: "10014", animal: "dog" };
 	    var url = 'http://api.petfinder.com/pet.find?key=a4994cca2cf214901ee9892d3c1f58bf&output=full&format=json';
 	    $.ajax({
@@ -32615,7 +32645,8 @@
 	      dataType: "jsonp",
 	      data: data,
 	      success: function (petResult) {
-	        DogActions.receiveDogs(petResult.petfinder.pets.pet);
+	        //  debugger;
+	        DogActions.receiveDogs(petResult.petfinder.pets.pet, petResult.petfinder.lastOffset.$t);
 	      },
 	      error: function () {}
 	    });
@@ -32647,10 +32678,11 @@
 	var DogConstants = __webpack_require__(249);
 	
 	module.exports = {
-	  receiveDogs: function (dogs) {
+	  receiveDogs: function (dogs, offset) {
 	    Dispatcher.dispatch({
 	      actionType: DogConstants.DOGS_RECEIVED,
-	      dogs: dogs
+	      dogs: dogs,
+	      offset: offset
 	    });
 	  },
 	
