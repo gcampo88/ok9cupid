@@ -32256,7 +32256,7 @@
 	  componentDidMount: function () {
 	    this.dogListener = DogStore.addListener(this._onChange);
 	    this.sessionListener = SessionStore.addListener(this._onChange);
-	    DogUtil.fetchManyDogs({ location: "10014" });
+	    DogUtil.fetchManyDogs({ location: "10014", animal: "dog" });
 	
 	    // GIGI NOTE THAT YOU COMMENTED OUT ALL THE DOGUTIL CALLS; COMMENT THEM BACK IN AFTER MONDAY!
 	    //nextPage will redo search with offset argument of lastOffset (figure out how to pull that out)
@@ -32880,7 +32880,7 @@
 	
 	  guestLogin: function () {
 	    this.setState({
-	      email: "gigi.campo@gmail.com",
+	      email: "gigiheartsluna@gmail.com",
 	      password: "password"
 	    }, function () {
 	      ApiUtil.login(this.state, function () {
@@ -33019,7 +33019,7 @@
 	
 	  guestLogin: function () {
 	    this.setState({
-	      email: "gigi.campo@gmail.com",
+	      email: "gigiheartsluna@gmail.com",
 	      password: "password"
 	    }, function () {
 	      ApiUtil.login(this.state, function () {
@@ -33129,7 +33129,7 @@
 	
 	  guestLogin: function () {
 	    this.setState({
-	      email: "gigi.campo@gmail.com",
+	      email: "gigiheartsluna@gmail.com",
 	      password: "password"
 	    }, function () {
 	      ApiUtil.login(this.state, function () {
