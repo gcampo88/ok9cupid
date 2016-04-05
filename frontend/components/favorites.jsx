@@ -29,7 +29,6 @@ var Favorites = React.createClass({
   },
 
   goToDogShow: function (e) {
-    debugger;
     this.context.router.push("/dogs/" + e.currentTarget.value);
   },
 

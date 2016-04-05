@@ -22,11 +22,13 @@ var QuickMatch = React.createClass({
 
   componentDidMount: function () {
     this.dogListener = DogStore.addListener(this._onChange);
+    this.favoriteListener = FavoriteStore.addListener(this._onChange);
     this.redoSearch();
   },
 
   componentWillUnmount: function () {
     this.dogListener.remove();
+    this.favoriteListener.remove();
   },
 
   componentWillReceiveProps: function (newProps) {
@@ -34,30 +36,36 @@ var QuickMatch = React.createClass({
   },
 
   toggleFavorite: function () {
-    var photo;
 
-    if (this.state.dog.photos) {
-      for (var i = 0; i < this.state.dog.photos.length; i ++ ) {
-        if (this.state.dog.photos[i].$t.includes("-x")) {
-          photo = this.state.dog.photos[i].$t;
+    if (FavoriteStore.isFavorite(this.state.dog.id)) {
+      var id = FavoriteStore.findFavoriteID(this.state.dog.id);
+      FavoriteUtil.destroyFavorite(id);
+
+    } else {
+
+      var photo;
+
+      if (this.state.dog.photos) {
+        for (var i = 0; i < this.state.dog.photos.length; i ++ ) {
+          if (this.state.dog.photos[i].$t.includes("-x")) {
+            photo = this.state.dog.photos[i].$t;
+          }
         }
       }
-    }
 
 
-    var favoriteData = {
-      favorite: {
-        user_id: SessionStore.currentUser().id,
-        dog_id: parseInt(this.state.dog.id),
-        dog_photo: photo,
-        dog_name: this.state.dog.name
+      var favoriteData = {
+        favorite: {
+          user_id: SessionStore.currentUser().id,
+          dog_id: parseInt(this.state.dog.id),
+          dog_photo: photo,
+          dog_name: this.state.dog.name
+        }
       }
+
+      FavoriteUtil.createFavorite(favoriteData)
+
     }
-
-    debugger;
-
-    FavoriteUtil.createFavorite(favoriteData)
-
   },
 
   redoSearch: function () {

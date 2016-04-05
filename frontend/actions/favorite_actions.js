@@ -14,6 +14,13 @@ module.exports = {
       actionType: FavoriteConstants.FAVORITES_RECEIVED,
       favorites: favorites
     });
+  },
+
+  removedFavorite: function (favorite) {
+    Dispatcher.dispatch({
+      actionType: FavoriteConstants.FAVORITE_REMOVED,
+      favorite: favorite
+    });
   }
 
 };

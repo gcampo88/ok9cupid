@@ -23,6 +23,14 @@ FavoriteStore.removeFavorite = function (favorite) {
   _favorites.splice(id, 1);
 };
 
+FavoriteStore.findFavoriteID = function (dogId) {
+  for (var i = 0; i < _favorites.length; i ++) {
+    if (_favorites[i].dog_id === parseInt(dogId)) {
+      return _favorites[i].id;
+    }
+  }
+};
+
 FavoriteStore.isFavorite = function (dogId) {
   if (!_favorites) {
     return false;
@@ -45,6 +53,10 @@ FavoriteStore.__onDispatch = function (payload) {
       break;
     case FavoriteConstants.FAVORITES_RECEIVED:
       FavoriteStore.resetFavorites(payload.favorites);
+      FavoriteStore.__emitChange();
+      break;
+    case FavoriteConstants.FAVORITES_REMOVED:
+      FavoriteStore.removeFavorite(payload.favorite);
       FavoriteStore.__emitChange();
       break;
 

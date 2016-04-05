@@ -33315,26 +33315,33 @@
 	  },
 	
 	  toggleFavorite: function () {
-	    var photo;
 	
-	    if (this.state.dog.photos) {
-	      for (var i = 0; i < this.state.dog.photos.length; i++) {
-	        if (this.state.dog.photos[i].$t.includes("-x")) {
-	          photo = this.state.dog.photos[i].$t;
+	    if (FavoriteStore.isFavorite(this.state.dog.id)) {
+	      var id = FavoriteStore.findFavoriteID(this.state.dog.id);
+	      FavoriteUtil.destroyFavorite(id);
+	    } else {
+	
+	      var photo;
+	
+	      if (this.state.dog.photos) {
+	        for (var i = 0; i < this.state.dog.photos.length; i++) {
+	          if (this.state.dog.photos[i].$t.includes("-x")) {
+	            photo = this.state.dog.photos[i].$t;
+	          }
 	        }
 	      }
+	
+	      var favoriteData = {
+	        favorite: {
+	          user_id: SessionStore.currentUser().id,
+	          dog_id: parseInt(this.state.dog.id),
+	          dog_photo: photo,
+	          dog_name: this.state.dog.name
+	        }
+	      };
+	
+	      FavoriteUtil.createFavorite(favoriteData);
 	    }
-	
-	    var favoriteData = {
-	      favorite: {
-	        user_id: SessionStore.currentUser().id,
-	        dog_id: parseInt(this.state.dog.id),
-	        dog_photo: photo,
-	        dog_name: this.state.dog.name
-	      }
-	    };
-	
-	    FavoriteUtil.createFavorite(favoriteData);
 	  },
 	
 	  render: function () {
@@ -33512,11 +33519,13 @@
 	
 	  componentDidMount: function () {
 	    this.dogListener = DogStore.addListener(this._onChange);
+	    this.favoriteListener = FavoriteStore.addListener(this._onChange);
 	    this.redoSearch();
 	  },
 	
 	  componentWillUnmount: function () {
 	    this.dogListener.remove();
+	    this.favoriteListener.remove();
 	  },
 	
 	  componentWillReceiveProps: function (newProps) {
@@ -33524,28 +33533,33 @@
 	  },
 	
 	  toggleFavorite: function () {
-	    var photo;
 	
-	    if (this.state.dog.photos) {
-	      for (var i = 0; i < this.state.dog.photos.length; i++) {
-	        if (this.state.dog.photos[i].$t.includes("-x")) {
-	          photo = this.state.dog.photos[i].$t;
+	    if (FavoriteStore.isFavorite(this.state.dog.id)) {
+	      var id = FavoriteStore.findFavoriteID(this.state.dog.id);
+	      FavoriteUtil.destroyFavorite(id);
+	    } else {
+	
+	      var photo;
+	
+	      if (this.state.dog.photos) {
+	        for (var i = 0; i < this.state.dog.photos.length; i++) {
+	          if (this.state.dog.photos[i].$t.includes("-x")) {
+	            photo = this.state.dog.photos[i].$t;
+	          }
 	        }
 	      }
+	
+	      var favoriteData = {
+	        favorite: {
+	          user_id: SessionStore.currentUser().id,
+	          dog_id: parseInt(this.state.dog.id),
+	          dog_photo: photo,
+	          dog_name: this.state.dog.name
+	        }
+	      };
+	
+	      FavoriteUtil.createFavorite(favoriteData);
 	    }
-	
-	    var favoriteData = {
-	      favorite: {
-	        user_id: SessionStore.currentUser().id,
-	        dog_id: parseInt(this.state.dog.id),
-	        dog_photo: photo,
-	        dog_name: this.state.dog.name
-	      }
-	    };
-	
-	    debugger;
-	
-	    FavoriteUtil.createFavorite(favoriteData);
 	  },
 	
 	  redoSearch: function () {
@@ -33759,7 +33773,6 @@
 	  },
 	
 	  goToDogShow: function (e) {
-	    debugger;
 	    this.context.router.push("/dogs/" + e.currentTarget.value);
 	  },
 	
@@ -33843,7 +33856,7 @@
 	      type: "DELETE",
 	      dataType: "json",
 	      success: function (favorite) {
-	        debugger;
+	        FavoriteActions.removedFavorite(favorite);
 	      },
 	      error: function () {
 	        console.log("error in favorites destroy");
@@ -33875,6 +33888,13 @@
 	      actionType: FavoriteConstants.FAVORITES_RECEIVED,
 	      favorites: favorites
 	    });
+	  },
+	
+	  removedFavorite: function (favorite) {
+	    Dispatcher.dispatch({
+	      actionType: FavoriteConstants.FAVORITE_REMOVED,
+	      favorite: favorite
+	    });
 	  }
 	
 	};
@@ -33885,7 +33905,8 @@
 
 	module.exports = {
 	  FAVORITE_RECEIVED: "FAVORITE_RECEIVED",
-	  FAVORITES_RECEIVED: "FAVORITES_RECEIVED"
+	  FAVORITES_RECEIVED: "FAVORITES_RECEIVED",
+	  FAVORITE_REMOVED: "FAVORITE_REMOVED"
 	};
 
 /***/ },
@@ -33917,6 +33938,14 @@
 	  _favorites.splice(id, 1);
 	};
 	
+	FavoriteStore.findFavoriteID = function (dogId) {
+	  for (var i = 0; i < _favorites.length; i++) {
+	    if (_favorites[i].dog_id === parseInt(dogId)) {
+	      return _favorites[i].id;
+	    }
+	  }
+	};
+	
 	FavoriteStore.isFavorite = function (dogId) {
 	  if (!_favorites) {
 	    return false;
@@ -33937,6 +33966,10 @@
 	      break;
 	    case FavoriteConstants.FAVORITES_RECEIVED:
 	      FavoriteStore.resetFavorites(payload.favorites);
+	      FavoriteStore.__emitChange();
+	      break;
+	    case FavoriteConstants.FAVORITES_REMOVED:
+	      FavoriteStore.removeFavorite(payload.favorite);
 	      FavoriteStore.__emitChange();
 	      break;
 	

@@ -38,7 +38,7 @@ FavoriteUtil = {
       type: "DELETE",
       dataType: "json",
       success: function (favorite) {
-        debugger;
+        FavoriteActions.removedFavorite(favorite);
       },
       error: function () {
         console.log("error in favorites destroy");
