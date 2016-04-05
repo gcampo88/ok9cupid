@@ -46,6 +46,10 @@ var App = React.createClass({
     this.context.router.push("/quickmatch");
   },
 
+  handleFavoritesClick: function () {
+    this.context.router.push("/favorites")
+  },
+
   logOut: function (e) {
     e.preventDefault();
     ApiUtil.logout(function () {
@@ -69,6 +73,7 @@ var App = React.createClass({
         <li className="root-tab" onClick={this.handleBrowseClick} >Browse Dogs</li>
         <li className="root-tab" onClick={this.handleQuickMatchClick} >QuickMatch</li>
         <li className="root-tab" onClick={this.handleProfileClick} >Profile</li>
+        <li className="root-tab" onClick={this.handleFavoritesClick} >Favorites</li>
         {button}
     </nav>
     {this.props.children}

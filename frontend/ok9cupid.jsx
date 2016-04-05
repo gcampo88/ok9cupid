@@ -7,14 +7,17 @@ var Router = ReactRouter.Router;
 var IndexRoute = ReactRouter.IndexRoute;
 var hashHistory = ReactRouter.hashHistory;
 
-var Profile = require('./components/profile');
-var Browse = require('./components/browse');
 var LoginForm = require('./components/login_form');
 var SignupForm = require('./components/signup_form');
 var Splash = require('./components/splash');
+
 var App = require('./components/app');
-var QuickMatch = require('./components/quickmatch');
+var Profile = require('./components/profile');
+var Browse = require('./components/browse');
 var DogDetail = require('./components/dog_detail');
+var QuickMatch = require('./components/quickmatch');
+var Favorites = require('./components/favorites');
+
 var DogUtil = require('./util/dog_util');
 
 
@@ -29,7 +32,7 @@ var router = (
       <Route path="profile" component={Profile} />
       <Route path="browse" component={Browse} />
       <Route path="dogs/:dogId" component={DogDetail} />
-
+      <Route path="favorites" component={Favorites} />
       <Route path="quickmatch" component={QuickMatch} />
     </Route>
 

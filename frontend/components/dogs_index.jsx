@@ -114,7 +114,6 @@ var DogsIndex = React.createClass({
 
     user_params.offset = DogStore.offset();
 
-    debugger;
     DogUtil.fetchManyDogs(user_params)
   },
 

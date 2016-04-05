@@ -53,14 +53,17 @@
 	var IndexRoute = ReactRouter.IndexRoute;
 	var hashHistory = ReactRouter.hashHistory;
 	
-	var Profile = __webpack_require__(216);
-	var Browse = __webpack_require__(246);
 	var LoginForm = __webpack_require__(254);
 	var SignupForm = __webpack_require__(255);
 	var Splash = __webpack_require__(256);
+	
 	var App = __webpack_require__(257);
-	var QuickMatch = __webpack_require__(258);
+	var Profile = __webpack_require__(216);
+	var Browse = __webpack_require__(246);
 	var DogDetail = __webpack_require__(253);
+	var QuickMatch = __webpack_require__(258);
+	var Favorites = __webpack_require__(259);
+	
 	var DogUtil = __webpack_require__(250);
 	
 	var SessionStore = __webpack_require__(221);
@@ -74,6 +77,7 @@
 	    React.createElement(Route, { path: 'profile', component: Profile }),
 	    React.createElement(Route, { path: 'browse', component: Browse }),
 	    React.createElement(Route, { path: 'dogs/:dogId', component: DogDetail }),
+	    React.createElement(Route, { path: 'favorites', component: Favorites }),
 	    React.createElement(Route, { path: 'quickmatch', component: QuickMatch })
 	  ),
 	  React.createElement(Route, { path: '/login', component: LoginForm }),
@@ -32353,7 +32357,6 @@
 	
 	    user_params.offset = DogStore.offset();
 	
-	    debugger;
 	    DogUtil.fetchManyDogs(user_params);
 	  },
 	
@@ -32626,7 +32629,6 @@
 	
 	var DogUtil = {
 	  fetchManyDogs: function (searchParams) {
-	    // debugger;
 	    var data = searchParams ? searchParams : { location: "10014", animal: "dog" };
 	    var url = 'http://api.petfinder.com/pet.find?key=a4994cca2cf214901ee9892d3c1f58bf&output=full&format=json';
 	    $.ajax({
@@ -33383,6 +33385,10 @@
 	    this.context.router.push("/quickmatch");
 	  },
 	
+	  handleFavoritesClick: function () {
+	    this.context.router.push("/favorites");
+	  },
+	
 	  logOut: function (e) {
 	    e.preventDefault();
 	    ApiUtil.logout(function () {
@@ -33430,6 +33436,11 @@
 	          'li',
 	          { className: 'root-tab', onClick: this.handleProfileClick },
 	          'Profile'
+	        ),
+	        React.createElement(
+	          'li',
+	          { className: 'root-tab', onClick: this.handleFavoritesClick },
+	          'Favorites'
 	        ),
 	        button
 	      ),
@@ -33650,6 +33661,27 @@
 	});
 	
 	module.exports = QuickMatch;
+
+/***/ },
+/* 259 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var SessionStore = __webpack_require__(221);
+	
+	var Favorites = React.createClass({
+	  displayName: 'Favorites',
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      'Favorites!'
+	    );
+	  }
+	});
+	
+	module.exports = Favorites;
 
 /***/ }
 /******/ ]);
