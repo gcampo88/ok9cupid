@@ -51,7 +51,7 @@ var SignupForm = React.createClass({
 
   guestLogin: function () {
     this.setState({
-      email: "gigi.campo@gmail.com",
+      email: "gigiheartsluna@gmail.com",
       password: "password"
     }, function () {
         ApiUtil.login(this.state, function () {
@@ -59,7 +59,6 @@ var SignupForm = React.createClass({
       }.bind(this))
     })
   },
-
 
   render: function () {
 

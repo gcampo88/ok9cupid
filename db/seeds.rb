@@ -9,7 +9,7 @@
 
 
 
-gigi = User.create!(name: "Gigi", zipcode: "10014", email: "gigi.campo@gmail.com",
+gigi = User.create!(name: "Gigi", zipcode: "10014", email: "gigiheartsluna@gmail.com",
 password_digest: "$2a$10$OprmvzZSU/TLZ/fxq/EbkegN2H0Ub.FfMK3tOMY6zIZ5s5WvpjTJe",
 search_sex: "F", search_age: "Young", search_size: "Small",
 about_me: "I am an App Academy student with tons of free time to spend playing with a puppy.",
