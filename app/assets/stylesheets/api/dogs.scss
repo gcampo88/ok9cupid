@@ -24,8 +24,22 @@
 
 .dog-show-photos > li > img {
   margin: 20px;
-  border: 1px solid darkblue;
+  border: 1px solid darkblue
+}
 
+.favorite-button {
+  float: right;
+  margin: 5px;
+  padding: 10px;
+  background: lightblue;
+  border: 1px solid red;
+  border-radius: 3px;
+}
+
+.favorite-button:hover {
+  background: darkblue;
+  cursor: pointer;
+  color: white;
 }
 
 
@@ -62,21 +76,19 @@
 .browse-item:hover {
   cursor: pointer;
   color: red;
-  font-size: 36px;
 }
 
 .next-page {
   display: inline-block;
-  background: lightblue;
-  padding: 5px;
-  border-radius: 3px;
-  border: 1px solid darkblue;
   margin: 5px;
-
+  padding: 10px;
+  background: lightblue;
+  border: 1px solid red;
+  border-radius: 3px;
 }
 
 .next-page:hover {
+  background: darkblue;
   cursor: pointer;
-  color: red;
-  font-size: 36px;
+  color: white;
 }

@@ -43,7 +43,6 @@ ApiUtil = {
         SessionActions.logout();
       },
       error: function () {
-        console.log("error logging out in ajax");
       }
     });
   },
@@ -61,7 +60,6 @@ ApiUtil = {
         callback && callback();
       },
       error: function () {
-        console.log("failed create ajax call");
       }
     });
   },
@@ -76,10 +74,8 @@ ApiUtil = {
       data: formData,
       success: function (user) {
         SessionActions.receiveCurrentUser(user);
-        console.log("success on patch req!");
       },
       error: function () {
-        console.log("failed AJAX patch profile request");
       }
     });
   }

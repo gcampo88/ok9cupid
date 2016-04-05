@@ -32150,9 +32150,7 @@
 	        callback && callback();
 	        SessionActions.logout();
 	      },
-	      error: function () {
-	        console.log("error logging out in ajax");
-	      }
+	      error: function () {}
 	    });
 	  },
 	
@@ -32168,9 +32166,7 @@
 	        SessionActions.receiveCurrentUser(currentUser);
 	        callback && callback();
 	      },
-	      error: function () {
-	        console.log("failed create ajax call");
-	      }
+	      error: function () {}
 	    });
 	  },
 	
@@ -32184,11 +32180,8 @@
 	      data: formData,
 	      success: function (user) {
 	        SessionActions.receiveCurrentUser(user);
-	        console.log("success on patch req!");
 	      },
-	      error: function () {
-	        console.log("failed AJAX patch profile request");
-	      }
+	      error: function () {}
 	    });
 	  }
 	};
@@ -32663,7 +32656,6 @@
 	  },
 	
 	  fetchRandomDog: function (searchParams) {
-	
 	    var url = 'http://api.petfinder.com/pet.getRandom?key=a4994cca2cf214901ee9892d3c1f58bf&format=json&output=full';
 	    $.ajax({
 	      url: url,
@@ -32829,9 +32821,16 @@
 	      breeds = this.state.dog.breeds.$t;
 	    }
 	
+	    var favoriteText = "Add Favorite";
+	
 	    return React.createElement(
 	      'section',
 	      { className: 'dog-show-content group' },
+	      React.createElement(
+	        'button',
+	        { className: 'favorite-button' },
+	        favoriteText
+	      ),
 	      React.createElement(
 	        'label',
 	        { className: 'dog-show-label' },
@@ -33534,9 +33533,16 @@
 	      breeds = this.state.dog.breeds.$t;
 	    }
 	
+	    var favoriteText = "Add Favorite";
+	
 	    return React.createElement(
 	      'section',
 	      { className: 'dog-show-content group' },
+	      React.createElement(
+	        'button',
+	        { className: 'favorite-button' },
+	        favoriteText
+	      ),
 	      React.createElement(
 	        'label',
 	        { className: 'dog-show-label' },

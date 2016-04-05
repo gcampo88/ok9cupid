@@ -77,9 +77,11 @@ var QuickMatch = React.createClass({
       breeds = this.state.dog.breeds.$t;
     }
 
+    var favoriteText = "Add Favorite"
 
     return(
       <section className="dog-show-content group">
+        <button className="favorite-button">{favoriteText}</button>
 
         <label className="dog-show-label">Name:</label>
          <label className="dog-show-info">{this.state.dog.name}</label>

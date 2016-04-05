@@ -36,7 +36,6 @@ var DogUtil = {
  },
 
  fetchRandomDog: function (searchParams) {
-
    var url = 'http://api.petfinder.com/pet.getRandom?key=a4994cca2cf214901ee9892d3c1f58bf&format=json&output=full';
    $.ajax({
      url: url,
