@@ -32147,8 +32147,8 @@
 	      type: "DELETE",
 	      dataType: "json",
 	      success: function () {
-	        SessionActions.logout();
 	        callback && callback();
+	        SessionActions.logout();
 	      },
 	      error: function () {
 	        console.log("error logging out in ajax");
@@ -32295,15 +32295,15 @@
 	      animal: "dog"
 	    };
 	
-	    if (this.state.search_age !== "Any") {
+	    if (this.state.search_age !== "Any" && this.state.search_age !== "null") {
 	      user_params.age = this.state.search_age;
 	    }
 	
-	    if (this.state.search_sex !== "Any") {
+	    if (this.state.search_sex !== "Any" && this.state.search_sex !== "null") {
 	      user_params.sex = this.state.search_sex;
 	    }
 	
-	    if (this.state.search_size !== "Any") {
+	    if (this.state.search_size !== "Any" && this.state.search_size !== "null") {
 	      user_params.size = this.state.search_size;
 	    }
 	
@@ -32633,6 +32633,7 @@
 	
 	var DogUtil = {
 	  fetchManyDogs: function (searchParams) {
+	    // debugger;
 	    var data = searchParams ? searchParams : { location: "10014", animal: "dog" };
 	    var url = 'http://api.petfinder.com/pet.find?key=a4994cca2cf214901ee9892d3c1f58bf&output=full&format=json';
 	    $.ajax({
@@ -32662,6 +32663,7 @@
 	  },
 	
 	  fetchRandomDog: function (searchParams) {
+	
 	    var url = 'http://api.petfinder.com/pet.getRandom?key=a4994cca2cf214901ee9892d3c1f58bf&format=json&output=full';
 	    $.ajax({
 	      url: url,
@@ -32806,8 +32808,8 @@
 	        if (photoObject.$t.includes("-x")) {
 	          return React.createElement(
 	            'li',
-	            null,
-	            React.createElement('img', { src: photoObject.$t, key: index })
+	            { key: index },
+	            React.createElement('img', { src: photoObject.$t })
 	          );
 	        }
 	      });
@@ -32978,7 +32980,7 @@
 	      password: "password"
 	    }, function () {
 	      ApiUtil.login(this.state, function () {
-	        this.context.router.push("/");
+	        this.context.router.push("/browse");
 	      }.bind(this));
 	    });
 	  },
@@ -33485,15 +33487,15 @@
 	      animal: "dog"
 	    };
 	
-	    if (SessionStore.currentUser().search_age !== "Any") {
+	    if (SessionStore.currentUser().search_age !== "Any" && SessionStore.currentUser().search_age !== "null") {
 	      user_params.age = SessionStore.currentUser().search_age;
 	    }
 	
-	    if (SessionStore.currentUser().search_sex !== "Any") {
+	    if (SessionStore.currentUser().search_sex !== "Any" && SessionStore.currentUser().search_sex !== "null") {
 	      user_params.sex = SessionStore.currentUser().search_sex;
 	    }
 	
-	    if (SessionStore.currentUser().search_size !== "Any") {
+	    if (SessionStore.currentUser().search_size !== "Any" && SessionStore.currentUser().search_size !== "null") {
 	      user_params.size = SessionStore.currentUser().search_size;
 	    }
 	

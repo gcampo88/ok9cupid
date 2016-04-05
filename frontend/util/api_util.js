@@ -39,8 +39,8 @@ ApiUtil = {
       type: "DELETE",
       dataType: "json",
       success: function () {
-        SessionActions.logout();
         callback && callback();
+        SessionActions.logout();
       },
       error: function () {
         console.log("error logging out in ajax");

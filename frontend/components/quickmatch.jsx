@@ -37,15 +37,15 @@ var QuickMatch = React.createClass({
       animal: "dog"
     };
 
-    if (SessionStore.currentUser().search_age !== "Any") {
+    if (SessionStore.currentUser().search_age !== "Any" && SessionStore.currentUser().search_age !== "null") {
       user_params.age = SessionStore.currentUser().search_age;
     }
 
-    if (SessionStore.currentUser().search_sex !== "Any") {
+    if (SessionStore.currentUser().search_sex !== "Any" && SessionStore.currentUser().search_sex !== "null") {
       user_params.sex = SessionStore.currentUser().search_sex;
     }
 
-    if (SessionStore.currentUser().search_size!== "Any") {
+    if (SessionStore.currentUser().search_size!== "Any" && SessionStore.currentUser().search_size !== "null") {
       user_params.size = SessionStore.currentUser().search_size;
     }
 

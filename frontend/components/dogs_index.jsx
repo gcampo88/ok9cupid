@@ -48,15 +48,15 @@ var DogsIndex = React.createClass({
       animal: "dog"
     };
 
-    if (this.state.search_age !== "Any") {
+    if (this.state.search_age !== "Any" && this.state.search_age !== "null") {
       user_params.age = this.state.search_age;
     }
 
-    if (this.state.search_sex !== "Any") {
+    if (this.state.search_sex !== "Any" && this.state.search_sex !== "null") {
       user_params.sex = this.state.search_sex;
     }
 
-    if (this.state.search_size!== "Any") {
+    if (this.state.search_size!== "Any" && this.state.search_size !== "null") {
       user_params.size = this.state.search_size;
     }
 

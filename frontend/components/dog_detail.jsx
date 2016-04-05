@@ -44,7 +44,7 @@ var DogDetail = React.createClass({
     if (this.state.dog.photos) {
       photos = this.state.dog.photos.map(function (photoObject, index) {
         if (photoObject.$t.includes("-x")) {
-          return (<li><img src={photoObject.$t} key={index} /></li>);
+          return (<li key={index}><img src={photoObject.$t} /></li>);
         }
       });
     }

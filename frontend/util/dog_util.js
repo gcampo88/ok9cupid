@@ -2,6 +2,7 @@ var DogActions = require('../actions/dog_actions');
 
 var DogUtil = {
  fetchManyDogs: function (searchParams) {
+  // debugger;
    var data = searchParams ? searchParams : ({ location: "10014", animal: "dog" });
    var url = 'http://api.petfinder.com/pet.find?key=a4994cca2cf214901ee9892d3c1f58bf&output=full&format=json';
    $.ajax({
@@ -35,6 +36,7 @@ var DogUtil = {
  },
 
  fetchRandomDog: function (searchParams) {
+
    var url = 'http://api.petfinder.com/pet.getRandom?key=a4994cca2cf214901ee9892d3c1f58bf&format=json&output=full';
    $.ajax({
      url: url,
