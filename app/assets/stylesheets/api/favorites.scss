@@ -1,0 +1,49 @@
+.favorites-index {
+  display: block;
+  // background: red;
+  height: 100%;
+  width: 1240px;
+  margin: auto;
+
+}
+
+.favorites-index-item {
+  position: relative;
+  float: left;
+  width: 300px;
+  height: 300px;
+  padding: 48px;
+  margin: 5px;
+  border: 1px solid transparent;
+
+}
+
+.favorites-name {
+  color: white;
+
+  font-size: 36px;
+  font-weight: lighter;
+  position: absolute;
+  bottom: 80px;
+  left: 140px;
+  opacity: 0;
+  z-index: 1;
+
+}
+
+.favorites-photo > img {
+  width: 300px;
+  height: 300px;
+}
+
+//do that thing Jonathan did with the glasses to make the name show up when you \
+//hover over them.
+
+.favorites-index-item:hover {
+  cursor: pointer;
+  border: 1px solid lightblue;
+}
+
+.favorites-index-item:hover .favorites-name{
+  opacity: 1;
+}

@@ -16,10 +16,14 @@
 
 .dog-show-info {
   display: block;
-  width: 650px;
+  width: 800px;
   font-size: 20px;
-  margin: 10px;
+  margin: 10px auto;
   text-align: justify;
+}
+
+.dog-show-photos > li {
+  float: left;
 }
 
 .dog-show-photos > li > img {

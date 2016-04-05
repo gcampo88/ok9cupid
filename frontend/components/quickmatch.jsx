@@ -1,5 +1,7 @@
 var React = require('react');
 var DogStore = require('../stores/dog');
+var FavoriteStore = require('../stores/favorite');
+var FavoriteUtil = require('../util/favorite_util');
 var SessionStore = require('../stores/session');
 var DogUtil = require('../util/dog_util');
 
@@ -29,6 +31,33 @@ var QuickMatch = React.createClass({
 
   componentWillReceiveProps: function (newProps) {
     this.redoSearch();
+  },
+
+  toggleFavorite: function () {
+    var photo;
+
+    if (this.state.dog.photos) {
+      for (var i = 0; i < this.state.dog.photos.length; i ++ ) {
+        if (this.state.dog.photos[i].$t.includes("-x")) {
+          photo = this.state.dog.photos[i].$t;
+        }
+      }
+    }
+
+
+    var favoriteData = {
+      favorite: {
+        user_id: SessionStore.currentUser().id,
+        dog_id: parseInt(this.state.dog.id),
+        dog_photo: photo,
+        dog_name: this.state.dog.name
+      }
+    }
+
+    debugger;
+
+    FavoriteUtil.createFavorite(favoriteData)
+
   },
 
   redoSearch: function () {
@@ -77,11 +106,14 @@ var QuickMatch = React.createClass({
       breeds = this.state.dog.breeds.$t;
     }
 
-    var favoriteText = "Add Favorite"
+    var favoriteText = FavoriteStore.isFavorite(this.state.dog.id) ? "Remove Favorite" : "Add Favorite"
 
     return(
       <section className="dog-show-content group">
-        <button className="favorite-button">{favoriteText}</button>
+        <button
+          className="favorite-button"
+          onClick={this.toggleFavorite}
+          >{favoriteText}</button>
 
         <label className="dog-show-label">Name:</label>
          <label className="dog-show-info">{this.state.dog.name}</label>

@@ -4,6 +4,8 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: { format: 'json'} do
 
+    resources :favorites, only: [:create, :destroy, :show, :index]
+
     resources :users, only: [:update, :show, :new, :create] do
       get "splash", on: :collection
     end

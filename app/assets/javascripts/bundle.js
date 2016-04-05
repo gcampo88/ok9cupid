@@ -53,20 +53,20 @@
 	var IndexRoute = ReactRouter.IndexRoute;
 	var hashHistory = ReactRouter.hashHistory;
 	
-	var LoginForm = __webpack_require__(254);
-	var SignupForm = __webpack_require__(255);
-	var Splash = __webpack_require__(256);
+	var LoginForm = __webpack_require__(216);
+	var SignupForm = __webpack_require__(242);
+	var Splash = __webpack_require__(243);
 	
-	var App = __webpack_require__(257);
-	var Profile = __webpack_require__(216);
-	var Browse = __webpack_require__(246);
-	var DogDetail = __webpack_require__(253);
+	var App = __webpack_require__(244);
+	var Profile = __webpack_require__(245);
+	var Browse = __webpack_require__(250);
+	var DogDetail = __webpack_require__(257);
 	var QuickMatch = __webpack_require__(258);
 	var Favorites = __webpack_require__(259);
 	
-	var DogUtil = __webpack_require__(250);
+	var DogUtil = __webpack_require__(254);
 	
-	var SessionStore = __webpack_require__(221);
+	var SessionStore = __webpack_require__(224);
 	
 	var router = React.createElement(
 	  Router,
@@ -24778,531 +24778,562 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var LinkedStateMixin = __webpack_require__(217);
-	var SessionStore = __webpack_require__(221);
-	var ApiUtil = __webpack_require__(244);
+	var ApiUtil = __webpack_require__(217);
 	
-	var Profile = React.createClass({
-	  displayName: 'Profile',
+	var LoginForm = React.createClass({
+	  displayName: 'LoginForm',
 	
-	  mixins: [LinkedStateMixin],
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
 	
 	  getInitialState: function () {
-	    return SessionStore.currentUser();
+	    return {
+	      email: "",
+	      password: ""
+	    };
 	  },
 	
-	  componentDidMount: function () {
-	    this.userListener = SessionStore.addListener(this.onChange);
-	    ApiUtil.fetchCurrentUser();
+	  updateEmail: function (e) {
+	    this.setState({ email: e.currentTarget.value });
 	  },
 	
-	  componentWillUnmount: function () {
-	    this.userListener.remove();
+	  updatePassword: function (e) {
+	    this.setState({ password: e.currentTarget.value });
 	  },
 	
-	  onChange: function () {
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+	    ApiUtil.login(this.state, function () {
+	      this.context.router.push("/");
+	    }.bind(this));
+	  },
+	
+	  goToNewUser: function (e) {
+	    this.context.router.push("/splash");
+	  },
+	
+	  guestLogin: function () {
 	    this.setState({
-	      age: SessionStore.currentUser().search_age,
-	      size: SessionStore.currentUser().search_size,
-	      sex: SessionStore.currentUser().search_sex,
-	      about_me: SessionStore.currentUser().about_me,
-	      about_life: SessionStore.currentUser().about_life,
-	      idealdog: SessionStore.currentUser().ideal_dog,
-	      zipcode: SessionStore.currentUser().zipcode,
-	      imageUrl: SessionStore.currentUser().imageUrl
+	      email: "gigiheartsluna@gmail.com",
+	      password: "password"
+	    }, function () {
+	      ApiUtil.login(this.state, function () {
+	        this.context.router.push("/browse");
+	      }.bind(this));
 	    });
 	  },
 	
-	  handleFileChange: function (e) {
-	    var file = e.currentTarget.files[0];
-	    var reader = new FileReader();
-	    reader.onloadend = function () {
-	      var result = reader.result;
-	      this.setState({ imageFile: file, imageUrl: result });
-	      this.handleInput();
-	    }.bind(this);
-	
-	    reader.readAsDataURL(file);
-	  },
-	
-	  handleEnter: function (e) {
-	    if (e.charCode === 13) {
-	      this.handleInput();
-	    }
-	  },
-	
-	  handleSearchSexUpdate: function (e) {
-	    e.preventDefault();
-	    this.setState({ sex: e.target.value });
-	  },
-	
-	  handleSearchSizeUpdate: function (e) {
-	    e.preventDefault();
-	    this.setState({ size: e.target.value });
-	  },
-	
-	  handleSearchAgeUpdate: function (e) {
-	    e.preventDefault();
-	    this.setState({ age: e.target.value });
-	  },
-	
-	  handleSearchZipUpdate: function (e) {
-	    e.preventDefault();
-	    this.setState({ zipcode: e.target.value });
-	  },
-	
-	  handleInput: function (e) {
-	    e.preventDefault();
-	
-	    var formData = new FormData();
-	    formData.append("user[search_sex]", this.state.sex);
-	    formData.append("user[search_size]", this.state.size);
-	    formData.append("user[search_age]", this.state.age);
-	    formData.append("user[about_me]", this.state.about_me);
-	    formData.append("user[about_life]", this.state.about_life);
-	    formData.append("user[ideal_dog]", this.state.ideal_dog);
-	    formData.append("user[zipcode]", this.state.zipcode);
-	
-	    if (this.state.imageFile) {
-	      formData.append("user[image]", this.state.imageFile);
-	    }
-	
-	    ApiUtil.updateUserProfile(formData, this.state.id);
-	  },
-	
 	  render: function () {
-	    if (!SessionStore.currentUserHasBeenFetched()) {
-	      return React.createElement(
-	        'div',
-	        null,
-	        'Loading current user..'
-	      );
-	    }
-	
 	    return React.createElement(
 	      'section',
-	      { className: 'profile-items group' },
-	      React.createElement('hr', { className: 'breakpoint' }),
+	      null,
 	      React.createElement(
-	        'form',
-	        { className: 'profile-form' },
-	        React.createElement('img', { className: 'profile-pic',
-	          src: this.state.imageUrl }),
+	        'header',
+	        { className: 'user-acq-header' },
 	        React.createElement(
-	          'h3',
+	          'h1',
 	          null,
-	          this.state.name
-	        ),
-	        React.createElement('input', {
-	          className: 'upload-pic',
-	          type: 'file',
-	          onChange: this.handleFileChange }),
-	        React.createElement(
-	          'label',
-	          null,
-	          'About Me'
-	        ),
-	        React.createElement('textarea', {
-	          placeholder: 'all about me',
-	          className: 'profile-param',
-	          valueLink: this.linkState('about_me'),
-	          onBlur: this.handleInput,
-	          onKeyPress: this.handleEnter }),
-	        React.createElement(
-	          'label',
-	          null,
-	          'What kind of life can I give a pup?'
-	        ),
-	        React.createElement('textarea', {
-	          placeholder: 'all about my future pup\'s life',
-	          className: 'profile-param',
-	          valueLink: this.linkState('about_life'),
-	          onBlur: this.handleInput,
-	          onKeyPress: this.handleEnter }),
-	        React.createElement(
-	          'label',
-	          null,
-	          'My ideal dog is:'
-	        ),
-	        React.createElement('textarea', {
-	          placeholder: 'all about my future pup',
-	          className: 'profile-param',
-	          valueLink: this.linkState('ideal_dog'),
-	          onBlur: this.handleInput,
-	          onKeyPress: this.handleEnter })
+	          'Sign in!'
+	        )
 	      ),
 	      React.createElement(
 	        'form',
-	        { className: 'profile-search',
-	          encType: 'multipart/form-data' },
-	        React.createElement(
-	          'h3',
-	          null,
-	          'My pup search:'
-	        ),
+	        { className: 'user-acq-form group',
+	          onSubmit: this.handleSubmit },
 	        React.createElement(
 	          'label',
 	          null,
-	          'Age'
-	        ),
-	        React.createElement(
-	          'select',
-	          {
-	            value: this.state.age,
-	            onChange: this.handleSearchAgeUpdate,
-	            className: 'search-param' },
-	          React.createElement(
-	            'option',
-	            { value: 'Any' },
-	            'Any Age'
-	          ),
-	          React.createElement(
-	            'option',
-	            { value: 'Baby' },
-	            'Baby'
-	          ),
-	          React.createElement(
-	            'option',
-	            { value: 'Young' },
-	            'Young'
-	          ),
-	          React.createElement(
-	            'option',
-	            { value: 'Adult' },
-	            'Adult'
-	          ),
-	          React.createElement(
-	            'option',
-	            { value: 'Senior' },
-	            'Senior'
-	          )
-	        ),
-	        React.createElement(
-	          'label',
-	          null,
-	          'Size'
-	        ),
-	        React.createElement(
-	          'select',
-	          {
-	            value: this.state.size,
-	            onChange: this.handleSearchSizeUpdate,
-	            className: 'search-param' },
-	          React.createElement(
-	            'option',
-	            { value: 'Any' },
-	            'Any Size'
-	          ),
-	          React.createElement(
-	            'option',
-	            { value: 'S' },
-	            'Small'
-	          ),
-	          React.createElement(
-	            'option',
-	            { value: 'M' },
-	            'Medium'
-	          ),
-	          React.createElement(
-	            'option',
-	            { value: 'L' },
-	            'Large'
-	          ),
-	          React.createElement(
-	            'option',
-	            { value: 'XL' },
-	            'Very Large'
-	          )
-	        ),
-	        React.createElement(
-	          'label',
-	          null,
-	          'Sex'
-	        ),
-	        React.createElement(
-	          'select',
-	          {
-	            value: this.state.sex,
-	            onChange: this.handleSearchSexUpdate,
-	            className: 'search-param' },
-	          React.createElement(
-	            'option',
-	            { value: 'Any' },
-	            'Doesn\'t Matter'
-	          ),
-	          React.createElement(
-	            'option',
-	            { value: 'F' },
-	            'Female'
-	          ),
-	          React.createElement(
-	            'option',
-	            { value: 'M' },
-	            'Male'
-	          )
-	        ),
-	        React.createElement(
-	          'label',
-	          null,
-	          'Zipcode'
+	          'Email Address'
 	        ),
 	        React.createElement('input', {
+	          className: 'user-acq-input',
 	          type: 'text',
-	          placeholder: 'zipcode',
-	          value: this.state.zipcode,
-	          onChange: this.handleSearchZipUpdate,
-	          className: 'search-param' }),
+	          onChange: this.updateEmail,
+	          value: this.state.email
+	        }),
 	        React.createElement(
-	          'button',
-	          {
-	            onClick: this.handleInput },
-	          'Save updated search'
+	          'label',
+	          null,
+	          'Password'
+	        ),
+	        React.createElement('input', {
+	          className: 'user-acq-input',
+	          type: 'password',
+	          onChange: this.updatePassword,
+	          value: this.state.password
+	        }),
+	        React.createElement('input', {
+	          className: 'user-acq-button',
+	          type: 'submit',
+	          value: 'Sign in!' }),
+	        React.createElement(
+	          'a',
+	          { className: 'facebook-login',
+	            href: '/auth/facebook' },
+	          'Log in with facebook!'
 	        )
+	      ),
+	      React.createElement(
+	        'button',
+	        {
+	          className: 'toggle-existing-user-button',
+	          onClick: this.goToNewUser },
+	        'New user? Sign up!'
+	      ),
+	      React.createElement(
+	        'button',
+	        {
+	          className: 'toggle-existing-user-button',
+	          onClick: this.guestLogin },
+	        'Demo login'
 	      )
 	    );
 	  }
 	
 	});
 	
-	module.exports = Profile;
+	module.exports = LoginForm;
 
 /***/ },
 /* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(218);
+	var SessionActions = __webpack_require__(218);
+	var SessionStore = __webpack_require__(224);
+	
+	ApiUtil = {
+	  fetchCurrentUser: function (completion) {
+	    $.ajax({
+	      url: "api/session",
+	      type: "GET",
+	      dataType: "json",
+	      success: function (currentUser) {
+	        SessionActions.receiveCurrentUser(currentUser);
+	      },
+	      complete: function () {
+	        completion && completion();
+	      }
+	    });
+	  },
+	
+	  login: function (credentials, callback) {
+	    $.ajax({
+	      url: "api/session",
+	      type: "POST",
+	      dataType: "json",
+	      data: credentials,
+	      success: function (currentUser) {
+	        SessionActions.receiveCurrentUser(currentUser);
+	        callback && callback();
+	      },
+	      error: function () {
+	        alert("Invalid credentials.");
+	      }
+	    });
+	  },
+	
+	  logout: function (callback) {
+	    $.ajax({
+	      url: "api/session",
+	      type: "DELETE",
+	      dataType: "json",
+	      success: function () {
+	        callback && callback();
+	        SessionActions.logout();
+	      },
+	      error: function () {}
+	    });
+	  },
+	
+	  createUser: function (userInfo, callback) {
+	    $.ajax({
+	      url: "api/users",
+	      type: "POST",
+	      dataType: "json",
+	      data: userInfo,
+	      contentType: false,
+	      processData: false,
+	      success: function (currentUser) {
+	        SessionActions.receiveCurrentUser(currentUser);
+	        callback && callback();
+	      },
+	      error: function () {}
+	    });
+	  },
+	
+	  updateUserProfile: function (formData, id) {
+	    $.ajax({
+	      url: "api/users/" + id,
+	      type: "PATCH",
+	      dataType: "json",
+	      processData: false,
+	      contentType: false,
+	      data: formData,
+	      success: function (user) {
+	        SessionActions.receiveCurrentUser(user);
+	      },
+	      error: function () {}
+	    });
+	  }
+	};
+	
+	module.exports = ApiUtil;
 
 /***/ },
 /* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule LinkedStateMixin
-	 * @typechecks static-only
-	 */
+	var Dispatcher = __webpack_require__(219);
+	var SessionConstants = __webpack_require__(223);
 	
-	'use strict';
+	module.exports = {
+	  receiveCurrentUser: function (user) {
+	    Dispatcher.dispatch({
+	      actionType: SessionConstants.CURRENT_USER_RECEIVED,
+	      user: user
+	    });
+	  },
 	
-	var ReactLink = __webpack_require__(219);
-	var ReactStateSetters = __webpack_require__(220);
-	
-	/**
-	 * A simple mixin around ReactLink.forState().
-	 */
-	var LinkedStateMixin = {
-	  /**
-	   * Create a ReactLink that's linked to part of this component's state. The
-	   * ReactLink will have the current value of this.state[key] and will call
-	   * setState() when a change is requested.
-	   *
-	   * @param {string} key state key to update. Note: you may want to use keyOf()
-	   * if you're using Google Closure Compiler advanced mode.
-	   * @return {ReactLink} ReactLink instance linking to the state.
-	   */
-	  linkState: function (key) {
-	    return new ReactLink(this.state[key], ReactStateSetters.createStateKeySetter(this, key));
+	  logout: function () {
+	    Dispatcher.dispatch({
+	      actionType: SessionConstants.LOGOUT
+	    });
 	  }
 	};
-	
-	module.exports = LinkedStateMixin;
 
 /***/ },
 /* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactLink
-	 * @typechecks static-only
-	 */
-	
-	'use strict';
-	
-	/**
-	 * ReactLink encapsulates a common pattern in which a component wants to modify
-	 * a prop received from its parent. ReactLink allows the parent to pass down a
-	 * value coupled with a callback that, when invoked, expresses an intent to
-	 * modify that value. For example:
-	 *
-	 * React.createClass({
-	 *   getInitialState: function() {
-	 *     return {value: ''};
-	 *   },
-	 *   render: function() {
-	 *     var valueLink = new ReactLink(this.state.value, this._handleValueChange);
-	 *     return <input valueLink={valueLink} />;
-	 *   },
-	 *   _handleValueChange: function(newValue) {
-	 *     this.setState({value: newValue});
-	 *   }
-	 * });
-	 *
-	 * We have provided some sugary mixins to make the creation and
-	 * consumption of ReactLink easier; see LinkedValueUtils and LinkedStateMixin.
-	 */
-	
-	var React = __webpack_require__(2);
-	
-	/**
-	 * @param {*} value current value of the link
-	 * @param {function} requestChange callback to request a change
-	 */
-	function ReactLink(value, requestChange) {
-	  this.value = value;
-	  this.requestChange = requestChange;
-	}
-	
-	/**
-	 * Creates a PropType that enforces the ReactLink API and optionally checks the
-	 * type of the value being passed inside the link. Example:
-	 *
-	 * MyComponent.propTypes = {
-	 *   tabIndexLink: ReactLink.PropTypes.link(React.PropTypes.number)
-	 * }
-	 */
-	function createLinkTypeChecker(linkType) {
-	  var shapes = {
-	    value: typeof linkType === 'undefined' ? React.PropTypes.any.isRequired : linkType.isRequired,
-	    requestChange: React.PropTypes.func.isRequired
-	  };
-	  return React.PropTypes.shape(shapes);
-	}
-	
-	ReactLink.PropTypes = {
-	  link: createLinkTypeChecker
-	};
-	
-	module.exports = ReactLink;
+	var Dispatcher = __webpack_require__(220).Dispatcher;
+	module.exports = new Dispatcher();
 
 /***/ },
 /* 220 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
-	 * Copyright 2013-2015, Facebook, Inc.
+	 * Copyright (c) 2014-2015, Facebook, Inc.
 	 * All rights reserved.
 	 *
 	 * This source code is licensed under the BSD-style license found in the
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactStateSetters
 	 */
 	
-	'use strict';
-	
-	var ReactStateSetters = {
-	  /**
-	   * Returns a function that calls the provided function, and uses the result
-	   * of that to set the component's state.
-	   *
-	   * @param {ReactCompositeComponent} component
-	   * @param {function} funcReturningState Returned callback uses this to
-	   *                                      determine how to update state.
-	   * @return {function} callback that when invoked uses funcReturningState to
-	   *                    determined the object literal to setState.
-	   */
-	  createStateSetter: function (component, funcReturningState) {
-	    return function (a, b, c, d, e, f) {
-	      var partialState = funcReturningState.call(component, a, b, c, d, e, f);
-	      if (partialState) {
-	        component.setState(partialState);
-	      }
-	    };
-	  },
-	
-	  /**
-	   * Returns a single-argument callback that can be used to update a single
-	   * key in the component's state.
-	   *
-	   * Note: this is memoized function, which makes it inexpensive to call.
-	   *
-	   * @param {ReactCompositeComponent} component
-	   * @param {string} key The key in the state that you should update.
-	   * @return {function} callback of 1 argument which calls setState() with
-	   *                    the provided keyName and callback argument.
-	   */
-	  createStateKeySetter: function (component, key) {
-	    // Memoize the setters.
-	    var cache = component.__keySetters || (component.__keySetters = {});
-	    return cache[key] || (cache[key] = createStateKeySetter(component, key));
-	  }
-	};
-	
-	function createStateKeySetter(component, key) {
-	  // Partial state is allocated outside of the function closure so it can be
-	  // reused with every call, avoiding memory allocation when this function
-	  // is called.
-	  var partialState = {};
-	  return function stateKeySetter(value) {
-	    partialState[key] = value;
-	    component.setState(partialState);
-	  };
-	}
-	
-	ReactStateSetters.Mixin = {
-	  /**
-	   * Returns a function that calls the provided function, and uses the result
-	   * of that to set the component's state.
-	   *
-	   * For example, these statements are equivalent:
-	   *
-	   *   this.setState({x: 1});
-	   *   this.createStateSetter(function(xValue) {
-	   *     return {x: xValue};
-	   *   })(1);
-	   *
-	   * @param {function} funcReturningState Returned callback uses this to
-	   *                                      determine how to update state.
-	   * @return {function} callback that when invoked uses funcReturningState to
-	   *                    determined the object literal to setState.
-	   */
-	  createStateSetter: function (funcReturningState) {
-	    return ReactStateSetters.createStateSetter(this, funcReturningState);
-	  },
-	
-	  /**
-	   * Returns a single-argument callback that can be used to update a single
-	   * key in the component's state.
-	   *
-	   * For example, these statements are equivalent:
-	   *
-	   *   this.setState({x: 1});
-	   *   this.createStateKeySetter('x')(1);
-	   *
-	   * Note: this is memoized function, which makes it inexpensive to call.
-	   *
-	   * @param {string} key The key in the state that you should update.
-	   * @return {function} callback of 1 argument which calls setState() with
-	   *                    the provided keyName and callback argument.
-	   */
-	  createStateKeySetter: function (key) {
-	    return ReactStateSetters.createStateKeySetter(this, key);
-	  }
-	};
-	
-	module.exports = ReactStateSetters;
+	module.exports.Dispatcher = __webpack_require__(221);
+
 
 /***/ },
 /* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(222).Store;
-	var SessionConstants = __webpack_require__(240);
-	var AppDispatcher = __webpack_require__(241);
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright (c) 2014-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule Dispatcher
+	 * 
+	 * @preventMunge
+	 */
+	
+	'use strict';
+	
+	exports.__esModule = true;
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	
+	var invariant = __webpack_require__(222);
+	
+	var _prefix = 'ID_';
+	
+	/**
+	 * Dispatcher is used to broadcast payloads to registered callbacks. This is
+	 * different from generic pub-sub systems in two ways:
+	 *
+	 *   1) Callbacks are not subscribed to particular events. Every payload is
+	 *      dispatched to every registered callback.
+	 *   2) Callbacks can be deferred in whole or part until other callbacks have
+	 *      been executed.
+	 *
+	 * For example, consider this hypothetical flight destination form, which
+	 * selects a default city when a country is selected:
+	 *
+	 *   var flightDispatcher = new Dispatcher();
+	 *
+	 *   // Keeps track of which country is selected
+	 *   var CountryStore = {country: null};
+	 *
+	 *   // Keeps track of which city is selected
+	 *   var CityStore = {city: null};
+	 *
+	 *   // Keeps track of the base flight price of the selected city
+	 *   var FlightPriceStore = {price: null}
+	 *
+	 * When a user changes the selected city, we dispatch the payload:
+	 *
+	 *   flightDispatcher.dispatch({
+	 *     actionType: 'city-update',
+	 *     selectedCity: 'paris'
+	 *   });
+	 *
+	 * This payload is digested by `CityStore`:
+	 *
+	 *   flightDispatcher.register(function(payload) {
+	 *     if (payload.actionType === 'city-update') {
+	 *       CityStore.city = payload.selectedCity;
+	 *     }
+	 *   });
+	 *
+	 * When the user selects a country, we dispatch the payload:
+	 *
+	 *   flightDispatcher.dispatch({
+	 *     actionType: 'country-update',
+	 *     selectedCountry: 'australia'
+	 *   });
+	 *
+	 * This payload is digested by both stores:
+	 *
+	 *   CountryStore.dispatchToken = flightDispatcher.register(function(payload) {
+	 *     if (payload.actionType === 'country-update') {
+	 *       CountryStore.country = payload.selectedCountry;
+	 *     }
+	 *   });
+	 *
+	 * When the callback to update `CountryStore` is registered, we save a reference
+	 * to the returned token. Using this token with `waitFor()`, we can guarantee
+	 * that `CountryStore` is updated before the callback that updates `CityStore`
+	 * needs to query its data.
+	 *
+	 *   CityStore.dispatchToken = flightDispatcher.register(function(payload) {
+	 *     if (payload.actionType === 'country-update') {
+	 *       // `CountryStore.country` may not be updated.
+	 *       flightDispatcher.waitFor([CountryStore.dispatchToken]);
+	 *       // `CountryStore.country` is now guaranteed to be updated.
+	 *
+	 *       // Select the default city for the new country
+	 *       CityStore.city = getDefaultCityForCountry(CountryStore.country);
+	 *     }
+	 *   });
+	 *
+	 * The usage of `waitFor()` can be chained, for example:
+	 *
+	 *   FlightPriceStore.dispatchToken =
+	 *     flightDispatcher.register(function(payload) {
+	 *       switch (payload.actionType) {
+	 *         case 'country-update':
+	 *         case 'city-update':
+	 *           flightDispatcher.waitFor([CityStore.dispatchToken]);
+	 *           FlightPriceStore.price =
+	 *             getFlightPriceStore(CountryStore.country, CityStore.city);
+	 *           break;
+	 *     }
+	 *   });
+	 *
+	 * The `country-update` payload will be guaranteed to invoke the stores'
+	 * registered callbacks in order: `CountryStore`, `CityStore`, then
+	 * `FlightPriceStore`.
+	 */
+	
+	var Dispatcher = (function () {
+	  function Dispatcher() {
+	    _classCallCheck(this, Dispatcher);
+	
+	    this._callbacks = {};
+	    this._isDispatching = false;
+	    this._isHandled = {};
+	    this._isPending = {};
+	    this._lastID = 1;
+	  }
+	
+	  /**
+	   * Registers a callback to be invoked with every dispatched payload. Returns
+	   * a token that can be used with `waitFor()`.
+	   */
+	
+	  Dispatcher.prototype.register = function register(callback) {
+	    var id = _prefix + this._lastID++;
+	    this._callbacks[id] = callback;
+	    return id;
+	  };
+	
+	  /**
+	   * Removes a callback based on its token.
+	   */
+	
+	  Dispatcher.prototype.unregister = function unregister(id) {
+	    !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.unregister(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
+	    delete this._callbacks[id];
+	  };
+	
+	  /**
+	   * Waits for the callbacks specified to be invoked before continuing execution
+	   * of the current callback. This method should only be used by a callback in
+	   * response to a dispatched payload.
+	   */
+	
+	  Dispatcher.prototype.waitFor = function waitFor(ids) {
+	    !this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Must be invoked while dispatching.') : invariant(false) : undefined;
+	    for (var ii = 0; ii < ids.length; ii++) {
+	      var id = ids[ii];
+	      if (this._isPending[id]) {
+	        !this._isHandled[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Circular dependency detected while ' + 'waiting for `%s`.', id) : invariant(false) : undefined;
+	        continue;
+	      }
+	      !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
+	      this._invokeCallback(id);
+	    }
+	  };
+	
+	  /**
+	   * Dispatches a payload to all registered callbacks.
+	   */
+	
+	  Dispatcher.prototype.dispatch = function dispatch(payload) {
+	    !!this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch.') : invariant(false) : undefined;
+	    this._startDispatching(payload);
+	    try {
+	      for (var id in this._callbacks) {
+	        if (this._isPending[id]) {
+	          continue;
+	        }
+	        this._invokeCallback(id);
+	      }
+	    } finally {
+	      this._stopDispatching();
+	    }
+	  };
+	
+	  /**
+	   * Is this Dispatcher currently dispatching.
+	   */
+	
+	  Dispatcher.prototype.isDispatching = function isDispatching() {
+	    return this._isDispatching;
+	  };
+	
+	  /**
+	   * Call the callback stored with the given id. Also do some internal
+	   * bookkeeping.
+	   *
+	   * @internal
+	   */
+	
+	  Dispatcher.prototype._invokeCallback = function _invokeCallback(id) {
+	    this._isPending[id] = true;
+	    this._callbacks[id](this._pendingPayload);
+	    this._isHandled[id] = true;
+	  };
+	
+	  /**
+	   * Set up bookkeeping needed when dispatching.
+	   *
+	   * @internal
+	   */
+	
+	  Dispatcher.prototype._startDispatching = function _startDispatching(payload) {
+	    for (var id in this._callbacks) {
+	      this._isPending[id] = false;
+	      this._isHandled[id] = false;
+	    }
+	    this._pendingPayload = payload;
+	    this._isDispatching = true;
+	  };
+	
+	  /**
+	   * Clear bookkeeping used for dispatching.
+	   *
+	   * @internal
+	   */
+	
+	  Dispatcher.prototype._stopDispatching = function _stopDispatching() {
+	    delete this._pendingPayload;
+	    this._isDispatching = false;
+	  };
+	
+	  return Dispatcher;
+	})();
+	
+	module.exports = Dispatcher;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 222 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule invariant
+	 */
+	
+	"use strict";
+	
+	/**
+	 * Use invariant() to assert state which your program assumes to be true.
+	 *
+	 * Provide sprintf-style format (only %s is supported) and arguments
+	 * to provide information about what broke and what you were
+	 * expecting.
+	 *
+	 * The invariant message will be stripped in production, but the invariant
+	 * will remain to ensure logic does not differ in production.
+	 */
+	
+	var invariant = function (condition, format, a, b, c, d, e, f) {
+	  if (process.env.NODE_ENV !== 'production') {
+	    if (format === undefined) {
+	      throw new Error('invariant requires an error message argument');
+	    }
+	  }
+	
+	  if (!condition) {
+	    var error;
+	    if (format === undefined) {
+	      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
+	    } else {
+	      var args = [a, b, c, d, e, f];
+	      var argIndex = 0;
+	      error = new Error('Invariant Violation: ' + format.replace(/%s/g, function () {
+	        return args[argIndex++];
+	      }));
+	    }
+	
+	    error.framesToPop = 1; // we don't care about invariant's own frame
+	    throw error;
+	  }
+	};
+	
+	module.exports = invariant;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 223 */
+/***/ function(module, exports) {
+
+	module.exports = {
+	  CURRENT_USER_RECEIVED: "CURRENT_USER_RECEIVED",
+	  LOGOUT: "LOGOUT"
+	};
+
+/***/ },
+/* 224 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(225).Store;
+	var SessionConstants = __webpack_require__(223);
+	var AppDispatcher = __webpack_require__(219);
 	
 	var SessionStore = new Store(AppDispatcher);
 	
@@ -25338,7 +25369,7 @@
 	module.exports = SessionStore;
 
 /***/ },
-/* 222 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25350,15 +25381,15 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Container = __webpack_require__(223);
-	module.exports.MapStore = __webpack_require__(227);
-	module.exports.Mixin = __webpack_require__(239);
-	module.exports.ReduceStore = __webpack_require__(228);
-	module.exports.Store = __webpack_require__(229);
+	module.exports.Container = __webpack_require__(226);
+	module.exports.MapStore = __webpack_require__(229);
+	module.exports.Mixin = __webpack_require__(241);
+	module.exports.ReduceStore = __webpack_require__(230);
+	module.exports.Store = __webpack_require__(231);
 
 
 /***/ },
-/* 223 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25380,10 +25411,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStoreGroup = __webpack_require__(224);
+	var FluxStoreGroup = __webpack_require__(227);
 	
-	var invariant = __webpack_require__(225);
-	var shallowEqual = __webpack_require__(226);
+	var invariant = __webpack_require__(222);
+	var shallowEqual = __webpack_require__(228);
 	
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -25541,7 +25572,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 224 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25560,7 +25591,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(225);
+	var invariant = __webpack_require__(222);
 	
 	/**
 	 * FluxStoreGroup allows you to execute a callback on every dispatch after
@@ -25622,62 +25653,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 225 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule invariant
-	 */
-	
-	"use strict";
-	
-	/**
-	 * Use invariant() to assert state which your program assumes to be true.
-	 *
-	 * Provide sprintf-style format (only %s is supported) and arguments
-	 * to provide information about what broke and what you were
-	 * expecting.
-	 *
-	 * The invariant message will be stripped in production, but the invariant
-	 * will remain to ensure logic does not differ in production.
-	 */
-	
-	var invariant = function (condition, format, a, b, c, d, e, f) {
-	  if (process.env.NODE_ENV !== 'production') {
-	    if (format === undefined) {
-	      throw new Error('invariant requires an error message argument');
-	    }
-	  }
-	
-	  if (!condition) {
-	    var error;
-	    if (format === undefined) {
-	      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
-	    } else {
-	      var args = [a, b, c, d, e, f];
-	      var argIndex = 0;
-	      error = new Error('Invariant Violation: ' + format.replace(/%s/g, function () {
-	        return args[argIndex++];
-	      }));
-	    }
-	
-	    error.framesToPop = 1; // we don't care about invariant's own frame
-	    throw error;
-	  }
-	};
-	
-	module.exports = invariant;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
-
-/***/ },
-/* 226 */
+/* 228 */
 /***/ function(module, exports) {
 
 	/**
@@ -25732,7 +25708,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 227 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25753,10 +25729,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxReduceStore = __webpack_require__(228);
-	var Immutable = __webpack_require__(238);
+	var FluxReduceStore = __webpack_require__(230);
+	var Immutable = __webpack_require__(240);
 	
-	var invariant = __webpack_require__(225);
+	var invariant = __webpack_require__(222);
 	
 	/**
 	 * This is a simple store. It allows caching key value pairs. An implementation
@@ -25882,7 +25858,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 228 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25903,10 +25879,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStore = __webpack_require__(229);
+	var FluxStore = __webpack_require__(231);
 	
-	var abstractMethod = __webpack_require__(237);
-	var invariant = __webpack_require__(225);
+	var abstractMethod = __webpack_require__(239);
+	var invariant = __webpack_require__(222);
 	
 	var FluxReduceStore = (function (_FluxStore) {
 	  _inherits(FluxReduceStore, _FluxStore);
@@ -25989,7 +25965,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 229 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26008,11 +25984,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var _require = __webpack_require__(230);
+	var _require = __webpack_require__(232);
 	
 	var EventEmitter = _require.EventEmitter;
 	
-	var invariant = __webpack_require__(225);
+	var invariant = __webpack_require__(222);
 	
 	/**
 	 * This class should be extended by the stores in your application, like so:
@@ -26172,7 +26148,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 230 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26185,14 +26161,14 @@
 	 */
 	
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(231)
+	  EventEmitter: __webpack_require__(233)
 	};
 	
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 231 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26211,11 +26187,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var EmitterSubscription = __webpack_require__(232);
-	var EventSubscriptionVendor = __webpack_require__(234);
+	var EmitterSubscription = __webpack_require__(234);
+	var EventSubscriptionVendor = __webpack_require__(236);
 	
-	var emptyFunction = __webpack_require__(236);
-	var invariant = __webpack_require__(235);
+	var emptyFunction = __webpack_require__(238);
+	var invariant = __webpack_require__(237);
 	
 	/**
 	 * @class BaseEventEmitter
@@ -26389,7 +26365,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 232 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26410,7 +26386,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var EventSubscription = __webpack_require__(233);
+	var EventSubscription = __webpack_require__(235);
 	
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -26442,7 +26418,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 233 */
+/* 235 */
 /***/ function(module, exports) {
 
 	/**
@@ -26496,7 +26472,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 234 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26515,7 +26491,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(235);
+	var invariant = __webpack_require__(237);
 	
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -26605,7 +26581,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 235 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26660,7 +26636,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 236 */
+/* 238 */
 /***/ function(module, exports) {
 
 	/**
@@ -26702,7 +26678,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 237 */
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26719,7 +26695,7 @@
 	
 	'use strict';
 	
-	var invariant = __webpack_require__(225);
+	var invariant = __webpack_require__(222);
 	
 	function abstractMethod(className, methodName) {
 	   true ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Subclasses of %s must override %s() with their own implementation.', className, methodName) : invariant(false) : undefined;
@@ -26729,7 +26705,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 238 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -31716,7 +31692,7 @@
 	}));
 
 /***/ },
-/* 239 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -31733,9 +31709,9 @@
 	
 	'use strict';
 	
-	var FluxStoreGroup = __webpack_require__(224);
+	var FluxStoreGroup = __webpack_require__(227);
 	
-	var invariant = __webpack_require__(225);
+	var invariant = __webpack_require__(222);
 	
 	/**
 	 * `FluxContainer` should be preferred over this mixin, but it requires using
@@ -31839,387 +31815,929 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 240 */
-/***/ function(module, exports) {
-
-	module.exports = {
-	  CURRENT_USER_RECEIVED: "CURRENT_USER_RECEIVED",
-	  LOGOUT: "LOGOUT"
-	};
-
-/***/ },
-/* 241 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Dispatcher = __webpack_require__(242).Dispatcher;
-	module.exports = new Dispatcher();
-
-/***/ },
 /* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/**
-	 * Copyright (c) 2014-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 */
+	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(217);
 	
-	module.exports.Dispatcher = __webpack_require__(243);
-
+	var SignupForm = React.createClass({
+	  displayName: 'SignupForm',
+	
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+	    var formData = new FormData();
+	    formData.append("user[name]", this.state.name);
+	    formData.append("user[zipcode]", this.state.zipcode);
+	    formData.append("user[email]", this.state.email);
+	    formData.append("user[password]", this.state.password);
+	
+	    ApiUtil.createUser(formData, function () {
+	      this.context.router.push("/");
+	    }.bind(this));
+	  },
+	
+	  getInitialState: function () {
+	    return {
+	      name: "",
+	      zipcode: "",
+	      email: "",
+	      password: ""
+	    };
+	  },
+	
+	  updateName: function (e) {
+	    this.setState({ name: e.currentTarget.value });
+	  },
+	
+	  updateZip: function (e) {
+	    this.setState({ zipcode: e.currentTarget.value });
+	  },
+	
+	  updateEmail: function (e) {
+	    this.setState({ email: e.currentTarget.value });
+	  },
+	
+	  updatePassword: function (e) {
+	    this.setState({ password: e.currentTarget.value });
+	  },
+	
+	  goToExistingUser: function (e) {
+	    this.context.router.push("/login");
+	  },
+	
+	  guestLogin: function () {
+	    this.setState({
+	      email: "gigiheartsluna@gmail.com",
+	      password: "password"
+	    }, function () {
+	      ApiUtil.login(this.state, function () {
+	        this.context.router.push("/");
+	      }.bind(this));
+	    });
+	  },
+	
+	  render: function () {
+	
+	    return React.createElement(
+	      'section',
+	      null,
+	      React.createElement(
+	        'header',
+	        { className: 'user-acq-header' },
+	        React.createElement(
+	          'h1',
+	          null,
+	          'Almost there!'
+	        ),
+	        React.createElement(
+	          'h3',
+	          null,
+	          'Your new best friend is only a few clicks away.'
+	        )
+	      ),
+	      React.createElement(
+	        'form',
+	        { className: 'user-acq-form group', onSubmit: this.handleSubmit },
+	        React.createElement(
+	          'label',
+	          null,
+	          'Name'
+	        ),
+	        React.createElement('input', { className: 'user-acq-input', type: 'text', onChange: this.updateName, value: this.state.name }),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Zip Code'
+	        ),
+	        React.createElement('input', { className: 'user-acq-input', type: 'text', onChange: this.updateZip, value: this.state.zipcode }),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Email Address'
+	        ),
+	        React.createElement('input', { className: 'user-acq-input', type: 'text', onChange: this.updateEmail, value: this.state.email }),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Password'
+	        ),
+	        React.createElement('input', { className: 'user-acq-input', type: 'password', onChange: this.updatePassword, value: this.state.password }),
+	        React.createElement('input', { className: 'user-acq-button', type: 'submit', value: 'Create account!' }),
+	        React.createElement(
+	          'a',
+	          { className: 'facebook-login',
+	            href: '/auth/facebook' },
+	          'Log in with facebook!'
+	        )
+	      ),
+	      React.createElement(
+	        'button',
+	        {
+	          className: 'toggle-existing-user-button',
+	          onClick: this.goToExistingUser },
+	        'Existing user? Sign in!'
+	      ),
+	      React.createElement(
+	        'button',
+	        {
+	          className: 'toggle-existing-user-button',
+	          onClick: this.guestLogin },
+	        'Demo login'
+	      )
+	    );
+	  }
+	
+	  //
+	
+	});
+	
+	module.exports = SignupForm;
 
 /***/ },
 /* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright (c) 2014-2015, Facebook, Inc.
+	var React = __webpack_require__(1);
+	
+	var Splash = React.createClass({
+	  displayName: 'Splash',
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+	    this.context.router.push('/signup');
+	  },
+	
+	  goToExistingUser: function () {
+	    this.context.router.push('/login');
+	  },
+	
+	  guestLogin: function () {
+	    this.setState({
+	      email: "gigiheartsluna@gmail.com",
+	      password: "password"
+	    }, function () {
+	      ApiUtil.login(this.state, function () {
+	        this.context.router.push("/");
+	      }.bind(this));
+	    });
+	  },
+	
+	  render: function () {
+	
+	    return React.createElement(
+	      'section',
+	      null,
+	      React.createElement(
+	        'header',
+	        { className: 'user-acq-header' },
+	        React.createElement(
+	          'h1',
+	          null,
+	          'Find your new best friend in minutes.'
+	        )
+	      ),
+	      React.createElement(
+	        'form',
+	        { className: 'user-acq-form group', onSubmit: this.handleSubmit },
+	        React.createElement(
+	          'h4',
+	          null,
+	          'I am a '
+	        ),
+	        React.createElement(
+	          'select',
+	          null,
+	          React.createElement(
+	            'option',
+	            null,
+	            'Puppy'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            'Dog'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            'Canine'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            'Hound'
+	          )
+	        ),
+	        React.createElement(
+	          'select',
+	          null,
+	          React.createElement(
+	            'option',
+	            null,
+	            'Cuddler'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            'Lover'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            'Enthusiast'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            'Admirer'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            'Nut'
+	          )
+	        ),
+	        React.createElement('input', { className: 'user-acq-button', type: 'submit', value: 'Continue' })
+	      ),
+	      React.createElement(
+	        'button',
+	        {
+	          className: 'toggle-existing-user-button',
+	          onClick: this.goToExistingUser },
+	        'Existing user? Sign in!'
+	      ),
+	      React.createElement(
+	        'button',
+	        {
+	          className: 'toggle-existing-user-button',
+	          onClick: this.guestLogin },
+	        'Demo login'
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Splash;
+
+/***/ },
+/* 244 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var SessionStore = __webpack_require__(224);
+	
+	var App = React.createClass({
+	  displayName: 'App',
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  getInitialState: function () {
+	    return {
+	      currentUser: SessionStore.currentUser()
+	    };
+	  },
+	
+	  componentDidMount: function () {
+	    this.sessionStoreToken = SessionStore.addListener(this.handleChange);
+	
+	    this.handleChange();
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.sessionStoreToken.remove();
+	  },
+	
+	  componentWillReceiveProps: function () {},
+	
+	  handleChange: function () {
+	    if (SessionStore.isLoggedIn()) {
+	      this.setState({ currentUser: SessionStore.currentUser() });
+	    } else {
+	      this.context.router.push("/login");
+	    }
+	  },
+	
+	  handleProfileClick: function () {
+	    this.context.router.push("/profile");
+	  },
+	
+	  handleBrowseClick: function () {
+	    this.context.router.push("/browse");
+	  },
+	
+	  handleQuickMatchClick: function () {
+	    this.context.router.push("/quickmatch");
+	  },
+	
+	  handleFavoritesClick: function () {
+	    this.context.router.push("/favorites");
+	  },
+	
+	  logOut: function (e) {
+	    e.preventDefault();
+	    ApiUtil.logout(function () {
+	      this.context.router.push("/login");
+	    }.bind(this));
+	  },
+	
+	  render: function () {
+	    var button, welcomeMessage;
+	
+	    if (this.state.currentUser) {
+	      welcomeMessage = React.createElement(
+	        'h2',
+	        { className: 'welcome' },
+	        'Welcome, ',
+	        this.state.currentUser.name,
+	        '!'
+	      );
+	      button = React.createElement(
+	        'button',
+	        { className: 'logout', onClick: this.logOut },
+	        'Logout'
+	      );
+	    }
+	
+	    return React.createElement(
+	      'div',
+	      null,
+	      welcomeMessage,
+	      React.createElement(
+	        'nav',
+	        { className: 'tabs group' },
+	        React.createElement('div', { className: 'root-tab-logo' }),
+	        React.createElement(
+	          'li',
+	          { className: 'root-tab', onClick: this.handleBrowseClick },
+	          'Browse Dogs'
+	        ),
+	        React.createElement(
+	          'li',
+	          { className: 'root-tab', onClick: this.handleQuickMatchClick },
+	          'QuickMatch'
+	        ),
+	        React.createElement(
+	          'li',
+	          { className: 'root-tab', onClick: this.handleProfileClick },
+	          'Profile'
+	        ),
+	        React.createElement(
+	          'li',
+	          { className: 'root-tab', onClick: this.handleFavoritesClick },
+	          'Favorites'
+	        ),
+	        button
+	      ),
+	      this.props.children
+	    );
+	  }
+	
+	});
+	
+	module.exports = App;
+
+/***/ },
+/* 245 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var LinkedStateMixin = __webpack_require__(246);
+	var SessionStore = __webpack_require__(224);
+	var ApiUtil = __webpack_require__(217);
+	
+	var Profile = React.createClass({
+	  displayName: 'Profile',
+	
+	  mixins: [LinkedStateMixin],
+	
+	  getInitialState: function () {
+	    return SessionStore.currentUser();
+	  },
+	
+	  componentDidMount: function () {
+	    this.userListener = SessionStore.addListener(this.onChange);
+	    ApiUtil.fetchCurrentUser();
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.userListener.remove();
+	  },
+	
+	  onChange: function () {
+	    this.setState({
+	      age: SessionStore.currentUser().search_age,
+	      size: SessionStore.currentUser().search_size,
+	      sex: SessionStore.currentUser().search_sex,
+	      about_me: SessionStore.currentUser().about_me,
+	      about_life: SessionStore.currentUser().about_life,
+	      idealdog: SessionStore.currentUser().ideal_dog,
+	      zipcode: SessionStore.currentUser().zipcode,
+	      imageUrl: SessionStore.currentUser().imageUrl
+	    });
+	  },
+	
+	  handleFileChange: function (e) {
+	    var file = e.currentTarget.files[0];
+	    var reader = new FileReader();
+	    reader.onloadend = function () {
+	      var result = reader.result;
+	      this.setState({ imageFile: file, imageUrl: result });
+	      this.handleInput();
+	    }.bind(this);
+	
+	    reader.readAsDataURL(file);
+	  },
+	
+	  handleEnter: function (e) {
+	    if (e.charCode === 13) {
+	      this.handleInput();
+	    }
+	  },
+	
+	  handleSearchSexUpdate: function (e) {
+	    e.preventDefault();
+	    this.setState({ sex: e.target.value });
+	  },
+	
+	  handleSearchSizeUpdate: function (e) {
+	    e.preventDefault();
+	    this.setState({ size: e.target.value });
+	  },
+	
+	  handleSearchAgeUpdate: function (e) {
+	    e.preventDefault();
+	    this.setState({ age: e.target.value });
+	  },
+	
+	  handleSearchZipUpdate: function (e) {
+	    e.preventDefault();
+	    this.setState({ zipcode: e.target.value });
+	  },
+	
+	  handleInput: function (e) {
+	    e.preventDefault();
+	
+	    var formData = new FormData();
+	    formData.append("user[search_sex]", this.state.sex);
+	    formData.append("user[search_size]", this.state.size);
+	    formData.append("user[search_age]", this.state.age);
+	    formData.append("user[about_me]", this.state.about_me);
+	    formData.append("user[about_life]", this.state.about_life);
+	    formData.append("user[ideal_dog]", this.state.ideal_dog);
+	    formData.append("user[zipcode]", this.state.zipcode);
+	
+	    if (this.state.imageFile) {
+	      formData.append("user[image]", this.state.imageFile);
+	    }
+	
+	    ApiUtil.updateUserProfile(formData, this.state.id);
+	  },
+	
+	  render: function () {
+	    if (!SessionStore.currentUserHasBeenFetched()) {
+	      return React.createElement(
+	        'div',
+	        null,
+	        'Loading current user..'
+	      );
+	    }
+	
+	    return React.createElement(
+	      'section',
+	      { className: 'profile-items group' },
+	      React.createElement('hr', { className: 'breakpoint' }),
+	      React.createElement(
+	        'form',
+	        { className: 'profile-form' },
+	        React.createElement('img', { className: 'profile-pic',
+	          src: this.state.imageUrl }),
+	        React.createElement(
+	          'h3',
+	          null,
+	          this.state.name
+	        ),
+	        React.createElement('input', {
+	          className: 'upload-pic',
+	          type: 'file',
+	          onChange: this.handleFileChange }),
+	        React.createElement(
+	          'label',
+	          null,
+	          'About Me'
+	        ),
+	        React.createElement('textarea', {
+	          placeholder: 'all about me',
+	          className: 'profile-param',
+	          valueLink: this.linkState('about_me'),
+	          onBlur: this.handleInput,
+	          onKeyPress: this.handleEnter }),
+	        React.createElement(
+	          'label',
+	          null,
+	          'What kind of life can I give a pup?'
+	        ),
+	        React.createElement('textarea', {
+	          placeholder: 'all about my future pup\'s life',
+	          className: 'profile-param',
+	          valueLink: this.linkState('about_life'),
+	          onBlur: this.handleInput,
+	          onKeyPress: this.handleEnter }),
+	        React.createElement(
+	          'label',
+	          null,
+	          'My ideal dog is:'
+	        ),
+	        React.createElement('textarea', {
+	          placeholder: 'all about my future pup',
+	          className: 'profile-param',
+	          valueLink: this.linkState('ideal_dog'),
+	          onBlur: this.handleInput,
+	          onKeyPress: this.handleEnter })
+	      ),
+	      React.createElement(
+	        'form',
+	        { className: 'profile-search',
+	          encType: 'multipart/form-data' },
+	        React.createElement(
+	          'h3',
+	          null,
+	          'My pup search:'
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Age'
+	        ),
+	        React.createElement(
+	          'select',
+	          {
+	            value: this.state.age,
+	            onChange: this.handleSearchAgeUpdate,
+	            className: 'search-param' },
+	          React.createElement(
+	            'option',
+	            { value: 'Any' },
+	            'Any Age'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: 'Baby' },
+	            'Baby'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: 'Young' },
+	            'Young'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: 'Adult' },
+	            'Adult'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: 'Senior' },
+	            'Senior'
+	          )
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Size'
+	        ),
+	        React.createElement(
+	          'select',
+	          {
+	            value: this.state.size,
+	            onChange: this.handleSearchSizeUpdate,
+	            className: 'search-param' },
+	          React.createElement(
+	            'option',
+	            { value: 'Any' },
+	            'Any Size'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: 'S' },
+	            'Small'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: 'M' },
+	            'Medium'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: 'L' },
+	            'Large'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: 'XL' },
+	            'Very Large'
+	          )
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Sex'
+	        ),
+	        React.createElement(
+	          'select',
+	          {
+	            value: this.state.sex,
+	            onChange: this.handleSearchSexUpdate,
+	            className: 'search-param' },
+	          React.createElement(
+	            'option',
+	            { value: 'Any' },
+	            'Doesn\'t Matter'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: 'F' },
+	            'Female'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: 'M' },
+	            'Male'
+	          )
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Zipcode'
+	        ),
+	        React.createElement('input', {
+	          type: 'text',
+	          placeholder: 'zipcode',
+	          value: this.state.zipcode,
+	          onChange: this.handleSearchZipUpdate,
+	          className: 'search-param' }),
+	        React.createElement(
+	          'button',
+	          {
+	            onClick: this.handleInput },
+	          'Save updated search'
+	        )
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Profile;
+
+/***/ },
+/* 246 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(247);
+
+/***/ },
+/* 247 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
 	 * All rights reserved.
 	 *
 	 * This source code is licensed under the BSD-style license found in the
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
-	 * @providesModule Dispatcher
-	 * 
-	 * @preventMunge
+	 * @providesModule LinkedStateMixin
+	 * @typechecks static-only
 	 */
 	
 	'use strict';
 	
-	exports.__esModule = true;
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-	
-	var invariant = __webpack_require__(225);
-	
-	var _prefix = 'ID_';
+	var ReactLink = __webpack_require__(248);
+	var ReactStateSetters = __webpack_require__(249);
 	
 	/**
-	 * Dispatcher is used to broadcast payloads to registered callbacks. This is
-	 * different from generic pub-sub systems in two ways:
+	 * A simple mixin around ReactLink.forState().
+	 */
+	var LinkedStateMixin = {
+	  /**
+	   * Create a ReactLink that's linked to part of this component's state. The
+	   * ReactLink will have the current value of this.state[key] and will call
+	   * setState() when a change is requested.
+	   *
+	   * @param {string} key state key to update. Note: you may want to use keyOf()
+	   * if you're using Google Closure Compiler advanced mode.
+	   * @return {ReactLink} ReactLink instance linking to the state.
+	   */
+	  linkState: function (key) {
+	    return new ReactLink(this.state[key], ReactStateSetters.createStateKeySetter(this, key));
+	  }
+	};
+	
+	module.exports = LinkedStateMixin;
+
+/***/ },
+/* 248 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
 	 *
-	 *   1) Callbacks are not subscribed to particular events. Every payload is
-	 *      dispatched to every registered callback.
-	 *   2) Callbacks can be deferred in whole or part until other callbacks have
-	 *      been executed.
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
-	 * For example, consider this hypothetical flight destination form, which
-	 * selects a default city when a country is selected:
-	 *
-	 *   var flightDispatcher = new Dispatcher();
-	 *
-	 *   // Keeps track of which country is selected
-	 *   var CountryStore = {country: null};
-	 *
-	 *   // Keeps track of which city is selected
-	 *   var CityStore = {city: null};
-	 *
-	 *   // Keeps track of the base flight price of the selected city
-	 *   var FlightPriceStore = {price: null}
-	 *
-	 * When a user changes the selected city, we dispatch the payload:
-	 *
-	 *   flightDispatcher.dispatch({
-	 *     actionType: 'city-update',
-	 *     selectedCity: 'paris'
-	 *   });
-	 *
-	 * This payload is digested by `CityStore`:
-	 *
-	 *   flightDispatcher.register(function(payload) {
-	 *     if (payload.actionType === 'city-update') {
-	 *       CityStore.city = payload.selectedCity;
-	 *     }
-	 *   });
-	 *
-	 * When the user selects a country, we dispatch the payload:
-	 *
-	 *   flightDispatcher.dispatch({
-	 *     actionType: 'country-update',
-	 *     selectedCountry: 'australia'
-	 *   });
-	 *
-	 * This payload is digested by both stores:
-	 *
-	 *   CountryStore.dispatchToken = flightDispatcher.register(function(payload) {
-	 *     if (payload.actionType === 'country-update') {
-	 *       CountryStore.country = payload.selectedCountry;
-	 *     }
-	 *   });
-	 *
-	 * When the callback to update `CountryStore` is registered, we save a reference
-	 * to the returned token. Using this token with `waitFor()`, we can guarantee
-	 * that `CountryStore` is updated before the callback that updates `CityStore`
-	 * needs to query its data.
-	 *
-	 *   CityStore.dispatchToken = flightDispatcher.register(function(payload) {
-	 *     if (payload.actionType === 'country-update') {
-	 *       // `CountryStore.country` may not be updated.
-	 *       flightDispatcher.waitFor([CountryStore.dispatchToken]);
-	 *       // `CountryStore.country` is now guaranteed to be updated.
-	 *
-	 *       // Select the default city for the new country
-	 *       CityStore.city = getDefaultCityForCountry(CountryStore.country);
-	 *     }
-	 *   });
-	 *
-	 * The usage of `waitFor()` can be chained, for example:
-	 *
-	 *   FlightPriceStore.dispatchToken =
-	 *     flightDispatcher.register(function(payload) {
-	 *       switch (payload.actionType) {
-	 *         case 'country-update':
-	 *         case 'city-update':
-	 *           flightDispatcher.waitFor([CityStore.dispatchToken]);
-	 *           FlightPriceStore.price =
-	 *             getFlightPriceStore(CountryStore.country, CityStore.city);
-	 *           break;
-	 *     }
-	 *   });
-	 *
-	 * The `country-update` payload will be guaranteed to invoke the stores'
-	 * registered callbacks in order: `CountryStore`, `CityStore`, then
-	 * `FlightPriceStore`.
+	 * @providesModule ReactLink
+	 * @typechecks static-only
 	 */
 	
-	var Dispatcher = (function () {
-	  function Dispatcher() {
-	    _classCallCheck(this, Dispatcher);
+	'use strict';
 	
-	    this._callbacks = {};
-	    this._isDispatching = false;
-	    this._isHandled = {};
-	    this._isPending = {};
-	    this._lastID = 1;
-	  }
+	/**
+	 * ReactLink encapsulates a common pattern in which a component wants to modify
+	 * a prop received from its parent. ReactLink allows the parent to pass down a
+	 * value coupled with a callback that, when invoked, expresses an intent to
+	 * modify that value. For example:
+	 *
+	 * React.createClass({
+	 *   getInitialState: function() {
+	 *     return {value: ''};
+	 *   },
+	 *   render: function() {
+	 *     var valueLink = new ReactLink(this.state.value, this._handleValueChange);
+	 *     return <input valueLink={valueLink} />;
+	 *   },
+	 *   _handleValueChange: function(newValue) {
+	 *     this.setState({value: newValue});
+	 *   }
+	 * });
+	 *
+	 * We have provided some sugary mixins to make the creation and
+	 * consumption of ReactLink easier; see LinkedValueUtils and LinkedStateMixin.
+	 */
 	
-	  /**
-	   * Registers a callback to be invoked with every dispatched payload. Returns
-	   * a token that can be used with `waitFor()`.
-	   */
+	var React = __webpack_require__(2);
 	
-	  Dispatcher.prototype.register = function register(callback) {
-	    var id = _prefix + this._lastID++;
-	    this._callbacks[id] = callback;
-	    return id;
+	/**
+	 * @param {*} value current value of the link
+	 * @param {function} requestChange callback to request a change
+	 */
+	function ReactLink(value, requestChange) {
+	  this.value = value;
+	  this.requestChange = requestChange;
+	}
+	
+	/**
+	 * Creates a PropType that enforces the ReactLink API and optionally checks the
+	 * type of the value being passed inside the link. Example:
+	 *
+	 * MyComponent.propTypes = {
+	 *   tabIndexLink: ReactLink.PropTypes.link(React.PropTypes.number)
+	 * }
+	 */
+	function createLinkTypeChecker(linkType) {
+	  var shapes = {
+	    value: typeof linkType === 'undefined' ? React.PropTypes.any.isRequired : linkType.isRequired,
+	    requestChange: React.PropTypes.func.isRequired
 	  };
+	  return React.PropTypes.shape(shapes);
+	}
 	
-	  /**
-	   * Removes a callback based on its token.
-	   */
+	ReactLink.PropTypes = {
+	  link: createLinkTypeChecker
+	};
 	
-	  Dispatcher.prototype.unregister = function unregister(id) {
-	    !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.unregister(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
-	    delete this._callbacks[id];
-	  };
-	
-	  /**
-	   * Waits for the callbacks specified to be invoked before continuing execution
-	   * of the current callback. This method should only be used by a callback in
-	   * response to a dispatched payload.
-	   */
-	
-	  Dispatcher.prototype.waitFor = function waitFor(ids) {
-	    !this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Must be invoked while dispatching.') : invariant(false) : undefined;
-	    for (var ii = 0; ii < ids.length; ii++) {
-	      var id = ids[ii];
-	      if (this._isPending[id]) {
-	        !this._isHandled[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Circular dependency detected while ' + 'waiting for `%s`.', id) : invariant(false) : undefined;
-	        continue;
-	      }
-	      !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
-	      this._invokeCallback(id);
-	    }
-	  };
-	
-	  /**
-	   * Dispatches a payload to all registered callbacks.
-	   */
-	
-	  Dispatcher.prototype.dispatch = function dispatch(payload) {
-	    !!this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch.') : invariant(false) : undefined;
-	    this._startDispatching(payload);
-	    try {
-	      for (var id in this._callbacks) {
-	        if (this._isPending[id]) {
-	          continue;
-	        }
-	        this._invokeCallback(id);
-	      }
-	    } finally {
-	      this._stopDispatching();
-	    }
-	  };
-	
-	  /**
-	   * Is this Dispatcher currently dispatching.
-	   */
-	
-	  Dispatcher.prototype.isDispatching = function isDispatching() {
-	    return this._isDispatching;
-	  };
-	
-	  /**
-	   * Call the callback stored with the given id. Also do some internal
-	   * bookkeeping.
-	   *
-	   * @internal
-	   */
-	
-	  Dispatcher.prototype._invokeCallback = function _invokeCallback(id) {
-	    this._isPending[id] = true;
-	    this._callbacks[id](this._pendingPayload);
-	    this._isHandled[id] = true;
-	  };
-	
-	  /**
-	   * Set up bookkeeping needed when dispatching.
-	   *
-	   * @internal
-	   */
-	
-	  Dispatcher.prototype._startDispatching = function _startDispatching(payload) {
-	    for (var id in this._callbacks) {
-	      this._isPending[id] = false;
-	      this._isHandled[id] = false;
-	    }
-	    this._pendingPayload = payload;
-	    this._isDispatching = true;
-	  };
-	
-	  /**
-	   * Clear bookkeeping used for dispatching.
-	   *
-	   * @internal
-	   */
-	
-	  Dispatcher.prototype._stopDispatching = function _stopDispatching() {
-	    delete this._pendingPayload;
-	    this._isDispatching = false;
-	  };
-	
-	  return Dispatcher;
-	})();
-	
-	module.exports = Dispatcher;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+	module.exports = ReactLink;
 
 /***/ },
-/* 244 */
-/***/ function(module, exports, __webpack_require__) {
+/* 249 */
+/***/ function(module, exports) {
 
-	var SessionActions = __webpack_require__(245);
-	var SessionStore = __webpack_require__(221);
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactStateSetters
+	 */
 	
-	ApiUtil = {
-	  fetchCurrentUser: function (completion) {
-	    $.ajax({
-	      url: "api/session",
-	      type: "GET",
-	      dataType: "json",
-	      success: function (currentUser) {
-	        SessionActions.receiveCurrentUser(currentUser);
-	      },
-	      complete: function () {
-	        completion && completion();
+	'use strict';
+	
+	var ReactStateSetters = {
+	  /**
+	   * Returns a function that calls the provided function, and uses the result
+	   * of that to set the component's state.
+	   *
+	   * @param {ReactCompositeComponent} component
+	   * @param {function} funcReturningState Returned callback uses this to
+	   *                                      determine how to update state.
+	   * @return {function} callback that when invoked uses funcReturningState to
+	   *                    determined the object literal to setState.
+	   */
+	  createStateSetter: function (component, funcReturningState) {
+	    return function (a, b, c, d, e, f) {
+	      var partialState = funcReturningState.call(component, a, b, c, d, e, f);
+	      if (partialState) {
+	        component.setState(partialState);
 	      }
-	    });
+	    };
 	  },
 	
-	  login: function (credentials, callback) {
-	    $.ajax({
-	      url: "api/session",
-	      type: "POST",
-	      dataType: "json",
-	      data: credentials,
-	      success: function (currentUser) {
-	        SessionActions.receiveCurrentUser(currentUser);
-	        callback && callback();
-	      },
-	      error: function () {
-	        alert("Invalid credentials.");
-	      }
-	    });
-	  },
-	
-	  logout: function (callback) {
-	    $.ajax({
-	      url: "api/session",
-	      type: "DELETE",
-	      dataType: "json",
-	      success: function () {
-	        callback && callback();
-	        SessionActions.logout();
-	      },
-	      error: function () {}
-	    });
-	  },
-	
-	  createUser: function (userInfo, callback) {
-	    $.ajax({
-	      url: "api/users",
-	      type: "POST",
-	      dataType: "json",
-	      data: userInfo,
-	      contentType: false,
-	      processData: false,
-	      success: function (currentUser) {
-	        SessionActions.receiveCurrentUser(currentUser);
-	        callback && callback();
-	      },
-	      error: function () {}
-	    });
-	  },
-	
-	  updateUserProfile: function (formData, id) {
-	    $.ajax({
-	      url: "api/users/" + id,
-	      type: "PATCH",
-	      dataType: "json",
-	      processData: false,
-	      contentType: false,
-	      data: formData,
-	      success: function (user) {
-	        SessionActions.receiveCurrentUser(user);
-	      },
-	      error: function () {}
-	    });
+	  /**
+	   * Returns a single-argument callback that can be used to update a single
+	   * key in the component's state.
+	   *
+	   * Note: this is memoized function, which makes it inexpensive to call.
+	   *
+	   * @param {ReactCompositeComponent} component
+	   * @param {string} key The key in the state that you should update.
+	   * @return {function} callback of 1 argument which calls setState() with
+	   *                    the provided keyName and callback argument.
+	   */
+	  createStateKeySetter: function (component, key) {
+	    // Memoize the setters.
+	    var cache = component.__keySetters || (component.__keySetters = {});
+	    return cache[key] || (cache[key] = createStateKeySetter(component, key));
 	  }
 	};
 	
-	module.exports = ApiUtil;
-
-/***/ },
-/* 245 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Dispatcher = __webpack_require__(241);
-	var SessionConstants = __webpack_require__(240);
+	function createStateKeySetter(component, key) {
+	  // Partial state is allocated outside of the function closure so it can be
+	  // reused with every call, avoiding memory allocation when this function
+	  // is called.
+	  var partialState = {};
+	  return function stateKeySetter(value) {
+	    partialState[key] = value;
+	    component.setState(partialState);
+	  };
+	}
 	
-	module.exports = {
-	  receiveCurrentUser: function (user) {
-	    Dispatcher.dispatch({
-	      actionType: SessionConstants.CURRENT_USER_RECEIVED,
-	      user: user
-	    });
+	ReactStateSetters.Mixin = {
+	  /**
+	   * Returns a function that calls the provided function, and uses the result
+	   * of that to set the component's state.
+	   *
+	   * For example, these statements are equivalent:
+	   *
+	   *   this.setState({x: 1});
+	   *   this.createStateSetter(function(xValue) {
+	   *     return {x: xValue};
+	   *   })(1);
+	   *
+	   * @param {function} funcReturningState Returned callback uses this to
+	   *                                      determine how to update state.
+	   * @return {function} callback that when invoked uses funcReturningState to
+	   *                    determined the object literal to setState.
+	   */
+	  createStateSetter: function (funcReturningState) {
+	    return ReactStateSetters.createStateSetter(this, funcReturningState);
 	  },
 	
-	  logout: function () {
-	    Dispatcher.dispatch({
-	      actionType: SessionConstants.LOGOUT
-	    });
+	  /**
+	   * Returns a single-argument callback that can be used to update a single
+	   * key in the component's state.
+	   *
+	   * For example, these statements are equivalent:
+	   *
+	   *   this.setState({x: 1});
+	   *   this.createStateKeySetter('x')(1);
+	   *
+	   * Note: this is memoized function, which makes it inexpensive to call.
+	   *
+	   * @param {string} key The key in the state that you should update.
+	   * @return {function} callback of 1 argument which calls setState() with
+	   *                    the provided keyName and callback argument.
+	   */
+	  createStateKeySetter: function (key) {
+	    return ReactStateSetters.createStateKeySetter(this, key);
 	  }
 	};
+	
+	module.exports = ReactStateSetters;
 
 /***/ },
-/* 246 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var DogsIndex = __webpack_require__(247);
+	var DogsIndex = __webpack_require__(251);
 	
 	var Browse = React.createClass({
 	  displayName: 'Browse',
@@ -32238,14 +32756,14 @@
 	module.exports = Browse;
 
 /***/ },
-/* 247 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var DogStore = __webpack_require__(248);
-	var SessionStore = __webpack_require__(221);
-	var DogUtil = __webpack_require__(250);
-	var DogsIndexItem = __webpack_require__(252);
+	var DogStore = __webpack_require__(252);
+	var SessionStore = __webpack_require__(224);
+	var DogUtil = __webpack_require__(254);
+	var DogsIndexItem = __webpack_require__(256);
 	
 	var DogsIndex = React.createClass({
 	  displayName: 'DogsIndex',
@@ -32521,12 +33039,12 @@
 	module.exports = DogsIndex;
 
 /***/ },
-/* 248 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(222).Store;
-	var Dispatcher = __webpack_require__(241);
-	var DogConstants = __webpack_require__(249);
+	var Store = __webpack_require__(225).Store;
+	var Dispatcher = __webpack_require__(219);
+	var DogConstants = __webpack_require__(253);
 	
 	var DogStore = new Store(Dispatcher);
 	
@@ -32613,7 +33131,7 @@
 	module.exports = DogStore;
 
 /***/ },
-/* 249 */
+/* 253 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -32622,10 +33140,10 @@
 	};
 
 /***/ },
-/* 250 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var DogActions = __webpack_require__(251);
+	var DogActions = __webpack_require__(255);
 	
 	var DogUtil = {
 	  fetchManyDogs: function (searchParams) {
@@ -32676,11 +33194,11 @@
 	module.exports = DogUtil;
 
 /***/ },
-/* 251 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Dispatcher = __webpack_require__(241);
-	var DogConstants = __webpack_require__(249);
+	var Dispatcher = __webpack_require__(219);
+	var DogConstants = __webpack_require__(253);
 	
 	module.exports = {
 	  receiveDogs: function (dogs, offset) {
@@ -32700,14 +33218,14 @@
 	};
 
 /***/ },
-/* 252 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var DogStore = __webpack_require__(248);
-	var SessionStore = __webpack_require__(221);
-	var DogUtil = __webpack_require__(250);
-	var DogDetail = __webpack_require__(253);
+	var DogStore = __webpack_require__(252);
+	var SessionStore = __webpack_require__(224);
+	var DogUtil = __webpack_require__(254);
+	var DogDetail = __webpack_require__(257);
 	
 	var DogsIndexItem = React.createClass({
 	  displayName: 'DogsIndexItem',
@@ -32751,12 +33269,15 @@
 	module.exports = DogsIndexItem;
 
 /***/ },
-/* 253 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var DogStore = __webpack_require__(248);
-	var DogUtil = __webpack_require__(250);
+	var DogStore = __webpack_require__(252);
+	var DogUtil = __webpack_require__(254);
+	var FavoriteUtil = __webpack_require__(260);
+	var SessionStore = __webpack_require__(224);
+	var FavoriteStore = __webpack_require__(263);
 	
 	var DogDetail = React.createClass({
 	  displayName: 'DogDetail',
@@ -32780,15 +33301,40 @@
 	
 	  componentDidMount: function () {
 	    this.dogListener = DogStore.addListener(this._onChange);
+	    this.favoriteListener = FavoriteStore.addListener(this._onChange);
 	    DogUtil.fetchSingleDog(parseInt(this.props.params.dogId));
 	  },
 	
 	  componentWillUnmount: function () {
 	    this.dogListener.remove();
+	    this.favoriteListener.remove();
 	  },
 	
 	  componentWillReceiveProps: function (newProps) {
 	    this._onChange();
+	  },
+	
+	  toggleFavorite: function () {
+	    var photo;
+	
+	    if (this.state.dog.photos) {
+	      for (var i = 0; i < this.state.dog.photos.length; i++) {
+	        if (this.state.dog.photos[i].$t.includes("-x")) {
+	          photo = this.state.dog.photos[i].$t;
+	        }
+	      }
+	    }
+	
+	    var favoriteData = {
+	      favorite: {
+	        user_id: SessionStore.currentUser().id,
+	        dog_id: parseInt(this.state.dog.id),
+	        dog_photo: photo,
+	        dog_name: this.state.dog.name
+	      }
+	    };
+	
+	    FavoriteUtil.createFavorite(favoriteData);
 	  },
 	
 	  render: function () {
@@ -32823,14 +33369,16 @@
 	      breeds = this.state.dog.breeds.$t;
 	    }
 	
-	    var favoriteText = "Add Favorite";
+	    var favoriteText = FavoriteStore.isFavorite(this.state.dog.id) ? "Remove Favorite" : "Add Favorite";
 	
 	    return React.createElement(
 	      'section',
 	      { className: 'dog-show-content group' },
 	      React.createElement(
 	        'button',
-	        { className: 'favorite-button' },
+	        {
+	          className: 'favorite-button',
+	          onClick: this.toggleFavorite },
 	        favoriteText
 	      ),
 	      React.createElement(
@@ -32935,531 +33483,15 @@
 	module.exports = DogDetail;
 
 /***/ },
-/* 254 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(244);
-	
-	var LoginForm = React.createClass({
-	  displayName: 'LoginForm',
-	
-	
-	  contextTypes: {
-	    router: React.PropTypes.object.isRequired
-	  },
-	
-	  getInitialState: function () {
-	    return {
-	      email: "",
-	      password: ""
-	    };
-	  },
-	
-	  updateEmail: function (e) {
-	    this.setState({ email: e.currentTarget.value });
-	  },
-	
-	  updatePassword: function (e) {
-	    this.setState({ password: e.currentTarget.value });
-	  },
-	
-	  handleSubmit: function (e) {
-	    e.preventDefault();
-	    ApiUtil.login(this.state, function () {
-	      this.context.router.push("/");
-	    }.bind(this));
-	  },
-	
-	  goToNewUser: function (e) {
-	    this.context.router.push("/splash");
-	  },
-	
-	  guestLogin: function () {
-	    this.setState({
-	      email: "gigiheartsluna@gmail.com",
-	      password: "password"
-	    }, function () {
-	      ApiUtil.login(this.state, function () {
-	        this.context.router.push("/browse");
-	      }.bind(this));
-	    });
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'section',
-	      null,
-	      React.createElement(
-	        'header',
-	        { className: 'user-acq-header' },
-	        React.createElement(
-	          'h1',
-	          null,
-	          'Sign in!'
-	        )
-	      ),
-	      React.createElement(
-	        'form',
-	        { className: 'user-acq-form group',
-	          onSubmit: this.handleSubmit },
-	        React.createElement(
-	          'label',
-	          null,
-	          'Email Address'
-	        ),
-	        React.createElement('input', {
-	          className: 'user-acq-input',
-	          type: 'text',
-	          onChange: this.updateEmail,
-	          value: this.state.email
-	        }),
-	        React.createElement(
-	          'label',
-	          null,
-	          'Password'
-	        ),
-	        React.createElement('input', {
-	          className: 'user-acq-input',
-	          type: 'password',
-	          onChange: this.updatePassword,
-	          value: this.state.password
-	        }),
-	        React.createElement('input', {
-	          className: 'user-acq-button',
-	          type: 'submit',
-	          value: 'Sign in!' }),
-	        React.createElement(
-	          'a',
-	          { className: 'facebook-login',
-	            href: '/auth/facebook' },
-	          'Log in with facebook!'
-	        )
-	      ),
-	      React.createElement(
-	        'button',
-	        {
-	          className: 'toggle-existing-user-button',
-	          onClick: this.goToNewUser },
-	        'New user? Sign up!'
-	      ),
-	      React.createElement(
-	        'button',
-	        {
-	          className: 'toggle-existing-user-button',
-	          onClick: this.guestLogin },
-	        'Demo login'
-	      )
-	    );
-	  }
-	
-	});
-	
-	module.exports = LoginForm;
-
-/***/ },
-/* 255 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(244);
-	
-	var SignupForm = React.createClass({
-	  displayName: 'SignupForm',
-	
-	
-	  contextTypes: {
-	    router: React.PropTypes.object.isRequired
-	  },
-	
-	  handleSubmit: function (e) {
-	    e.preventDefault();
-	    var formData = new FormData();
-	    formData.append("user[name]", this.state.name);
-	    formData.append("user[zipcode]", this.state.zipcode);
-	    formData.append("user[email]", this.state.email);
-	    formData.append("user[password]", this.state.password);
-	
-	    ApiUtil.createUser(formData, function () {
-	      this.context.router.push("/");
-	    }.bind(this));
-	  },
-	
-	  getInitialState: function () {
-	    return {
-	      name: "",
-	      zipcode: "",
-	      email: "",
-	      password: ""
-	    };
-	  },
-	
-	  updateName: function (e) {
-	    this.setState({ name: e.currentTarget.value });
-	  },
-	
-	  updateZip: function (e) {
-	    this.setState({ zipcode: e.currentTarget.value });
-	  },
-	
-	  updateEmail: function (e) {
-	    this.setState({ email: e.currentTarget.value });
-	  },
-	
-	  updatePassword: function (e) {
-	    this.setState({ password: e.currentTarget.value });
-	  },
-	
-	  goToExistingUser: function (e) {
-	    this.context.router.push("/login");
-	  },
-	
-	  guestLogin: function () {
-	    this.setState({
-	      email: "gigiheartsluna@gmail.com",
-	      password: "password"
-	    }, function () {
-	      ApiUtil.login(this.state, function () {
-	        this.context.router.push("/");
-	      }.bind(this));
-	    });
-	  },
-	
-	  render: function () {
-	
-	    return React.createElement(
-	      'section',
-	      null,
-	      React.createElement(
-	        'header',
-	        { className: 'user-acq-header' },
-	        React.createElement(
-	          'h1',
-	          null,
-	          'Almost there!'
-	        ),
-	        React.createElement(
-	          'h3',
-	          null,
-	          'Your new best friend is only a few clicks away.'
-	        )
-	      ),
-	      React.createElement(
-	        'form',
-	        { className: 'user-acq-form group', onSubmit: this.handleSubmit },
-	        React.createElement(
-	          'label',
-	          null,
-	          'Name'
-	        ),
-	        React.createElement('input', { className: 'user-acq-input', type: 'text', onChange: this.updateName, value: this.state.name }),
-	        React.createElement(
-	          'label',
-	          null,
-	          'Zip Code'
-	        ),
-	        React.createElement('input', { className: 'user-acq-input', type: 'text', onChange: this.updateZip, value: this.state.zipcode }),
-	        React.createElement(
-	          'label',
-	          null,
-	          'Email Address'
-	        ),
-	        React.createElement('input', { className: 'user-acq-input', type: 'text', onChange: this.updateEmail, value: this.state.email }),
-	        React.createElement(
-	          'label',
-	          null,
-	          'Password'
-	        ),
-	        React.createElement('input', { className: 'user-acq-input', type: 'password', onChange: this.updatePassword, value: this.state.password }),
-	        React.createElement('input', { className: 'user-acq-button', type: 'submit', value: 'Create account!' }),
-	        React.createElement(
-	          'a',
-	          { className: 'facebook-login',
-	            href: '/auth/facebook' },
-	          'Log in with facebook!'
-	        )
-	      ),
-	      React.createElement(
-	        'button',
-	        {
-	          className: 'toggle-existing-user-button',
-	          onClick: this.goToExistingUser },
-	        'Existing user? Sign in!'
-	      ),
-	      React.createElement(
-	        'button',
-	        {
-	          className: 'toggle-existing-user-button',
-	          onClick: this.guestLogin },
-	        'Demo login'
-	      )
-	    );
-	  }
-	
-	  //
-	
-	});
-	
-	module.exports = SignupForm;
-
-/***/ },
-/* 256 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	
-	var Splash = React.createClass({
-	  displayName: 'Splash',
-	
-	  contextTypes: {
-	    router: React.PropTypes.object.isRequired
-	  },
-	
-	  handleSubmit: function (e) {
-	    e.preventDefault();
-	    this.context.router.push('/signup');
-	  },
-	
-	  goToExistingUser: function () {
-	    this.context.router.push('/login');
-	  },
-	
-	  guestLogin: function () {
-	    this.setState({
-	      email: "gigiheartsluna@gmail.com",
-	      password: "password"
-	    }, function () {
-	      ApiUtil.login(this.state, function () {
-	        this.context.router.push("/");
-	      }.bind(this));
-	    });
-	  },
-	
-	  render: function () {
-	
-	    return React.createElement(
-	      'section',
-	      null,
-	      React.createElement(
-	        'header',
-	        { className: 'user-acq-header' },
-	        React.createElement(
-	          'h1',
-	          null,
-	          'Find your new best friend in minutes.'
-	        )
-	      ),
-	      React.createElement(
-	        'form',
-	        { className: 'user-acq-form group', onSubmit: this.handleSubmit },
-	        React.createElement(
-	          'h4',
-	          null,
-	          'I am a '
-	        ),
-	        React.createElement(
-	          'select',
-	          null,
-	          React.createElement(
-	            'option',
-	            null,
-	            'Puppy'
-	          ),
-	          React.createElement(
-	            'option',
-	            null,
-	            'Dog'
-	          ),
-	          React.createElement(
-	            'option',
-	            null,
-	            'Canine'
-	          ),
-	          React.createElement(
-	            'option',
-	            null,
-	            'Hound'
-	          )
-	        ),
-	        React.createElement(
-	          'select',
-	          null,
-	          React.createElement(
-	            'option',
-	            null,
-	            'Cuddler'
-	          ),
-	          React.createElement(
-	            'option',
-	            null,
-	            'Lover'
-	          ),
-	          React.createElement(
-	            'option',
-	            null,
-	            'Enthusiast'
-	          ),
-	          React.createElement(
-	            'option',
-	            null,
-	            'Admirer'
-	          ),
-	          React.createElement(
-	            'option',
-	            null,
-	            'Nut'
-	          )
-	        ),
-	        React.createElement('input', { className: 'user-acq-button', type: 'submit', value: 'Continue' })
-	      ),
-	      React.createElement(
-	        'button',
-	        {
-	          className: 'toggle-existing-user-button',
-	          onClick: this.goToExistingUser },
-	        'Existing user? Sign in!'
-	      ),
-	      React.createElement(
-	        'button',
-	        {
-	          className: 'toggle-existing-user-button',
-	          onClick: this.guestLogin },
-	        'Demo login'
-	      )
-	    );
-	  }
-	
-	});
-	
-	module.exports = Splash;
-
-/***/ },
-/* 257 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var SessionStore = __webpack_require__(221);
-	
-	var App = React.createClass({
-	  displayName: 'App',
-	
-	  contextTypes: {
-	    router: React.PropTypes.object.isRequired
-	  },
-	
-	  getInitialState: function () {
-	    return {
-	      currentUser: SessionStore.currentUser()
-	    };
-	  },
-	
-	  componentDidMount: function () {
-	    this.sessionStoreToken = SessionStore.addListener(this.handleChange);
-	
-	    this.handleChange();
-	  },
-	
-	  componentWillUnmount: function () {
-	    this.sessionStoreToken.remove();
-	  },
-	
-	  componentWillReceiveProps: function () {},
-	
-	  handleChange: function () {
-	    if (SessionStore.isLoggedIn()) {
-	      this.setState({ currentUser: SessionStore.currentUser() });
-	    } else {
-	      this.context.router.push("/login");
-	    }
-	  },
-	
-	  handleProfileClick: function () {
-	    this.context.router.push("/profile");
-	  },
-	
-	  handleBrowseClick: function () {
-	    this.context.router.push("/browse");
-	  },
-	
-	  handleQuickMatchClick: function () {
-	    this.context.router.push("/quickmatch");
-	  },
-	
-	  handleFavoritesClick: function () {
-	    this.context.router.push("/favorites");
-	  },
-	
-	  logOut: function (e) {
-	    e.preventDefault();
-	    ApiUtil.logout(function () {
-	      this.context.router.push("/login");
-	    }.bind(this));
-	  },
-	
-	  render: function () {
-	    var button, welcomeMessage;
-	
-	    if (this.state.currentUser) {
-	      welcomeMessage = React.createElement(
-	        'h2',
-	        { className: 'welcome' },
-	        'Welcome, ',
-	        this.state.currentUser.name,
-	        '!'
-	      );
-	      button = React.createElement(
-	        'button',
-	        { className: 'logout', onClick: this.logOut },
-	        'Logout'
-	      );
-	    }
-	
-	    return React.createElement(
-	      'div',
-	      null,
-	      welcomeMessage,
-	      React.createElement(
-	        'nav',
-	        { className: 'tabs group' },
-	        React.createElement('div', { className: 'root-tab-logo' }),
-	        React.createElement(
-	          'li',
-	          { className: 'root-tab', onClick: this.handleBrowseClick },
-	          'Browse Dogs'
-	        ),
-	        React.createElement(
-	          'li',
-	          { className: 'root-tab', onClick: this.handleQuickMatchClick },
-	          'QuickMatch'
-	        ),
-	        React.createElement(
-	          'li',
-	          { className: 'root-tab', onClick: this.handleProfileClick },
-	          'Profile'
-	        ),
-	        React.createElement(
-	          'li',
-	          { className: 'root-tab', onClick: this.handleFavoritesClick },
-	          'Favorites'
-	        ),
-	        button
-	      ),
-	      this.props.children
-	    );
-	  }
-	
-	});
-	
-	module.exports = App;
-
-/***/ },
 /* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var DogStore = __webpack_require__(248);
-	var SessionStore = __webpack_require__(221);
-	var DogUtil = __webpack_require__(250);
+	var DogStore = __webpack_require__(252);
+	var FavoriteStore = __webpack_require__(263);
+	var FavoriteUtil = __webpack_require__(260);
+	var SessionStore = __webpack_require__(224);
+	var DogUtil = __webpack_require__(254);
 	
 	var QuickMatch = React.createClass({
 	  displayName: 'QuickMatch',
@@ -33489,6 +33521,31 @@
 	
 	  componentWillReceiveProps: function (newProps) {
 	    this.redoSearch();
+	  },
+	
+	  toggleFavorite: function () {
+	    var photo;
+	
+	    if (this.state.dog.photos) {
+	      for (var i = 0; i < this.state.dog.photos.length; i++) {
+	        if (this.state.dog.photos[i].$t.includes("-x")) {
+	          photo = this.state.dog.photos[i].$t;
+	        }
+	      }
+	    }
+	
+	    var favoriteData = {
+	      favorite: {
+	        user_id: SessionStore.currentUser().id,
+	        dog_id: parseInt(this.state.dog.id),
+	        dog_photo: photo,
+	        dog_name: this.state.dog.name
+	      }
+	    };
+	
+	    debugger;
+	
+	    FavoriteUtil.createFavorite(favoriteData);
 	  },
 	
 	  redoSearch: function () {
@@ -33544,14 +33601,17 @@
 	      breeds = this.state.dog.breeds.$t;
 	    }
 	
-	    var favoriteText = "Add Favorite";
+	    var favoriteText = FavoriteStore.isFavorite(this.state.dog.id) ? "Remove Favorite" : "Add Favorite";
 	
 	    return React.createElement(
 	      'section',
 	      { className: 'dog-show-content group' },
 	      React.createElement(
 	        'button',
-	        { className: 'favorite-button' },
+	        {
+	          className: 'favorite-button',
+	          onClick: this.toggleFavorite
+	        },
 	        favoriteText
 	      ),
 	      React.createElement(
@@ -33667,21 +33727,223 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var SessionStore = __webpack_require__(221);
+	var SessionStore = __webpack_require__(224);
+	var FavoriteStore = __webpack_require__(263);
 	
 	var Favorites = React.createClass({
 	  displayName: 'Favorites',
 	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  getInitialState: function () {
+	    return {
+	      favorites: FavoriteStore.allFavorites()
+	    };
+	  },
+	
+	  componentDidMount: function () {
+	    this.favListener = FavoriteStore.addListener(this._onChange);
+	    FavoriteUtil.getAllFavorites();
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.favListener.remove();
+	  },
+	
+	  _onChange: function () {
+	    this.setState({
+	      favorites: FavoriteStore.allFavorites()
+	    });
+	  },
+	
+	  goToDogShow: function (e) {
+	    debugger;
+	    this.context.router.push("/dogs/" + e.currentTarget.value);
+	  },
+	
 	  render: function () {
+	
+	    var that = this;
+	
+	    var favToRender = this.state.favorites.map(function (favorite) {
+	      return React.createElement(
+	        'li',
+	        {
+	          key: favorite.id,
+	          value: favorite.dog_id,
+	          className: 'favorites-index-item',
+	          onClick: that.goToDogShow
+	        },
+	        React.createElement(
+	          'div',
+	          { className: 'favorites-name' },
+	          favorite.dog_name
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'favorites-photo' },
+	          React.createElement('img', { src: favorite.dog_photo })
+	        )
+	      );
+	    });
+	
 	    return React.createElement(
-	      'div',
-	      null,
-	      'Favorites!'
+	      'ul',
+	      { className: 'favorites-index group' },
+	      favToRender
 	    );
 	  }
 	});
 	
 	module.exports = Favorites;
+
+/***/ },
+/* 260 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var FavoriteActions = __webpack_require__(261);
+	var FavoriteStore = __webpack_require__(263);
+	
+	FavoriteUtil = {
+	
+	  getAllFavorites: function () {
+	    $.ajax({
+	      url: "api/favorites",
+	      type: "GET",
+	      dataType: "json",
+	      success: function (favorites) {
+	        FavoriteActions.allFavoritesRetrieved(favorites);
+	      },
+	      error: function () {
+	        console.log("error in favorites index");
+	      }
+	    });
+	  },
+	
+	  createFavorite: function (params) {
+	    $.ajax({
+	      url: "api/favorites",
+	      type: "POST",
+	      dataType: "json",
+	      data: params,
+	      success: function (favorite) {
+	        FavoriteActions.addedFavorite(favorite);
+	      },
+	      error: function () {
+	        console.log("error in favorites post");
+	      }
+	    });
+	  },
+	
+	  destroyFavorite: function (favoriteId, callback) {
+	    $.ajax({
+	      url: "api/favorites/" + favoriteId,
+	      type: "DELETE",
+	      dataType: "json",
+	      success: function (favorite) {
+	        debugger;
+	      },
+	      error: function () {
+	        console.log("error in favorites destroy");
+	      }
+	    });
+	  }
+	
+	};
+	
+	module.exports = FavoriteUtil;
+
+/***/ },
+/* 261 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var FavoriteConstants = __webpack_require__(262);
+	var Dispatcher = __webpack_require__(219);
+	
+	module.exports = {
+	  addedFavorite: function (favorite) {
+	    Dispatcher.dispatch({
+	      actionType: FavoriteConstants.FAVORITE_RECEIVED,
+	      favorite: favorite
+	    });
+	  },
+	
+	  allFavoritesRetrieved: function (favorites) {
+	    Dispatcher.dispatch({
+	      actionType: FavoriteConstants.FAVORITES_RECEIVED,
+	      favorites: favorites
+	    });
+	  }
+	
+	};
+
+/***/ },
+/* 262 */
+/***/ function(module, exports) {
+
+	module.exports = {
+	  FAVORITE_RECEIVED: "FAVORITE_RECEIVED",
+	  FAVORITES_RECEIVED: "FAVORITES_RECEIVED"
+	};
+
+/***/ },
+/* 263 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(225).Store;
+	var AppDispatcher = __webpack_require__(219);
+	var FavoriteConstants = __webpack_require__(262);
+	
+	var FavoriteStore = new Store(AppDispatcher);
+	
+	var _favorites = [];
+	
+	FavoriteStore.allFavorites = function () {
+	  return _favorites;
+	};
+	
+	FavoriteStore.resetFavorites = function (favorites) {
+	  _favorites = favorites;
+	};
+	
+	FavoriteStore.addFavorite = function (favorite) {
+	  _favorites.push(favorite);
+	};
+	
+	FavoriteStore.removeFavorite = function (favorite) {
+	  var id = _favorites.indexOf(favorite);
+	  _favorites.splice(id, 1);
+	};
+	
+	FavoriteStore.isFavorite = function (dogId) {
+	  if (!_favorites) {
+	    return false;
+	  }
+	  for (var i = 0; i < _favorites.length; i++) {
+	    if (_favorites[i].dog_id === parseInt(dogId)) {
+	      return true;
+	    }
+	  }
+	  return false;
+	};
+	
+	FavoriteStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case FavoriteConstants.FAVORITE_RECEIVED:
+	      FavoriteStore.addFavorite(payload.favorite);
+	      FavoriteStore.__emitChange();
+	      break;
+	    case FavoriteConstants.FAVORITES_RECEIVED:
+	      FavoriteStore.resetFavorites(payload.favorites);
+	      FavoriteStore.__emitChange();
+	      break;
+	
+	  }
+	};
+	
+	module.exports = FavoriteStore;
 
 /***/ }
 /******/ ]);

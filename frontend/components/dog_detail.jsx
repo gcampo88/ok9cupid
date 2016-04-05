@@ -1,6 +1,9 @@
 var React = require('react');
 var DogStore = require('../stores/dog');
 var DogUtil = require('../util/dog_util');
+var FavoriteUtil = require('../util/favorite_util');
+var SessionStore = require('../stores/session');
+var FavoriteStore = require('../stores/favorite');
 
 var DogDetail = React.createClass({
   contextTypes: {
@@ -22,15 +25,42 @@ var DogDetail = React.createClass({
 
   componentDidMount: function () {
     this.dogListener = DogStore.addListener(this._onChange);
+    this.favoriteListener = FavoriteStore.addListener(this._onChange);
     DogUtil.fetchSingleDog(parseInt(this.props.params.dogId));
   },
 
   componentWillUnmount: function () {
     this.dogListener.remove();
+    this.favoriteListener.remove();
   },
 
   componentWillReceiveProps: function (newProps) {
     this._onChange();
+  },
+
+  toggleFavorite: function () {
+    var photo;
+
+    if (this.state.dog.photos) {
+      for (var i = 0; i < this.state.dog.photos.length; i ++ ) {
+        if (this.state.dog.photos[i].$t.includes("-x")) {
+          photo = this.state.dog.photos[i].$t;
+        }
+      }
+    }
+
+
+    var favoriteData = {
+      favorite: {
+        user_id: SessionStore.currentUser().id,
+        dog_id: parseInt(this.state.dog.id),
+        dog_photo: photo,
+        dog_name: this.state.dog.name
+      }
+    }
+
+    FavoriteUtil.createFavorite(favoriteData)
+
   },
 
 
@@ -59,13 +89,17 @@ var DogDetail = React.createClass({
       breeds = this.state.dog.breeds.$t;
     }
 
-    var favoriteText = "Add Favorite";
+    var favoriteText = FavoriteStore.isFavorite(this.state.dog.id) ? "Remove Favorite" : "Add Favorite"
 
 
     return(
 
       <section className="dog-show-content group">
-        <button className="favorite-button">{favoriteText}</button>
+        <button
+          className="favorite-button"
+          onClick={this.toggleFavorite}>
+          {favoriteText}
+        </button>
 
         <label className="dog-show-label">Name:</label>
          <label className="dog-show-info">{this.state.dog.name}</label>
