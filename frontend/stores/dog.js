@@ -41,7 +41,9 @@ DogStore.__onDispatch = function (payload) {
       dogItem.city = dog.contact.city.$t;
       dogItem.zipcode = dog.contact.zip.$t;
       dogItem.email = dog.contact.email.$t;
-      dogItem.photos = dog.media.photos.photo;
+      if (dog.media.photos) {
+        dogItem.photos = dog.media.photos.photo;
+      }
       dogItem.description = dog.description.$t;
       _dogs.push(dogItem);
       DogStore.__emitChange();

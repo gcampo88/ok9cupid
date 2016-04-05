@@ -20,9 +20,11 @@ var DogsIndexItem = React.createClass({
 
     var photo;
 
-    for (var i = 0; i < this.props.dog.photos.length; i++) {
-      if (this.props.dog.photos[i].$t.includes("-x")) {
-        photo = (<img src={this.props.dog.photos[i].$t} />);
+    if (this.props.dog.photos) {
+      for (var i = 0; i < this.props.dog.photos.length; i++) {
+        if (this.props.dog.photos[i].$t.includes("-x")) {
+          photo = (<img src={this.props.dog.photos[i].$t} />);
+        }
       }
     }
 

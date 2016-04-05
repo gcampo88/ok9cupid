@@ -65,5 +65,19 @@
   cursor: pointer;
   color: red;
   font-size: 36px;
+}
 
+.next-page {
+  display: inline-block;
+  background: lightblue;
+  padding: 5px;
+  border-radius: 3px;
+  border: 1px solid darkblue;
+
+}
+
+.next-page:hover {
+  cursor: pointer;
+  color: red;
+  font-size: 36px;
 }

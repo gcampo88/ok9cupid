@@ -24,7 +24,8 @@ var DogsIndex = React.createClass({
   componentDidMount: function () {
     this.dogListener = DogStore.addListener(this._onChange);
     this.sessionListener = SessionStore.addListener(this._onChange);
-    DogUtil.fetchManyDogs({ location: "10014", animal: "dog" });
+    // debugger;
+    this.redoSearch();
 
     // GIGI NOTE THAT YOU COMMENTED OUT ALL THE DOGUTIL CALLS; COMMENT THEM BACK IN AFTER MONDAY!
     //nextPage will redo search with offset argument of lastOffset (figure out how to pull that out)
@@ -48,18 +49,24 @@ var DogsIndex = React.createClass({
   },
 
   redoSearch: function () {
-    var user_params =
-    {
-      age: this.state.search_age,
-      sex: this.state.search_sex,
-      size: this.state.search_size,
+    var user_params = {
       location: this.state.zipcode.toString(),
       animal: "dog"
+    };
 
+    if (this.state.search_age !== "Any") {
+      user_params.age = this.state.search_age;
     }
 
-    debugger;
-    // DogUtil.fetchManyDogs(user_params)
+    if (this.state.search_sex !== "Any") {
+      user_params.sex = this.state.search_sex;
+    }
+
+    if (this.state.search_size!== "Any") {
+      user_params.size = this.state.search_size;
+    }
+
+    DogUtil.fetchManyDogs(user_params)
   },
 
 
@@ -93,25 +100,33 @@ var DogsIndex = React.createClass({
     this.setState({ zipcode: e.target.value });
   },
 
+  nextPage: function (e) {
+    debugger;
+  },
+
   render: function () {
     if (!this.state.dogs) {
       return (<div></div>);
     }
 
-    var photo;
 
     var that = this;
 
     var dogsToShow = this.state.dogs.map(function (dog) {
       return(<DogsIndexItem dog={dog} key={dog.id}/>)
     });
-    // debugger;
 
     return(
       <div className="browse-items group" >
         <ul className="dogs-index group">
           {dogsToShow}
+          <button
+            className="next-page"
+            onClick={this.nextPage}>
+            Next Page
+          </button>
         </ul>
+
         <form className="profile-search">
 
           <h3>My pup search:</h3>
@@ -120,6 +135,7 @@ var DogsIndex = React.createClass({
             value={this.state.search_age}
             onChange={this.handleSearchAgeUpdate}
             className="search-param">
+            <option value="Any">Any Age</option>
             <option value="Baby">Baby</option>
             <option value="Young">Young</option>
             <option value="Adult">Adult</option>
@@ -131,6 +147,7 @@ var DogsIndex = React.createClass({
             value={this.state.search_size}
             onChange={this.handleSearchSizeUpdate}
             className="search-param">
+            <option value="Any">Any Size</option>
             <option value="S">Small</option>
             <option value="M">Medium</option>
             <option value="L">Large</option>
@@ -142,6 +159,7 @@ var DogsIndex = React.createClass({
               value={this.state.search_sex}
               onChange={this.handleSearchSexUpdate}
               className="search-param">
+              <option value="Any">Doesn't Matter</option>
               <option value="F">Female</option>
               <option value="M">Male</option>
             </select>

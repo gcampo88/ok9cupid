@@ -24949,22 +24949,27 @@
 	            className: 'search-param' },
 	          React.createElement(
 	            'option',
-	            null,
+	            { value: 'Any' },
+	            'Any Age'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: 'Baby' },
 	            'Baby'
 	          ),
 	          React.createElement(
 	            'option',
-	            null,
+	            { value: 'Young' },
 	            'Young'
 	          ),
 	          React.createElement(
 	            'option',
-	            null,
+	            { value: 'Adult' },
 	            'Adult'
 	          ),
 	          React.createElement(
 	            'option',
-	            null,
+	            { value: 'Senior' },
 	            'Senior'
 	          )
 	        ),
@@ -24979,6 +24984,11 @@
 	            value: this.state.size,
 	            onChange: this.handleSearchSizeUpdate,
 	            className: 'search-param' },
+	          React.createElement(
+	            'option',
+	            { value: 'Any' },
+	            'Any Size'
+	          ),
 	          React.createElement(
 	            'option',
 	            { value: 'S' },
@@ -25011,6 +25021,11 @@
 	            value: this.state.sex,
 	            onChange: this.handleSearchSexUpdate,
 	            className: 'search-param' },
+	          React.createElement(
+	            'option',
+	            { value: 'Any' },
+	            'Doesn\'t Matter'
+	          ),
 	          React.createElement(
 	            'option',
 	            { value: 'F' },
@@ -32256,7 +32271,8 @@
 	  componentDidMount: function () {
 	    this.dogListener = DogStore.addListener(this._onChange);
 	    this.sessionListener = SessionStore.addListener(this._onChange);
-	    DogUtil.fetchManyDogs({ location: "10014", animal: "dog" });
+	    // debugger;
+	    this.redoSearch();
 	
 	    // GIGI NOTE THAT YOU COMMENTED OUT ALL THE DOGUTIL CALLS; COMMENT THEM BACK IN AFTER MONDAY!
 	    //nextPage will redo search with offset argument of lastOffset (figure out how to pull that out)
@@ -32281,16 +32297,23 @@
 	
 	  redoSearch: function () {
 	    var user_params = {
-	      age: this.state.search_age,
-	      sex: this.state.search_sex,
-	      size: this.state.search_size,
 	      location: this.state.zipcode.toString(),
 	      animal: "dog"
-	
 	    };
 	
-	    debugger;
-	    // DogUtil.fetchManyDogs(user_params)
+	    if (this.state.search_age !== "Any") {
+	      user_params.age = this.state.search_age;
+	    }
+	
+	    if (this.state.search_sex !== "Any") {
+	      user_params.sex = this.state.search_sex;
+	    }
+	
+	    if (this.state.search_size !== "Any") {
+	      user_params.size = this.state.search_size;
+	    }
+	
+	    DogUtil.fetchManyDogs(user_params);
 	  },
 	
 	  updateSearchParams: function (e) {
@@ -32323,19 +32346,20 @@
 	    this.setState({ zipcode: e.target.value });
 	  },
 	
+	  nextPage: function (e) {
+	    debugger;
+	  },
+	
 	  render: function () {
 	    if (!this.state.dogs) {
 	      return React.createElement('div', null);
 	    }
-	
-	    var photo;
 	
 	    var that = this;
 	
 	    var dogsToShow = this.state.dogs.map(function (dog) {
 	      return React.createElement(DogsIndexItem, { dog: dog, key: dog.id });
 	    });
-	    // debugger;
 	
 	    return React.createElement(
 	      'div',
@@ -32343,7 +32367,14 @@
 	      React.createElement(
 	        'ul',
 	        { className: 'dogs-index group' },
-	        dogsToShow
+	        dogsToShow,
+	        React.createElement(
+	          'button',
+	          {
+	            className: 'next-page',
+	            onClick: this.nextPage },
+	          'Next Page'
+	        )
 	      ),
 	      React.createElement(
 	        'form',
@@ -32364,6 +32395,11 @@
 	            value: this.state.search_age,
 	            onChange: this.handleSearchAgeUpdate,
 	            className: 'search-param' },
+	          React.createElement(
+	            'option',
+	            { value: 'Any' },
+	            'Any Age'
+	          ),
 	          React.createElement(
 	            'option',
 	            { value: 'Baby' },
@@ -32398,6 +32434,11 @@
 	            className: 'search-param' },
 	          React.createElement(
 	            'option',
+	            { value: 'Any' },
+	            'Any Size'
+	          ),
+	          React.createElement(
+	            'option',
 	            { value: 'S' },
 	            'Small'
 	          ),
@@ -32428,6 +32469,11 @@
 	            value: this.state.search_sex,
 	            onChange: this.handleSearchSexUpdate,
 	            className: 'search-param' },
+	          React.createElement(
+	            'option',
+	            { value: 'Any' },
+	            'Doesn\'t Matter'
+	          ),
 	          React.createElement(
 	            'option',
 	            { value: 'F' },
@@ -32511,7 +32557,9 @@
 	        dogItem.city = dog.contact.city.$t;
 	        dogItem.zipcode = dog.contact.zip.$t;
 	        dogItem.email = dog.contact.email.$t;
-	        dogItem.photos = dog.media.photos.photo;
+	        if (dog.media.photos) {
+	          dogItem.photos = dog.media.photos.photo;
+	        }
 	        dogItem.description = dog.description.$t;
 	        _dogs.push(dogItem);
 	        DogStore.__emitChange();
@@ -32642,9 +32690,11 @@
 	
 	    var photo;
 	
-	    for (var i = 0; i < this.props.dog.photos.length; i++) {
-	      if (this.props.dog.photos[i].$t.includes("-x")) {
-	        photo = React.createElement('img', { src: this.props.dog.photos[i].$t });
+	    if (this.props.dog.photos) {
+	      for (var i = 0; i < this.props.dog.photos.length; i++) {
+	        if (this.props.dog.photos[i].$t.includes("-x")) {
+	          photo = React.createElement('img', { src: this.props.dog.photos[i].$t });
+	        }
 	      }
 	    }
 	
@@ -32709,15 +32759,18 @@
 	      return React.createElement('div', null);
 	    }
 	
-	    var photos = this.state.dog.photos.map(function (photoObject) {
-	      if (photoObject.$t.includes("-x")) {
-	        return React.createElement(
-	          'li',
-	          null,
-	          React.createElement('img', { src: photoObject.$t })
-	        );
-	      }
-	    });
+	    var photos;
+	    if (this.state.dog.photos) {
+	      photos = this.state.dog.photos.map(function (photoObject) {
+	        if (photoObject.$t.includes("-x")) {
+	          return React.createElement(
+	            'li',
+	            null,
+	            React.createElement('img', { src: photoObject.$t })
+	          );
+	        }
+	      });
+	    }
 	
 	    var breeds;
 	

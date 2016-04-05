@@ -39,11 +39,15 @@ var DogDetail = React.createClass({
       return (<div></div>);
     }
 
-    var photos = this.state.dog.photos.map(function (photoObject) {
-      if (photoObject.$t.includes("-x")) {
-        return (<li><img src={photoObject.$t} /></li>);
-      }
-    });
+
+    var photos;
+    if (this.state.dog.photos) {
+      photos = this.state.dog.photos.map(function (photoObject) {
+        if (photoObject.$t.includes("-x")) {
+          return (<li><img src={photoObject.$t} /></li>);
+        }
+      });
+    }
 
     var breeds;
 

@@ -124,12 +124,12 @@ var Profile = React.createClass({
             onKeyPress={this.handleEnter}/>
 
           <label>What kind of life can I give a pup?</label>
-          <textarea
-          placeholder="all about my future pup's life"
-          className="profile-param"
-          valueLink={this.linkState('about_life')}
-          onBlur={this.handleInput}
-          onKeyPress={this.handleEnter}/>
+            <textarea
+            placeholder="all about my future pup's life"
+            className="profile-param"
+            valueLink={this.linkState('about_life')}
+            onBlur={this.handleInput}
+            onKeyPress={this.handleEnter}/>
 
         <label>My ideal dog is:</label>
           <textarea
@@ -149,10 +149,11 @@ var Profile = React.createClass({
             value={this.state.age}
             onChange={this.handleSearchAgeUpdate}
             className="search-param">
-            <option>Baby</option>
-            <option>Young</option>
-            <option>Adult</option>
-            <option>Senior</option>
+            <option value="Any">Any Age</option>
+            <option value="Baby">Baby</option>
+            <option value="Young">Young</option>
+            <option value="Adult">Adult</option>
+            <option value="Senior">Senior</option>
           </select>
 
           <label>Size</label>
@@ -160,6 +161,7 @@ var Profile = React.createClass({
             value={this.state.size}
             onChange={this.handleSearchSizeUpdate}
             className="search-param">
+            <option value="Any">Any Size</option>
             <option value="S">Small</option>
             <option value="M">Medium</option>
             <option value="L">Large</option>
@@ -171,6 +173,7 @@ var Profile = React.createClass({
               value={this.state.sex}
               onChange={this.handleSearchSexUpdate}
               className="search-param">
+              <option value="Any">Doesn't Matter</option>
               <option value="F">Female</option>
               <option value="M">Male</option>
             </select>
