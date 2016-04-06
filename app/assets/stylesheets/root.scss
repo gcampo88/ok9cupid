@@ -20,6 +20,7 @@
 }
 
 .tabs {
+  background: darkblue;
   border-top: 1px solid lightblue;
   border-bottom: 1px solid lightblue;
   height: 60px;
@@ -60,4 +61,8 @@
   font-weight: lighter;
   width: 60px;
   float: left;
+}
+
+.root-tab-logo:hover {
+  cursor: pointer;
 }

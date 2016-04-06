@@ -88,6 +88,7 @@ var QuickMatch = React.createClass({
       user_params.size = SessionStore.currentUser().search_size;
     }
 
+
     DogUtil.fetchRandomDog(user_params);
   },
 
@@ -117,6 +118,9 @@ var QuickMatch = React.createClass({
     }
 
     var favoriteText = FavoriteStore.isFavorite(this.state.dog.id) ? "Remove Favorite" : "Add Favorite"
+
+    var mailtoLink = "mailto:" + this.state.dog.email;
+
 
     return(
       <section className="dog-show-content group">
@@ -152,7 +156,9 @@ var QuickMatch = React.createClass({
          <label className="dog-show-info">{this.state.dog.zipcode}</label>
 
         <label className="dog-show-label">Shelter email:</label>
-         <label className="dog-show-info">{this.state.dog.email}</label>
+
+        <label className="dog-show-info"><a href={mailtoLink}>{this.state.dog.email}</a></label>
+
 
        <button
          className="next-page"

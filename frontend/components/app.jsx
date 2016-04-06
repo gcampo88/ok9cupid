@@ -47,7 +47,11 @@ var App = React.createClass({
   },
 
   handleFavoritesClick: function () {
-    this.context.router.push("/favorites")
+    this.context.router.push("/favorites");
+  },
+
+  handleLogoClick: function () {
+    this.context.router.push("/browse");
   },
 
   logOut: function (e) {
@@ -69,7 +73,7 @@ var App = React.createClass({
     <div>
       {welcomeMessage}
       <nav className="tabs group">
-        <div className="root-tab-logo"></div>
+        <div className="root-tab-logo" onClick={this.handleLogoClick}></div>
         <li className="root-tab" onClick={this.handleBrowseClick} >Browse Dogs</li>
         <li className="root-tab" onClick={this.handleQuickMatchClick} >QuickMatch</li>
         <li className="root-tab" onClick={this.handleProfileClick} >Profile</li>
