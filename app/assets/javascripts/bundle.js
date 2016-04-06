@@ -33952,8 +33952,8 @@
 	        )
 	      ),
 	      React.createElement(
-	        'button',
-	        {
+	        'a',
+	        { href: '/#/quickmatch',
 	          className: 'next-page',
 	          onClick: this.redoSearch },
 	        'Match me again!'

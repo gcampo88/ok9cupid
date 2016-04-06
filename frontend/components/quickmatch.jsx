@@ -160,11 +160,11 @@ var QuickMatch = React.createClass({
         <label className="dog-show-info"><a href={mailtoLink}>{this.state.dog.email}</a></label>
 
 
-       <button
+       <a href="/#/quickmatch"
          className="next-page"
          onClick={this.redoSearch}>
          Match me again!
-       </button>
+       </a>
 
 
       </section>
