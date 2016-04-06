@@ -32785,10 +32785,10 @@
 	    return {
 	      dogs: DogStore.allFetchedDogs(),
 	      user: SessionStore.currentUser(),
-	      search_age: SessionStore.currentUser().search_age,
-	      search_sex: SessionStore.currentUser().search_sex,
-	      search_size: SessionStore.currentUser().search_size,
-	      zipcode: SessionStore.currentUser().zipcode
+	      search_age: SessionStore.currentUser().search_age || "",
+	      search_sex: SessionStore.currentUser().search_sex || "",
+	      search_size: SessionStore.currentUser().search_size || "",
+	      zipcode: SessionStore.currentUser().zipcode || ""
 	    };
 	  },
 	
@@ -32812,9 +32812,9 @@
 	    this.setState({
 	      dogs: DogStore.allFetchedDogs(),
 	      user: SessionStore.currentUser(),
-	      search_age: SessionStore.currentUser().search_age,
-	      search_sex: SessionStore.currentUser().search_sex,
-	      search_size: SessionStore.currentUser().search_size
+	      search_age: SessionStore.currentUser().search_age || "",
+	      search_sex: SessionStore.currentUser().search_sex || "",
+	      search_size: SessionStore.currentUser().search_size || ""
 	    });
 	  },
 	
