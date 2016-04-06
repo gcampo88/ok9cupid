@@ -42,8 +42,9 @@ var DogDetail = React.createClass({
 
     if (FavoriteStore.isFavorite(this.state.dog.id)) {
       var id = FavoriteStore.findFavoriteID(this.state.dog.id);
-      FavoriteUtil.destroyFavorite(id);
-
+      FavoriteUtil.destroyFavorite(id, function () {
+        this.context.router.push("/browse")
+      }.bind(this));
     } else {
 
       var photo;
@@ -73,10 +74,14 @@ var DogDetail = React.createClass({
 
 
   render: function () {
-    if (!this.state.dog) {
-      return (<div></div>);
-    }
 
+
+    if (!this.state.dog) {
+      return (
+        <div>
+          Great news-- this pup may have been adopted already!
+        </div>);
+    }
 
     var photos;
     if (this.state.dog.photos) {
@@ -98,7 +103,6 @@ var DogDetail = React.createClass({
     }
 
     var favoriteText = FavoriteStore.isFavorite(this.state.dog.id) ? "Remove Favorite" : "Add Favorite"
-
 
     return(
 

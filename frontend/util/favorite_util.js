@@ -38,6 +38,7 @@ FavoriteUtil = {
       type: "DELETE",
       dataType: "json",
       success: function (favorite) {
+        callback && callback();
         FavoriteActions.removedFavorite(favorite);
       },
       error: function () {

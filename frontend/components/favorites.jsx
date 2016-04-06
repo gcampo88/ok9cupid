@@ -1,6 +1,7 @@
 var React = require('react');
 var SessionStore = require('../stores/session');
 var FavoriteStore = require('../stores/favorite');
+var DogUtil = require('../util/dog_util');
 
 var Favorites = React.createClass({
   contextTypes: {
@@ -29,6 +30,7 @@ var Favorites = React.createClass({
   },
 
   goToDogShow: function (e) {
+    // DogUtil.fetchSingleDog(e.currentTarget.value);
     this.context.router.push("/dogs/" + e.currentTarget.value);
   },
 

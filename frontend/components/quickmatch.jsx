@@ -39,7 +39,9 @@ var QuickMatch = React.createClass({
 
     if (FavoriteStore.isFavorite(this.state.dog.id)) {
       var id = FavoriteStore.findFavoriteID(this.state.dog.id);
-      FavoriteUtil.destroyFavorite(id);
+      FavoriteUtil.destroyFavorite(id, function () {
+        this.context.router.push("/browse")
+      }.bind(this));
 
     } else {
 

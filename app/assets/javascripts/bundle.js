@@ -61,8 +61,8 @@
 	var Profile = __webpack_require__(245);
 	var Browse = __webpack_require__(250);
 	var DogDetail = __webpack_require__(257);
-	var QuickMatch = __webpack_require__(258);
-	var Favorites = __webpack_require__(259);
+	var QuickMatch = __webpack_require__(262);
+	var Favorites = __webpack_require__(263);
 	
 	var DogUtil = __webpack_require__(254);
 	
@@ -33162,6 +33162,7 @@
 	  },
 	
 	  fetchSingleDog: function (id) {
+	    //  debugger;
 	    var url = 'http://api.petfinder.com/pet.get?key=a4994cca2cf214901ee9892d3c1f58bf&format=json';
 	    $.ajax({
 	      url: url,
@@ -33275,9 +33276,9 @@
 	var React = __webpack_require__(1);
 	var DogStore = __webpack_require__(252);
 	var DogUtil = __webpack_require__(254);
-	var FavoriteUtil = __webpack_require__(260);
+	var FavoriteUtil = __webpack_require__(258);
 	var SessionStore = __webpack_require__(224);
-	var FavoriteStore = __webpack_require__(263);
+	var FavoriteStore = __webpack_require__(261);
 	
 	var DogDetail = React.createClass({
 	  displayName: 'DogDetail',
@@ -33318,7 +33319,9 @@
 	
 	    if (FavoriteStore.isFavorite(this.state.dog.id)) {
 	      var id = FavoriteStore.findFavoriteID(this.state.dog.id);
-	      FavoriteUtil.destroyFavorite(id);
+	      FavoriteUtil.destroyFavorite(id, function () {
+	        this.context.router.push("/browse");
+	      }.bind(this));
 	    } else {
 	
 	      var photo;
@@ -33345,8 +33348,13 @@
 	  },
 	
 	  render: function () {
+	
 	    if (!this.state.dog) {
-	      return React.createElement('div', null);
+	      return React.createElement(
+	        'div',
+	        null,
+	        'Great news-- this pup may have been adopted already!'
+	      );
 	    }
 	
 	    var photos;
@@ -33493,10 +33501,177 @@
 /* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var FavoriteActions = __webpack_require__(259);
+	var FavoriteStore = __webpack_require__(261);
+	
+	FavoriteUtil = {
+	
+	  getAllFavorites: function () {
+	    $.ajax({
+	      url: "api/favorites",
+	      type: "GET",
+	      dataType: "json",
+	      success: function (favorites) {
+	        FavoriteActions.allFavoritesRetrieved(favorites);
+	      },
+	      error: function () {
+	        console.log("error in favorites index");
+	      }
+	    });
+	  },
+	
+	  createFavorite: function (params) {
+	    $.ajax({
+	      url: "api/favorites",
+	      type: "POST",
+	      dataType: "json",
+	      data: params,
+	      success: function (favorite) {
+	        FavoriteActions.addedFavorite(favorite);
+	      },
+	      error: function () {
+	        console.log("error in favorites post");
+	      }
+	    });
+	  },
+	
+	  destroyFavorite: function (favoriteId, callback) {
+	    $.ajax({
+	      url: "api/favorites/" + favoriteId,
+	      type: "DELETE",
+	      dataType: "json",
+	      success: function (favorite) {
+	        callback && callback();
+	        FavoriteActions.removedFavorite(favorite);
+	      },
+	      error: function () {
+	        console.log("error in favorites destroy");
+	      }
+	    });
+	  }
+	
+	};
+	
+	module.exports = FavoriteUtil;
+
+/***/ },
+/* 259 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var FavoriteConstants = __webpack_require__(260);
+	var Dispatcher = __webpack_require__(219);
+	
+	module.exports = {
+	  addedFavorite: function (favorite) {
+	    Dispatcher.dispatch({
+	      actionType: FavoriteConstants.FAVORITE_RECEIVED,
+	      favorite: favorite
+	    });
+	  },
+	
+	  allFavoritesRetrieved: function (favorites) {
+	    Dispatcher.dispatch({
+	      actionType: FavoriteConstants.FAVORITES_RECEIVED,
+	      favorites: favorites
+	    });
+	  },
+	
+	  removedFavorite: function (favorite) {
+	    Dispatcher.dispatch({
+	      actionType: FavoriteConstants.FAVORITE_REMOVED,
+	      favorite: favorite
+	    });
+	  }
+	
+	};
+
+/***/ },
+/* 260 */
+/***/ function(module, exports) {
+
+	module.exports = {
+	  FAVORITE_RECEIVED: "FAVORITE_RECEIVED",
+	  FAVORITES_RECEIVED: "FAVORITES_RECEIVED",
+	  FAVORITE_REMOVED: "FAVORITE_REMOVED"
+	};
+
+/***/ },
+/* 261 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(225).Store;
+	var AppDispatcher = __webpack_require__(219);
+	var FavoriteConstants = __webpack_require__(260);
+	
+	var FavoriteStore = new Store(AppDispatcher);
+	
+	var _favorites = [];
+	
+	FavoriteStore.allFavorites = function () {
+	  return _favorites;
+	};
+	
+	FavoriteStore.resetFavorites = function (favorites) {
+	  _favorites = favorites;
+	};
+	
+	FavoriteStore.addFavorite = function (favorite) {
+	  _favorites.push(favorite);
+	};
+	
+	FavoriteStore.removeFavorite = function (favorite) {
+	  var id = _favorites.indexOf(favorite);
+	  _favorites.splice(id, 1);
+	};
+	
+	FavoriteStore.findFavoriteID = function (dogId) {
+	  for (var i = 0; i < _favorites.length; i++) {
+	    if (_favorites[i].dog_id === parseInt(dogId)) {
+	      return _favorites[i].id;
+	    }
+	  }
+	};
+	
+	FavoriteStore.isFavorite = function (dogId) {
+	  if (!_favorites) {
+	    return false;
+	  }
+	  for (var i = 0; i < _favorites.length; i++) {
+	    if (_favorites[i].dog_id === parseInt(dogId)) {
+	      return true;
+	    }
+	  }
+	  return false;
+	};
+	
+	FavoriteStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case FavoriteConstants.FAVORITE_RECEIVED:
+	      FavoriteStore.addFavorite(payload.favorite);
+	      FavoriteStore.__emitChange();
+	      break;
+	    case FavoriteConstants.FAVORITES_RECEIVED:
+	      FavoriteStore.resetFavorites(payload.favorites);
+	      FavoriteStore.__emitChange();
+	      break;
+	    case FavoriteConstants.FAVORITES_REMOVED:
+	      FavoriteStore.removeFavorite(payload.favorite);
+	      FavoriteStore.__emitChange();
+	      break;
+	
+	  }
+	};
+	
+	module.exports = FavoriteStore;
+
+/***/ },
+/* 262 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var React = __webpack_require__(1);
 	var DogStore = __webpack_require__(252);
-	var FavoriteStore = __webpack_require__(263);
-	var FavoriteUtil = __webpack_require__(260);
+	var FavoriteStore = __webpack_require__(261);
+	var FavoriteUtil = __webpack_require__(258);
 	var SessionStore = __webpack_require__(224);
 	var DogUtil = __webpack_require__(254);
 	
@@ -33536,7 +33711,9 @@
 	
 	    if (FavoriteStore.isFavorite(this.state.dog.id)) {
 	      var id = FavoriteStore.findFavoriteID(this.state.dog.id);
-	      FavoriteUtil.destroyFavorite(id);
+	      FavoriteUtil.destroyFavorite(id, function () {
+	        this.context.router.push("/browse");
+	      }.bind(this));
 	    } else {
 	
 	      var photo;
@@ -33737,12 +33914,13 @@
 	module.exports = QuickMatch;
 
 /***/ },
-/* 259 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var SessionStore = __webpack_require__(224);
-	var FavoriteStore = __webpack_require__(263);
+	var FavoriteStore = __webpack_require__(261);
+	var DogUtil = __webpack_require__(254);
 	
 	var Favorites = React.createClass({
 	  displayName: 'Favorites',
@@ -33773,6 +33951,7 @@
 	  },
 	
 	  goToDogShow: function (e) {
+	    // DogUtil.fetchSingleDog(e.currentTarget.value);
 	    this.context.router.push("/dogs/" + e.currentTarget.value);
 	  },
 	
@@ -33811,172 +33990,6 @@
 	});
 	
 	module.exports = Favorites;
-
-/***/ },
-/* 260 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var FavoriteActions = __webpack_require__(261);
-	var FavoriteStore = __webpack_require__(263);
-	
-	FavoriteUtil = {
-	
-	  getAllFavorites: function () {
-	    $.ajax({
-	      url: "api/favorites",
-	      type: "GET",
-	      dataType: "json",
-	      success: function (favorites) {
-	        FavoriteActions.allFavoritesRetrieved(favorites);
-	      },
-	      error: function () {
-	        console.log("error in favorites index");
-	      }
-	    });
-	  },
-	
-	  createFavorite: function (params) {
-	    $.ajax({
-	      url: "api/favorites",
-	      type: "POST",
-	      dataType: "json",
-	      data: params,
-	      success: function (favorite) {
-	        FavoriteActions.addedFavorite(favorite);
-	      },
-	      error: function () {
-	        console.log("error in favorites post");
-	      }
-	    });
-	  },
-	
-	  destroyFavorite: function (favoriteId, callback) {
-	    $.ajax({
-	      url: "api/favorites/" + favoriteId,
-	      type: "DELETE",
-	      dataType: "json",
-	      success: function (favorite) {
-	        FavoriteActions.removedFavorite(favorite);
-	      },
-	      error: function () {
-	        console.log("error in favorites destroy");
-	      }
-	    });
-	  }
-	
-	};
-	
-	module.exports = FavoriteUtil;
-
-/***/ },
-/* 261 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var FavoriteConstants = __webpack_require__(262);
-	var Dispatcher = __webpack_require__(219);
-	
-	module.exports = {
-	  addedFavorite: function (favorite) {
-	    Dispatcher.dispatch({
-	      actionType: FavoriteConstants.FAVORITE_RECEIVED,
-	      favorite: favorite
-	    });
-	  },
-	
-	  allFavoritesRetrieved: function (favorites) {
-	    Dispatcher.dispatch({
-	      actionType: FavoriteConstants.FAVORITES_RECEIVED,
-	      favorites: favorites
-	    });
-	  },
-	
-	  removedFavorite: function (favorite) {
-	    Dispatcher.dispatch({
-	      actionType: FavoriteConstants.FAVORITE_REMOVED,
-	      favorite: favorite
-	    });
-	  }
-	
-	};
-
-/***/ },
-/* 262 */
-/***/ function(module, exports) {
-
-	module.exports = {
-	  FAVORITE_RECEIVED: "FAVORITE_RECEIVED",
-	  FAVORITES_RECEIVED: "FAVORITES_RECEIVED",
-	  FAVORITE_REMOVED: "FAVORITE_REMOVED"
-	};
-
-/***/ },
-/* 263 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(225).Store;
-	var AppDispatcher = __webpack_require__(219);
-	var FavoriteConstants = __webpack_require__(262);
-	
-	var FavoriteStore = new Store(AppDispatcher);
-	
-	var _favorites = [];
-	
-	FavoriteStore.allFavorites = function () {
-	  return _favorites;
-	};
-	
-	FavoriteStore.resetFavorites = function (favorites) {
-	  _favorites = favorites;
-	};
-	
-	FavoriteStore.addFavorite = function (favorite) {
-	  _favorites.push(favorite);
-	};
-	
-	FavoriteStore.removeFavorite = function (favorite) {
-	  var id = _favorites.indexOf(favorite);
-	  _favorites.splice(id, 1);
-	};
-	
-	FavoriteStore.findFavoriteID = function (dogId) {
-	  for (var i = 0; i < _favorites.length; i++) {
-	    if (_favorites[i].dog_id === parseInt(dogId)) {
-	      return _favorites[i].id;
-	    }
-	  }
-	};
-	
-	FavoriteStore.isFavorite = function (dogId) {
-	  if (!_favorites) {
-	    return false;
-	  }
-	  for (var i = 0; i < _favorites.length; i++) {
-	    if (_favorites[i].dog_id === parseInt(dogId)) {
-	      return true;
-	    }
-	  }
-	  return false;
-	};
-	
-	FavoriteStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case FavoriteConstants.FAVORITE_RECEIVED:
-	      FavoriteStore.addFavorite(payload.favorite);
-	      FavoriteStore.__emitChange();
-	      break;
-	    case FavoriteConstants.FAVORITES_RECEIVED:
-	      FavoriteStore.resetFavorites(payload.favorites);
-	      FavoriteStore.__emitChange();
-	      break;
-	    case FavoriteConstants.FAVORITES_REMOVED:
-	      FavoriteStore.removeFavorite(payload.favorite);
-	      FavoriteStore.__emitChange();
-	      break;
-	
-	  }
-	};
-	
-	module.exports = FavoriteStore;
 
 /***/ }
 /******/ ]);
