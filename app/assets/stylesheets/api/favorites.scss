@@ -18,10 +18,15 @@
 
 .favorites-name {
   color: white;
+  text-shadow:
+    -1px -1px 0 darkblue,
+    1px -1px 0 darkblue,
+    -1px 1px 0 darkblue,
+    1px 1px 0 darkblue;
   font-size: 36px;
   font-weight: lighter;
   position: absolute;
-  bottom: 80px;
+  bottom: 100px;
   left: 200px;
   opacity: 0;
   z-index: 1;
@@ -45,4 +50,24 @@
 
 .favorites-index-item:hover .favorites-name{
   opacity: 1;
+}
+
+.favorites-index-item:hover .favorite-status{
+  opacity: 1;
+}
+
+
+.favorite-status {
+  background: #00D280;
+  padding: 6px;
+  border-radius: 20px;
+  letter-spacing: 3px;
+  color: white;
+  font-size: 12px;
+  text-transform: uppercase;
+  position: absolute;
+  top: 60px;
+  left: 190px;
+  z-index: 1;
+  opacity: 0;
 }

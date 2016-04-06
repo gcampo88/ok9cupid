@@ -48,7 +48,8 @@ var Favorites = React.createClass({
           >
           <div className="favorites-name">{favorite.dog_name}</div>
           <div className="favorites-photo"><img src={favorite.dog_photo} /></div>
-        </li>
+          <div className="favorite-status">adoptable</div>
+      </li>
       )
     })
 

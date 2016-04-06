@@ -34028,6 +34028,11 @@
 	          'div',
 	          { className: 'favorites-photo' },
 	          React.createElement('img', { src: favorite.dog_photo })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'favorite-status' },
+	          'adoptable'
 	        )
 	      );
 	    });
