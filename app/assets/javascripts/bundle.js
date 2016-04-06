@@ -32809,10 +32809,14 @@
 	  },
 	
 	  redoSearch: function () {
+	
 	    var user_params = {
-	      location: this.state.zipcode.toString(),
 	      animal: "dog"
 	    };
+	
+	    if (!this.state.zipcode) {
+	      user_params.location = "10014";
+	    }
 	
 	    if (this.state.search_age !== "Any" && this.state.search_age !== "null") {
 	      user_params.age = this.state.search_age;
