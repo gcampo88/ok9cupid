@@ -32241,9 +32241,7 @@
 	  },
 	
 	  onChange: function () {
-	    // debugger
-	    // age is search age || ""
-	    //anything that is null will be set to null.
+	
 	    this.setState({
 	      age: SessionStore.currentUser().search_age || "",
 	      size: SessionStore.currentUser().search_size || "",
@@ -32795,7 +32793,6 @@
 	  componentDidMount: function () {
 	    this.dogListener = DogStore.addListener(this._onChange);
 	    this.sessionListener = SessionStore.addListener(this._onChange);
-	    // debugger
 	    if (this.state.zipcode && this.state.zipcode !== "") {
 	      this.redoSearch();
 	    } else {
@@ -32850,10 +32847,21 @@
 	    e.preventDefault();
 	    var formData = new FormData();
 	
-	    formData.append("user[search_sex]", this.state.search_sex);
-	    formData.append("user[search_size]", this.state.search_size);
-	    formData.append("user[search_age]", this.state.search_age);
-	    formData.append("user[zipcode]", this.state.zipcode);
+	    if (this.state.search_sex !== "null") {
+	      formData.append("user[search_sex]", this.state.search_sex);
+	    }
+	
+	    if (this.state.search_size !== "null") {
+	      formData.append("user[search_size]", this.state.search_size);
+	    }
+	
+	    if (this.state.search_age !== "null") {
+	      formData.append("user[search_age]", this.state.search_age);
+	    }
+	
+	    if (this.state.search_sex !== "null") {
+	      formData.append("user[zipcode]", this.state.zipcode);
+	    }
 	
 	    ApiUtil.updateUserProfile(formData, this.state.user.id);
 	
@@ -33169,7 +33177,6 @@
 	var DogUtil = {
 	  fetchManyDogs: function (searchParams) {
 	    var data = searchParams ? searchParams : { location: "10014", animal: "dog" };
-	    //  debugger
 	    var url = 'http://api.petfinder.com/pet.find?key=a4994cca2cf214901ee9892d3c1f58bf&output=full&format=json';
 	    $.ajax({
 	      url: url,
@@ -33191,6 +33198,7 @@
 	      dataType: "jsonp",
 	      data: { id: id },
 	      success: function (petResult) {
+	
 	        DogActions.receiveSingleDog(petResult.petfinder.pet);
 	      },
 	      error: function () {}

@@ -19,8 +19,6 @@ class Api::UsersController < ApplicationController
   end
 
   def update
-    # debugger
-    #user-params points to null instead of "" ?
     current_user.update!(user_params)
     @user = current_user
     render :show

@@ -3,7 +3,6 @@ var DogActions = require('../actions/dog_actions');
 var DogUtil = {
  fetchManyDogs: function (searchParams) {
    var data = searchParams ? searchParams : ({ location: "10014", animal: "dog" });
-  //  debugger
    var url = 'http://api.petfinder.com/pet.find?key=a4994cca2cf214901ee9892d3c1f58bf&output=full&format=json';
    $.ajax({
      url: url,
@@ -27,6 +26,7 @@ var DogUtil = {
      dataType: "jsonp",
      data: {id: id},
      success: function (petResult) {
+
        DogActions.receiveSingleDog(petResult.petfinder.pet);
      },
      error: function () {

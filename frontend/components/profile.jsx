@@ -21,9 +21,7 @@ var Profile = React.createClass({
   },
 
   onChange: function () {
-    // debugger
-    // age is search age || ""
-    //anything that is null will be set to null.
+
     this.setState({
       age: SessionStore.currentUser().search_age || "",
       size: SessionStore.currentUser().search_size || "",
@@ -88,6 +86,7 @@ var Profile = React.createClass({
     formData.append("user[about_life]", this.state.about_life);
     formData.append("user[ideal_dog]", this.state.ideal_dog);
     formData.append("user[zipcode]", this.state.zipcode);
+
 
     if (this.state.imageFile) {
       formData.append("user[image]", this.state.imageFile);

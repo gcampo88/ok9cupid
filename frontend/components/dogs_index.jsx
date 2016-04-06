@@ -24,7 +24,6 @@ var DogsIndex = React.createClass({
   componentDidMount: function () {
     this.dogListener = DogStore.addListener(this._onChange);
     this.sessionListener = SessionStore.addListener(this._onChange);
-    // debugger
     if (this.state.zipcode && this.state.zipcode !== "") {
       this.redoSearch();
     } else {
@@ -82,10 +81,21 @@ var DogsIndex = React.createClass({
     e.preventDefault();
     var formData = new FormData();
 
-    formData.append("user[search_sex]", this.state.search_sex);
-    formData.append("user[search_size]", this.state.search_size);
-    formData.append("user[search_age]", this.state.search_age);
-    formData.append("user[zipcode]", this.state.zipcode);
+    if (this.state.search_sex !== "null") {
+      formData.append("user[search_sex]", this.state.search_sex);
+    }
+
+    if (this.state.search_size!== "null") {
+      formData.append("user[search_size]", this.state.search_size);
+    }
+
+    if (this.state.search_age !== "null") {
+      formData.append("user[search_age]", this.state.search_age);
+    }
+
+    if (this.state.search_sex !== "null") {
+      formData.append("user[zipcode]", this.state.zipcode);
+    }
 
     ApiUtil.updateUserProfile(formData, this.state.user.id);
 
