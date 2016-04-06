@@ -72,19 +72,19 @@ var QuickMatch = React.createClass({
 
   redoSearch: function () {
     var user_params = {
-      location: SessionStore.currentUser().zipcode.toString(),
+      location: SessionStore.currentUser().zipcode || "10014",
       animal: "dog"
     };
 
-    if (SessionStore.currentUser().search_age !== "Any" && SessionStore.currentUser().search_age !== "null") {
+    if (SessionStore.currentUser().search_age !== "Any" && SessionStore.currentUser().search_age !== "") {
       user_params.age = SessionStore.currentUser().search_age;
     }
 
-    if (SessionStore.currentUser().search_sex !== "Any" && SessionStore.currentUser().search_sex !== "null") {
+    if (SessionStore.currentUser().search_sex !== "Any" && SessionStore.currentUser().search_sex !== "") {
       user_params.sex = SessionStore.currentUser().search_sex;
     }
 
-    if (SessionStore.currentUser().search_size!== "Any" && SessionStore.currentUser().search_size !== "null") {
+    if (SessionStore.currentUser().search_size!== "Any" && SessionStore.currentUser().search_size !== "") {
       user_params.size = SessionStore.currentUser().search_size;
     }
 

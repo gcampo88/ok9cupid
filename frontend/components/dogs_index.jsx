@@ -49,19 +49,20 @@ var DogsIndex = React.createClass({
       animal: "dog"
     };
 
-    if (!this.state.zipcode) {
+
+    if (!this.state.zipcode || this.state.zipcode !== "") {
       user_params.location = "10014"
     }
 
-    if (this.state.search_age !== "Any" && this.state.search_age !== "null") {
+    if (this.state.search_age !== "Any" && this.state.search_age !== "") {
       user_params.age = this.state.search_age;
     }
 
-    if (this.state.search_sex !== "Any" && this.state.search_sex !== "null") {
+    if (this.state.search_sex !== "Any" && this.state.search_sex !== "") {
       user_params.sex = this.state.search_sex;
     }
 
-    if (this.state.search_size!== "Any" && this.state.search_size !== "null") {
+    if (this.state.search_size!== "Any" && this.state.search_size !== "") {
       user_params.size = this.state.search_size;
     }
 
@@ -70,6 +71,7 @@ var DogsIndex = React.createClass({
 
 
   updateSearchParams: function (e) {
+
     e.preventDefault();
     var formData = new FormData();
 

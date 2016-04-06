@@ -21,15 +21,18 @@ var Profile = React.createClass({
   },
 
   onChange: function () {
+    // debugger
+    // age is search age || ""
+    //anything that is null will be set to null.
     this.setState({
-      age: SessionStore.currentUser().search_age,
-      size: SessionStore.currentUser().search_size,
-      sex: SessionStore.currentUser().search_sex,
-      about_me: SessionStore.currentUser().about_me,
-      about_life: SessionStore.currentUser().about_life,
-      idealdog: SessionStore.currentUser().ideal_dog,
-      zipcode: SessionStore.currentUser().zipcode,
-      imageUrl: SessionStore.currentUser().imageUrl
+      age: SessionStore.currentUser().search_age || "",
+      size: SessionStore.currentUser().search_size || "",
+      sex: SessionStore.currentUser().search_sex || "",
+      about_me: SessionStore.currentUser().about_me || "",
+      about_life: SessionStore.currentUser().about_life || "",
+      ideal_dog: SessionStore.currentUser().ideal_dog || "",
+      zipcode: SessionStore.currentUser().zipcode || "",
+      imageUrl: SessionStore.currentUser().imageUrl || ""
     });
   },
 
@@ -74,6 +77,8 @@ var Profile = React.createClass({
 
   handleInput: function (e) {
     e.preventDefault();
+
+    //
 
     var formData = new FormData();
     formData.append("user[search_sex]", this.state.sex);

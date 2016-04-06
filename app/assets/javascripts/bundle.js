@@ -32241,15 +32241,18 @@
 	  },
 	
 	  onChange: function () {
+	    // debugger
+	    // age is search age || ""
+	    //anything that is null will be set to null.
 	    this.setState({
-	      age: SessionStore.currentUser().search_age,
-	      size: SessionStore.currentUser().search_size,
-	      sex: SessionStore.currentUser().search_sex,
-	      about_me: SessionStore.currentUser().about_me,
-	      about_life: SessionStore.currentUser().about_life,
-	      idealdog: SessionStore.currentUser().ideal_dog,
-	      zipcode: SessionStore.currentUser().zipcode,
-	      imageUrl: SessionStore.currentUser().imageUrl
+	      age: SessionStore.currentUser().search_age || "",
+	      size: SessionStore.currentUser().search_size || "",
+	      sex: SessionStore.currentUser().search_sex || "",
+	      about_me: SessionStore.currentUser().about_me || "",
+	      about_life: SessionStore.currentUser().about_life || "",
+	      ideal_dog: SessionStore.currentUser().ideal_dog || "",
+	      zipcode: SessionStore.currentUser().zipcode || "",
+	      imageUrl: SessionStore.currentUser().imageUrl || ""
 	    });
 	  },
 	
@@ -32293,6 +32296,8 @@
 	
 	  handleInput: function (e) {
 	    e.preventDefault();
+	
+	    //
 	
 	    var formData = new FormData();
 	    formData.append("user[search_sex]", this.state.sex);
@@ -32814,19 +32819,19 @@
 	      animal: "dog"
 	    };
 	
-	    if (!this.state.zipcode) {
+	    if (!this.state.zipcode || this.state.zipcode !== "") {
 	      user_params.location = "10014";
 	    }
 	
-	    if (this.state.search_age !== "Any" && this.state.search_age !== "null") {
+	    if (this.state.search_age !== "Any" && this.state.search_age !== "") {
 	      user_params.age = this.state.search_age;
 	    }
 	
-	    if (this.state.search_sex !== "Any" && this.state.search_sex !== "null") {
+	    if (this.state.search_sex !== "Any" && this.state.search_sex !== "") {
 	      user_params.sex = this.state.search_sex;
 	    }
 	
-	    if (this.state.search_size !== "Any" && this.state.search_size !== "null") {
+	    if (this.state.search_size !== "Any" && this.state.search_size !== "") {
 	      user_params.size = this.state.search_size;
 	    }
 	
@@ -32834,6 +32839,7 @@
 	  },
 	
 	  updateSearchParams: function (e) {
+	
 	    e.preventDefault();
 	    var formData = new FormData();
 	
@@ -33587,19 +33593,19 @@
 	
 	  redoSearch: function () {
 	    var user_params = {
-	      location: SessionStore.currentUser().zipcode.toString(),
+	      location: SessionStore.currentUser().zipcode || "10014",
 	      animal: "dog"
 	    };
 	
-	    if (SessionStore.currentUser().search_age !== "Any" && SessionStore.currentUser().search_age !== "null") {
+	    if (SessionStore.currentUser().search_age !== "Any" && SessionStore.currentUser().search_age !== "") {
 	      user_params.age = SessionStore.currentUser().search_age;
 	    }
 	
-	    if (SessionStore.currentUser().search_sex !== "Any" && SessionStore.currentUser().search_sex !== "null") {
+	    if (SessionStore.currentUser().search_sex !== "Any" && SessionStore.currentUser().search_sex !== "") {
 	      user_params.sex = SessionStore.currentUser().search_sex;
 	    }
 	
-	    if (SessionStore.currentUser().search_size !== "Any" && SessionStore.currentUser().search_size !== "null") {
+	    if (SessionStore.currentUser().search_size !== "Any" && SessionStore.currentUser().search_size !== "") {
 	      user_params.size = SessionStore.currentUser().search_size;
 	    }
 	
