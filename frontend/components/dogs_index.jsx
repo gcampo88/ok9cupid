@@ -155,23 +155,24 @@ var DogsIndex = React.createClass({
 
     return(
       <div className="browse-items group" >
+        <button
+          className="next-page"
+          onClick={this.nextPage}>
+          Next Page
+        </button>
+
         <ul className="dogs-index group">
           {dogsToShow}
-          <button
-            className="next-page"
-            onClick={this.nextPage}>
-            Next Page
-          </button>
         </ul>
 
-        <form className="profile-search">
+        <form className="browse-search">
 
           <h3>My pup search:</h3>
           <label>Age</label>
           <select
             value={this.state.search_age}
             onChange={this.handleSearchAgeUpdate}
-            className="search-param">
+            className="browse-search-param">
             <option value="Any">Any Age</option>
             <option value="Baby">Baby</option>
             <option value="Young">Young</option>
@@ -183,7 +184,7 @@ var DogsIndex = React.createClass({
           <select
             value={this.state.search_size}
             onChange={this.handleSearchSizeUpdate}
-            className="search-param">
+            className="browse-search-param">
             <option value="Any">Any Size</option>
             <option value="S">Small</option>
             <option value="M">Medium</option>
@@ -195,7 +196,7 @@ var DogsIndex = React.createClass({
            <select
               value={this.state.search_sex}
               onChange={this.handleSearchSexUpdate}
-              className="search-param">
+              className="browse-search-param">
               <option value="Any">Doesn't Matter</option>
               <option value="F">Female</option>
               <option value="M">Male</option>
@@ -208,7 +209,7 @@ var DogsIndex = React.createClass({
                 placeholder="zipcode"
                 value={this.state.zipcode}
                 onChange={this.handleSearchZipUpdate}
-                className="search-param">
+                className="browse-search-param">
               </input>
 
           <button

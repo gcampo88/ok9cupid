@@ -30,9 +30,11 @@ var DogsIndexItem = React.createClass({
 
     return(
       <li className="browse-item" onClick={this.showDetail} key={this.props.dog.id}>
-        <div>{this.props.dog.name}</div>
         {photo}
-      </li>);
+        <div className="browse-item-name">{this.props.dog.name}</div>
+        <div className="browse-item-zip">{this.props.dog.zipcode}</div>
+        <div className="browse-item-status">adoptable</div>
+    </li>);
 
     }
   }

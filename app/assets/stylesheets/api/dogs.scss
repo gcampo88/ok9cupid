@@ -57,7 +57,7 @@
 .browse-items {
   display: block;
   background: #F3F5F9;
-  width: 900px;
+  width:80%;
   height: 100%;
   margin: auto;
   border-radius: 3px;
@@ -65,23 +65,66 @@
 }
 
 .dogs-index {
-  width: 500px;
+  width: 75%;
+  box-sizing: border-box;
   height: auto;
   float: left;
-  margin: 20px;
-  padding: 10px;
+  // margin: 20px;
+  // padding: 10px;
 }
 
 .browse-item {
- width: 500px;
+ float: left;
+ position: relative;
+ width: 300px;
+ height: 400px;
+ background: white;
+ border: 1px solid lightgray;
+ border-radius: 6px;
+ margin: 20px;
 }
 
-.browse-item > div {
+.browse-item-name {
+  position: absolute;
+  left: 100px;
+  bottom: 40px;
+  display: block;
+  width: 280px;
+  font-size: 36px;
+  color: darkblue;
+}
+
+.browse-item-zip {
+  position: absolute;
   display: block;
   width: 480px;
-  margin: 10px;
-
+  font-size: 16px;
+  color: darkblue;
+  bottom: 10px;
+  left: 115px;
 }
+
+.browse-item > img {
+  border-radius: 6px;
+  width: 300px;
+  position: absolute;
+  clip: rect(0px, 300px, 300px, 0px);
+}
+
+.browse-item-status {
+  background: #00D280;
+  padding: 6px;
+  border-radius: 20px;
+  letter-spacing: 3px;
+  color: white;
+  font-size: 12px;
+  text-transform: uppercase;
+  position: absolute;
+  top: 10px;
+  left: 100px;
+  z-index: 1;
+}
+
 
 .browse-item:hover {
   cursor: pointer;
@@ -89,8 +132,9 @@
 }
 
 .next-page {
+  float: right;
   display: inline-block;
-  margin: 5px;
+  margin: 10px;
   padding: 10px;
   background: lightblue;
   border: 1px solid red;
@@ -101,4 +145,68 @@
   background: darkblue;
   cursor: pointer;
   color: white;
+}
+
+//Dogs Browse search box
+
+.browse-search {
+  position: relative;
+  width: 20%;
+  height: 320px;
+  box-sizing: border-box;
+  float: right;
+  margin: 10px;
+  // margin: 250px 30px 0 0;
+  // padding: 10px;
+}
+
+.browse-search > h3 {
+  // margin: 20px 0;
+  padding: 10px 0;
+  box-sizing: border-box;
+  text-align: center;
+  width: 100%;
+  color: white;
+  background: #4C7BD9;
+
+}
+
+.browse-search > label {
+  font-size: 16px;
+  color: #4C4D59;
+}
+
+.browse-search-param {
+  margin: 0 0 0 10px;
+  color: darkblue;
+  display: block;
+  font-size: 16px;
+  width: 90%;
+  cursor: pointer;
+  padding: 10px 0;
+
+}
+
+.browse-search- > input:focus {
+  border: 1px dotted lightblue;
+  background: lightgray;
+  color: black;
+}
+
+.browse-search > button {
+  cursor: pointer;
+  background: #00D280;
+  padding: 5px;
+  color: white;
+  margin: 5px;
+  position: absolute;
+  bottom: 0;
+  left: 60px;
+  text-align: center;
+  font-size: 18px;
+  border-radius: 3px;
+}
+
+.browse-search > button:hover {
+  color: darkblue;
 }

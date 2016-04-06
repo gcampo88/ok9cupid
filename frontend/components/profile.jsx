@@ -193,7 +193,7 @@ var Profile = React.createClass({
 
           <button
             onClick={this.handleInput}>
-            Save updated search
+            Update search!
           </button>
 
         </form>
