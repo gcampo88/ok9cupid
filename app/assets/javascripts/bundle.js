@@ -32795,7 +32795,12 @@
 	  componentDidMount: function () {
 	    this.dogListener = DogStore.addListener(this._onChange);
 	    this.sessionListener = SessionStore.addListener(this._onChange);
-	    this.redoSearch();
+	    // debugger
+	    if (this.state.zipcode && this.state.zipcode !== "") {
+	      this.redoSearch();
+	    } else {
+	      DogUtil.fetchManyDogs();
+	    }
 	  },
 	
 	  componentWillUnmount: function () {
@@ -32819,8 +32824,10 @@
 	      animal: "dog"
 	    };
 	
-	    if (!this.state.zipcode || this.state.zipcode !== "") {
+	    if (!this.state.zipcode || this.state.zipcode === "") {
 	      user_params.location = "10014";
+	    } else {
+	      user_params.location = this.state.zipcode;
 	    }
 	
 	    if (this.state.search_age !== "Any" && this.state.search_age !== "") {
@@ -33162,6 +33169,7 @@
 	var DogUtil = {
 	  fetchManyDogs: function (searchParams) {
 	    var data = searchParams ? searchParams : { location: "10014", animal: "dog" };
+	    //  debugger
 	    var url = 'http://api.petfinder.com/pet.find?key=a4994cca2cf214901ee9892d3c1f58bf&output=full&format=json';
 	    $.ajax({
 	      url: url,

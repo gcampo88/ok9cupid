@@ -24,7 +24,12 @@ var DogsIndex = React.createClass({
   componentDidMount: function () {
     this.dogListener = DogStore.addListener(this._onChange);
     this.sessionListener = SessionStore.addListener(this._onChange);
-    this.redoSearch();
+    // debugger
+    if (this.state.zipcode && this.state.zipcode !== "") {
+      this.redoSearch();
+    } else {
+      DogUtil.fetchManyDogs();
+    }
   },
 
   componentWillUnmount: function () {
@@ -50,8 +55,10 @@ var DogsIndex = React.createClass({
     };
 
 
-    if (!this.state.zipcode || this.state.zipcode !== "") {
+    if (!this.state.zipcode || this.state.zipcode === "") {
       user_params.location = "10014"
+    } else {
+      user_params.location = this.state.zipcode;
     }
 
     if (this.state.search_age !== "Any" && this.state.search_age !== "") {
