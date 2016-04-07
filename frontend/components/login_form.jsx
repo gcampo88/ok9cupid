@@ -25,7 +25,7 @@ var LoginForm = React.createClass({
   handleSubmit: function (e) {
     e.preventDefault();
     ApiUtil.login(this.state, function () {
-      this.context.router.push("/")
+      this.context.router.push("/browse")
     }.bind(this))
   },
 
@@ -39,7 +39,7 @@ var LoginForm = React.createClass({
       password: "password"
     }, function () {
         ApiUtil.login(this.state, function () {
-        this.context.router.push("/")
+        this.context.router.push("/browse")
       }.bind(this))
     })
   },

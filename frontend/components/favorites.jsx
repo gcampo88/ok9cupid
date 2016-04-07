@@ -40,7 +40,9 @@ var Favorites = React.createClass({
   },
 
   destroyFavorite: function (e) {
-    FavoriteUtil.destroyFavorite(e.currentTarget.dataset.id, this._onChange);
+    FavoriteUtil.destroyFavorite(e.currentTarget.dataset.id, function () {
+      this.context.router.push("/favorites")
+    }.bind(this));
   },
 
 

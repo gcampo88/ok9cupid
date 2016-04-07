@@ -26732,7 +26732,7 @@
 	  handleSubmit: function (e) {
 	    e.preventDefault();
 	    ApiUtil.login(this.state, function () {
-	      this.context.router.push("/");
+	      this.context.router.push("/browse");
 	    }.bind(this));
 	  },
 	
@@ -26746,7 +26746,7 @@
 	      password: "password"
 	    }, function () {
 	      ApiUtil.login(this.state, function () {
-	        this.context.router.push("/");
+	        this.context.router.push("/browse");
 	      }.bind(this));
 	    });
 	  },
@@ -35892,7 +35892,9 @@
 	  },
 	
 	  destroyFavorite: function (e) {
-	    FavoriteUtil.destroyFavorite(e.currentTarget.dataset.id, this._onChange);
+	    FavoriteUtil.destroyFavorite(e.currentTarget.dataset.id, function () {
+	      this.context.router.push("/favorites");
+	    }.bind(this));
 	  },
 	
 	  render: function () {
