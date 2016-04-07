@@ -1,119 +1,37 @@
-# ok9cupid
+[ok9cupid](http://www.ok9cupid.com)
 
-[ok9cupid.herokuapp.com][http://ok9cupid.herokuapp.com/]
+## Application Description
+ok9cupid is a clone of the dating site OkCupid, and uses React.js on a Rails back-end. Its purpose is for users to search for adoptable dogs. Users can create profiles with information about the kind of dog they're looking for (including age, size, sex, location), then browse dogs that meet those criteria, using data pulled in from Petfinder, and Favorite those they are interested in. Impatient users can also be "quickmatch"ed with dogs that meet their search parameters.
 
+## Features
+- [x] Secure user authentication using BCrypt
+- [x] Facebook login option
+- [x] User profile with image upload and storage capabilities through AWS
+- [x] Manipulation of Petfinder API to locate and list real adoptable dogs
 
-## Minimum Viable Product
+## App Components
+ok9cupid was written using React.js and follows the Flux architecture for one-way information flow. Example: when a user favorites a dog, an AJAX request is triggered to POST a new favorite. Upon success, the resulting json representation of that Favorite object is passed over to the Favorite Actions bundler, and is then dispatched to the Favorite Store, which then emits a notification to all listening components that there's been a change. All listening components will then take appropriate action (if any), and rerender if a state change was triggered (causing the "Add Favorite" text to change to "Remove Favorite", among other results).
 
-ok9cupid is a web application inspired by OKCupid built using Ruby on Rails
-and React.js. ok9cupid allows users to:
+## User Authentication
+When a user signs up, the password he/she creates is used to instantiate a hashed & salted password_digest using the Rails gem BCrypt. For security purposes, only the digest gets stored in the database. When a user later logs in, the password he or she types is checked against its salted, hashed digest version by BCrypt, and the user successfully logs in if there's a match. Upon logging in, the user is generated a new session token using SecureRandom; this session token is how Rails determines who the current user is at all points of the app.
 
-<!-- This is a Markdown checklist. Use it to keep track of your
-progress. Put an x between the brackets for a checkmark: [x] -->
+## User Profile
+Users can enter text to fill out their profiles simply by clicking on a text box (with either their own existing text in place, or else the default placeholder text). When they click away from the text box in question ("onBlur"), an AJAX patch request fires immediately to update their profile. Users can also update and save their dog search parameters on this page. Finally, they can upload profile pictures of themselves, which will then be saved to the database and stored in AWS storage.
 
-- [ ] Create an account
-- [ ] Log in / Log out
-- [ ] Create, read, edit, and delete profile information and photos
-- [ ] Browse adoptable dogs
-- [ ] Search for adoptable dogs that match specific parameters like age, size, sex, location, breed
-- [ ] Add dogs to and remove dogs from their list of favorites
-- [ ] Be "quickmatched" with a random adoptable dog that meets their search parameters
+## Browse Dogs
+The Browse Dogs page relies heavily on Petfinder's public API, specifically the pet.find(parameters) method, which accepts arguments like location, age, sex, size, breed, etc. One of the required search parameters is location; to handle this in cases where the user has yet to enter his/her zip code (most often because they logged in through facebook), I've made the search default to NYC. This site would be tough to scale up in a major way due to Petfinder's 10k requests/ day limit on API clients (which I hit earlier this week).
 
-## Design Docs
-* [View Wireframes][views]
-* [React Components][components]
-* [Flux Stores][stores]
-* [API endpoints][api-endpoints]
-* [DB schema][schema]
+## QuickMatch
+QuickMatch relied on another of the Petfinder API methods: pet.getRandom(parameters). I used React-Modal to pop open the modal onClick of the QuickMatch tab.
 
-[views]: ./docs/wireframes
-[components]: ./docs/components.md
-[stores]: ./docs/stores.md
-[api-endpoints]: ./docs/api-endpoints.md
-[schema]: ./docs/schema.md
-
-## Implementation Timeline
-
-### Phase 1: Backend setup and User Authentication (0.5 days)
-
-**Objective:** Functioning rails project with Authentication
-
-- [ ] create new project
-- [ ] create `User` model
-- [ ] authentication
-- [ ] user signup/signin pages
-- [ ] blank landing page after signin
-
-### Phase 2: User Model, API, and basic APIUtil (1 day)
-
-**Objective:** User profile information can be created, read, edited and destroyed through
-the API.
-
-- [ ] flesh out "User" model
-- [ ] seed the database with a small amount of test data
-- [ ] CRUD API for profile information
-- [ ] setup Webpack & Flux scaffold
-- [ ] setup `APIUtil` to interact with the API
-- [ ] test out API interaction in the console.
-
-### Phase 3: Flux Architecture and Router (1 day)
-
-**Objective:** User profile information can be created, read, edited and destroyed with the
-user interface.
-
-- [ ] setup the flux loop with skeleton files
-- [ ] setup React Router
-- [ ] implement Profile component, building out the flux loop as needed.
-- [ ] save user search params to the DB anytime they change.
-
-### Phase 4: Start Styling (1 day)
-
-**Objective:** Existing pages (including singup/signin) will look good.
-
-- [ ] create a basic style guide
-- [ ] position elements on the page
-- [ ] add basic colors & styles
-
-### Phase 5: Browsing Dogs (2 days)
-
-**Objective:** Users can search for adoptable dogs with or without search parameters.
-
-- [ ] set up connection with Petfinder's API
-- [ ] set up dogs front end, including index, show, and search pages
-- [ ] build form for user to set search parameters, following petfinder's API docs
-- [ ] enable infinite search with react-scroll
-- [ ] design root page with links to Browse, Quickmatch (tk), Favorites (tk).
-- [ ] create carousel on root page with randomly selected dog photos from dog index
-- [ ] Use CSS to style new views
+## Favorites
+The Favorites table in the database is essentially a join table between my Users table and Petfinder's Dogs table, storing foreign keys for both users and dogs, plus some light information about the dogs to display on the Favorites Index page.
+This gets a little tricky because when a dog gets adopted, Petfinder removes its ID from the database; so in this case, the Favorite continues to exist on the Favorites Index page, until the user clicks on the Favorite (at which point he/she is redirected to a page informing them that the pup is no longer available).
 
 
-### Phase 6: Favorites (1 day)
 
-**Objective:** Users can add dogs to and remove them from their Favorites list.
-
-- [ ] create 'Favorites' model
-- [ ] build out API, Flux loop, and components for:
-  - [ ] adding dogs to favorites
-  - [ ] viewing all Favorites
-  - [ ] viewing specific Favorite
-  - [ ] removing dogs from favorites
-- [ ] Style new elements
-
-### Phase 7: QuickMatch (0.5 days)
-
-**objective:** Enable QuickMatch functionality.
-
-- [ ] QuickMatch pulls in one dog at random from the results of the user's most recent search
-- [ ] enable modal pop-up with QuickMatch result using react-modal
-
-### Phase 8: Styling Cleanup and Seeding (1 day)
-
-**objective:** Make the site feel more cohesive and awesome.
-
-- [ ] Get feedback on my UI from others
-- [ ] Refactor HTML classes & CSS rules
-- [ ] Add modals, transitions, and other styling flourishes.
-
-### Bonus Features (TBD)
-- [ ] allow users to email shelters directly from app using Sendgrid
-- [ ] mimic okCupid's immediate user feedback (like "Ahhh, [location]" that pops up when you enter your zip code).
+## Future work
+- [ ] I'd love to add a feature that would allow users to email shelters directly from the app, potentially including their profile information as their adoption application info.
+- [ ] I'd like to add omniauth for google as well.
+- [ ] It would be fun to allow users to establish relationships with other users through the site, so that couples or friends who both had accounts could send each other dog profiles of note, etc.
+- [ ] I'd like to add some more CSS features, like a carousel of available dogs on the home page, etc.    
