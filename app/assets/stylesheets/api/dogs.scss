@@ -156,12 +156,17 @@
   position: absolute;
   top: 10px;
   left: 100px;
+  opacity: 0;
 }
 
 
 .browse-item:hover {
   cursor: pointer;
   color: red;
+}
+
+.browse-item:hover .browse-item-status {
+  opacity: 1;
 }
 
 .next-page {

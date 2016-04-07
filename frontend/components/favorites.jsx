@@ -1,7 +1,9 @@
 var React = require('react');
 var SessionStore = require('../stores/session');
 var FavoriteStore = require('../stores/favorite');
+
 var DogUtil = require('../util/dog_util');
+var FavoriteUtil = require('../util/favorite_util');
 
 var Favorites = React.createClass({
   contextTypes: {
@@ -30,9 +32,13 @@ var Favorites = React.createClass({
   },
 
   goToDogShow: function (e) {
-    // DogUtil.fetchSingleDog(e.currentTarget.value);
-    this.context.router.push("/dogs/" + e.currentTarget.value);
+    this.context.router.push("/dogs/" + e.currentTarget.dataset.id);
   },
+
+  destroyFavorite: function (e) {
+    FavoriteUtil.destroyFavorite(e.currentTarget.dataset.id, this._onChange);
+  },
+
 
   render: function () {
 
@@ -42,13 +48,23 @@ var Favorites = React.createClass({
       return(
         <li
           key={favorite.id}
-          value={favorite.dog_id}
           className="favorites-index-item"
-          onClick={that.goToDogShow}
           >
           <div className="favorites-name">{favorite.dog_name}</div>
-          <div className="favorites-photo"><img src={favorite.dog_photo} /></div>
-          <div className="favorite-status">adoptable</div>
+
+          <div
+            className="favorites-photo"
+            data-id={favorite.dog_id}
+            onClick={that.goToDogShow}>
+            <img src={favorite.dog_photo} />
+          </div>
+
+          <button
+            className="favorite-destroy"
+            data-id={favorite.id}
+            onClick={that.destroyFavorite}>
+            Remove favorite
+          </button>
       </li>
       )
     })
