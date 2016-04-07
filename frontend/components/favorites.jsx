@@ -25,6 +25,10 @@ var Favorites = React.createClass({
     this.favListener.remove();
   },
 
+  componentWillReceiveProps: function () {
+    this._onChange();
+  },
+
   _onChange: function () {
     this.setState({
       favorites: FavoriteStore.allFavorites()

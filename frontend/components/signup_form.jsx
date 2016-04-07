@@ -16,7 +16,7 @@ var SignupForm = React.createClass({
     formData.append("user[password]", this.state.password);
 
     ApiUtil.createUser(formData, function () {
-      this.context.router.push("/");
+      this.context.router.push("/browse");
     }.bind(this));
   },
 
@@ -55,7 +55,7 @@ var SignupForm = React.createClass({
       password: "password"
     }, function () {
         ApiUtil.login(this.state, function () {
-        this.context.router.push("/")
+        this.context.router.push("/browse")
       }.bind(this))
     })
   },

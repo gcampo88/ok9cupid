@@ -33764,7 +33764,7 @@
 	    formData.append("user[password]", this.state.password);
 	
 	    ApiUtil.createUser(formData, function () {
-	      this.context.router.push("/");
+	      this.context.router.push("/browse");
 	    }.bind(this));
 	  },
 	
@@ -33803,7 +33803,7 @@
 	      password: "password"
 	    }, function () {
 	      ApiUtil.login(this.state, function () {
-	        this.context.router.push("/");
+	        this.context.router.push("/browse");
 	      }.bind(this));
 	    });
 	  },
@@ -35875,6 +35875,10 @@
 	
 	  componentWillUnmount: function () {
 	    this.favListener.remove();
+	  },
+	
+	  componentWillReceiveProps: function () {
+	    this._onChange();
 	  },
 	
 	  _onChange: function () {
