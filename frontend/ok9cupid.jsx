@@ -1,5 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+var Modal = require('react-modal');
 
 var ReactRouter = require('react-router');
 var Route = ReactRouter.Route;
@@ -61,6 +62,7 @@ function _requireLoggedIn(nextState, replace, asyncCompletionCallback) {
 }
 
 $(document).ready(function () {
+  Modal.setAppElement(document.body);
   ReactDOM.render(router, $('#content')[0]);
 
 });
