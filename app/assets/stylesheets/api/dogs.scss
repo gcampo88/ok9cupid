@@ -119,9 +119,10 @@
 
 .browse-item-name {
   position: absolute;
-  left: 100px;
+  left: 0px;
+  right: 0px;
   bottom: 40px;
-  display: block;
+  text-align: center;
   width: 280px;
   font-size: 36px;
   color: darkblue;
