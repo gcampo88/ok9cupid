@@ -32099,6 +32099,8 @@
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
 	var Modal = __webpack_require__(264);
+	
+	var QuickMatch = __webpack_require__(262);
 	var SessionStore = __webpack_require__(224);
 	
 	var customStyles = {
@@ -32161,8 +32163,6 @@
 	
 	  handleQuickMatchClick: function () {
 	    this.openModal();
-	
-	    // this.context.router.push("/quickmatch");
 	  },
 	
 	  handleFavoritesClick: function () {
@@ -32225,46 +32225,7 @@
 	              isOpen: this.state.modalIsOpen,
 	              onRequestClose: this.closeModal,
 	              style: customStyles },
-	            React.createElement(
-	              'h2',
-	              null,
-	              'Hello'
-	            ),
-	            React.createElement(
-	              'button',
-	              { onClick: this.closeModal },
-	              'close'
-	            ),
-	            React.createElement(
-	              'div',
-	              null,
-	              'I am a modal'
-	            ),
-	            React.createElement(
-	              'form',
-	              null,
-	              React.createElement('input', null),
-	              React.createElement(
-	                'button',
-	                null,
-	                'tab navigation'
-	              ),
-	              React.createElement(
-	                'button',
-	                null,
-	                'stays'
-	              ),
-	              React.createElement(
-	                'button',
-	                null,
-	                'inside'
-	              ),
-	              React.createElement(
-	                'button',
-	                null,
-	                'the modal'
-	              )
-	            )
+	            React.createElement(QuickMatch, { closeModal: this.closeModal })
 	          )
 	        ),
 	        React.createElement(
@@ -33788,15 +33749,20 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	
 	var DogStore = __webpack_require__(252);
 	var FavoriteStore = __webpack_require__(261);
-	var FavoriteUtil = __webpack_require__(258);
 	var SessionStore = __webpack_require__(224);
+	
+	var FavoriteUtil = __webpack_require__(258);
 	var DogUtil = __webpack_require__(254);
 	
 	var QuickMatch = React.createClass({
 	  displayName: 'QuickMatch',
 	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
 	
 	  getInitialState: function () {
 	    return this.getStateFromDogStore();
@@ -33879,9 +33845,18 @@
 	    DogUtil.fetchRandomDog(user_params);
 	  },
 	
+	  showDetail: function () {
+	    this.props.closeModal();
+	    this.context.router.push("/dogs/" + this.state.dog.id);
+	  },
+	
 	  render: function () {
 	    if (!this.state.dog) {
 	      return React.createElement('div', null);
+	    }
+	
+	    if (!this.state.dog.photos) {
+	      this.redoSearch();
 	    }
 	
 	    var photos;
@@ -33897,27 +33872,21 @@
 	      });
 	    }
 	
-	    var breeds;
-	
-	    if (Array.isArray(this.state.dog.breeds)) {
-	      breeds = this.state.dog.breeds.map(function (breedObj, index) {
-	        return React.createElement(
-	          'div',
-	          { key: index },
-	          breedObj.$t
-	        );
-	      });
-	    } else {
-	      breeds = this.state.dog.breeds.$t;
-	    }
-	
 	    var favoriteText = FavoriteStore.isFavorite(this.state.dog.id) ? "Remove Favorite" : "Add Favorite";
-	
-	    var mailtoLink = "mailto:" + this.state.dog.email;
 	
 	    return React.createElement(
 	      'section',
-	      { className: 'dog-show-content group' },
+	      { className: 'quickmatch-content group' },
+	      React.createElement(
+	        'label',
+	        { className: 'quickmatch-info' },
+	        this.state.dog.name
+	      ),
+	      React.createElement(
+	        'ul',
+	        { className: 'quickmatch-photos group' },
+	        photos
+	      ),
 	      React.createElement(
 	        'form',
 	        { className: 'quickmatch-buttons' },
@@ -33935,105 +33904,14 @@
 	            className: 'favorite-button',
 	            onClick: this.redoSearch },
 	          'Match me again'
-	        )
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-label' },
-	        'Name:'
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-info' },
-	        this.state.dog.name
-	      ),
-	      React.createElement(
-	        'ul',
-	        { className: 'dog-show-photos group' },
-	        photos
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-label' },
-	        'Age:'
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-info' },
-	        this.state.dog.age
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-label' },
-	        'Size:'
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-info' },
-	        this.state.dog.size
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-label' },
-	        'Sex:'
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-info' },
-	        this.state.dog.sex
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-label' },
-	        'Breed(s):'
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-info' },
-	        breeds
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-label' },
-	        'About this pup:'
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-info' },
-	        this.state.dog.description
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-label' },
-	        'City:'
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-info' },
-	        this.state.dog.city
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-label' },
-	        'Zipcode:'
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-info' },
-	        this.state.dog.zipcode
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-label' },
-	        'Shelter email:'
-	      ),
-	      React.createElement(
-	        'label',
-	        { className: 'dog-show-info' },
+	        ),
 	        React.createElement(
-	          'a',
-	          { href: mailtoLink },
-	          this.state.dog.email
+	          'button',
+	          {
+	            className: 'favorite-button',
+	            onClick: this.showDetail },
+	          'More info about ',
+	          this.state.dog.name
 	        )
 	      )
 	    );

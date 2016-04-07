@@ -1,6 +1,8 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Modal = require('react-modal');
+
+var QuickMatch = require('./quickmatch');
 var SessionStore = require('../stores/session');
 
 var customStyles = {
@@ -63,8 +65,6 @@ var App = React.createClass({
 
   handleQuickMatchClick: function () {
     this.openModal();
-
-    // this.context.router.push("/quickmatch");
   },
 
   handleFavoritesClick: function () {
@@ -103,17 +103,7 @@ var App = React.createClass({
             isOpen={this.state.modalIsOpen}
             onRequestClose={this.closeModal}
             style={customStyles} >
-
-            <h2>Hello</h2>
-            <button onClick={this.closeModal}>close</button>
-            <div>I am a modal</div>
-            <form>
-              <input />
-              <button>tab navigation</button>
-              <button>stays</button>
-              <button>inside</button>
-              <button>the modal</button>
-            </form>
+            <QuickMatch closeModal={this.closeModal} />
           </Modal>
         </div>
         <li className="root-tab" onClick={this.handleProfileClick} >Profile</li>

@@ -1,11 +1,18 @@
 var React = require('react');
+
 var DogStore = require('../stores/dog');
 var FavoriteStore = require('../stores/favorite');
-var FavoriteUtil = require('../util/favorite_util');
 var SessionStore = require('../stores/session');
+
+var FavoriteUtil = require('../util/favorite_util');
 var DogUtil = require('../util/dog_util');
 
+
 var QuickMatch = React.createClass({
+  contextTypes: {
+    router: React.PropTypes.object.isRequired
+  },
+
 
   getInitialState: function () {
     return this.getStateFromDogStore();
@@ -92,11 +99,19 @@ var QuickMatch = React.createClass({
     DogUtil.fetchRandomDog(user_params);
   },
 
+  showDetail: function () {
+    this.props.closeModal();
+    this.context.router.push("/dogs/" + this.state.dog.id);
+  },
+
   render: function () {
     if (!this.state.dog) {
       return (<div></div>);
     }
 
+    if (!this.state.dog.photos) {
+      this.redoSearch();
+    }
 
     var photos;
     if (this.state.dog.photos) {
@@ -107,65 +122,33 @@ var QuickMatch = React.createClass({
       });
     }
 
-    var breeds;
-
-    if (Array.isArray(this.state.dog.breeds)) {
-      breeds = this.state.dog.breeds.map(function (breedObj, index) {
-        return (<div key={index}>{breedObj.$t}</div>);
-      });
-    } else {
-      breeds = this.state.dog.breeds.$t;
-    }
 
     var favoriteText = FavoriteStore.isFavorite(this.state.dog.id) ? "Remove Favorite" : "Add Favorite"
 
-    var mailtoLink = "mailto:" + this.state.dog.email;
-
 
     return(
-      <section className="dog-show-content group">
-        <form className="quickmatch-buttons">
-          <button
-            className="favorite-button"
-            onClick={this.toggleFavorite}
-            >{favoriteText}</button>
-          <button
-            className="favorite-button"
-            onClick={this.redoSearch}>
-            Match me again
-          </button>
+      <section className="quickmatch-content group">
+
+
+        <label className="quickmatch-info">{this.state.dog.name}</label>
+        <ul className="quickmatch-photos group">{photos}</ul>
+
+          <form className="quickmatch-buttons">
+            <button
+              className="favorite-button"
+              onClick={this.toggleFavorite}
+              >{favoriteText}</button>
+            <button
+              className="favorite-button"
+              onClick={this.redoSearch}>
+              Match me again
+            </button>
+            <button
+              className="favorite-button"
+              onClick={this.showDetail}>
+              More info about {this.state.dog.name}
+            </button>
           </form>
-
-
-        <label className="dog-show-label">Name:</label>
-         <label className="dog-show-info">{this.state.dog.name}</label>
-
-        <ul className="dog-show-photos group">{photos}</ul>
-
-        <label className="dog-show-label">Age:</label>
-         <label className="dog-show-info">{this.state.dog.age}</label>
-
-        <label className="dog-show-label">Size:</label>
-         <label className="dog-show-info">{this.state.dog.size}</label>
-
-        <label className="dog-show-label">Sex:</label>
-         <label className="dog-show-info">{this.state.dog.sex}</label>
-
-        <label className="dog-show-label">Breed(s):</label>
-         <label className="dog-show-info">{breeds}</label>
-
-        <label className="dog-show-label">About this pup:</label>
-         <label className="dog-show-info">{this.state.dog.description}</label>
-
-        <label className="dog-show-label">City:</label>
-         <label className="dog-show-info">{this.state.dog.city}</label>
-
-        <label className="dog-show-label">Zipcode:</label>
-         <label className="dog-show-info">{this.state.dog.zipcode}</label>
-
-        <label className="dog-show-label">Shelter email:</label>
-
-        <label className="dog-show-info"><a href={mailtoLink}>{this.state.dog.email}</a></label>
 
 
 
@@ -173,7 +156,6 @@ var QuickMatch = React.createClass({
     )
   }
 });
-
 
 
 module.exports = QuickMatch;
