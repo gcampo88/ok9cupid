@@ -26746,7 +26746,7 @@
 	      password: "password"
 	    }, function () {
 	      ApiUtil.login(this.state, function () {
-	        this.context.router.push("/browse");
+	        this.context.router.push("/");
 	      }.bind(this));
 	    });
 	  },
