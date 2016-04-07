@@ -34738,9 +34738,11 @@
 	
 	  handleFileChange: function (e) {
 	    var file = e.currentTarget.files[0];
+	
 	    var reader = new FileReader();
 	    reader.onloadend = function () {
 	      var result = reader.result;
+	
 	      this.setState({ imageFile: file, imageUrl: result });
 	      this.handleInput();
 	    }.bind(this);
@@ -34755,29 +34757,26 @@
 	  },
 	
 	  handleSearchSexUpdate: function (e) {
-	    e.preventDefault();
+	
 	    this.setState({ sex: e.target.value });
 	  },
 	
 	  handleSearchSizeUpdate: function (e) {
-	    e.preventDefault();
+	
 	    this.setState({ size: e.target.value });
 	  },
 	
 	  handleSearchAgeUpdate: function (e) {
-	    e.preventDefault();
+	
 	    this.setState({ age: e.target.value });
 	  },
 	
 	  handleSearchZipUpdate: function (e) {
-	    e.preventDefault();
+	
 	    this.setState({ zipcode: e.target.value });
 	  },
 	
 	  handleInput: function (e) {
-	    e.preventDefault();
-	
-	    //
 	
 	    var formData = new FormData();
 	    formData.append("user[search_sex]", this.state.sex);
