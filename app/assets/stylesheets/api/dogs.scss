@@ -2,7 +2,7 @@
 
 .dog-show-content {
   background: #F3F5F9;
-  width: 900px;
+  width: 90%;
   height: 100%;
   margin: auto;
   border-radius: 3px;
@@ -16,7 +16,7 @@
 
 .dog-show-info {
   display: block;
-  width: 800px;
+  width: 90%;
   font-size: 20px;
   margin: 10px auto;
   text-align: justify;
@@ -47,11 +47,11 @@
   color: white;
 }
 
-.mailto-button {
-  width: 100px;
-  height: 100px;
-  background: red;
-}
+// .mailto-button {
+//   width: 100px;
+//   height: 100px;
+//   background: red;
+// }
 
 
 //quickmatch modal
@@ -90,7 +90,7 @@
 .browse-items {
   display: block;
   background: #F3F5F9;
-  width:80%;
+  width:90%;
   height: 100%;
   margin: auto;
   border-radius: 3px;
@@ -98,7 +98,7 @@
 }
 
 .dogs-index {
-  width: 75%;
+  width: 80%;
   box-sizing: border-box;
   height: auto;
   float: left;
@@ -188,7 +188,7 @@
   height: 320px;
   box-sizing: border-box;
   float: right;
-  margin: 10px;
+  // margin: 10px;
   border: 1px dashed lightblue;
 }
 

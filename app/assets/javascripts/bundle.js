@@ -32208,8 +32208,18 @@
 	        React.createElement('div', { className: 'root-tab-logo', onClick: this.handleLogoClick }),
 	        React.createElement(
 	          'li',
+	          { className: 'root-tab', onClick: this.handleProfileClick },
+	          'Profile'
+	        ),
+	        React.createElement(
+	          'li',
 	          { className: 'root-tab', onClick: this.handleBrowseClick },
 	          'Browse Dogs'
+	        ),
+	        React.createElement(
+	          'li',
+	          { className: 'root-tab', onClick: this.handleFavoritesClick },
+	          'Favorites'
 	        ),
 	        React.createElement(
 	          'li',
@@ -32227,16 +32237,6 @@
 	              style: customStyles },
 	            React.createElement(QuickMatch, { closeModal: this.closeModal })
 	          )
-	        ),
-	        React.createElement(
-	          'li',
-	          { className: 'root-tab', onClick: this.handleProfileClick },
-	          'Profile'
-	        ),
-	        React.createElement(
-	          'li',
-	          { className: 'root-tab', onClick: this.handleFavoritesClick },
-	          'Favorites'
 	        ),
 	        button
 	      ),

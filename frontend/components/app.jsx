@@ -96,9 +96,11 @@ var App = React.createClass({
       {welcomeMessage}
       <nav className="tabs group">
         <div className="root-tab-logo" onClick={this.handleLogoClick}></div>
+        <li className="root-tab" onClick={this.handleProfileClick} >Profile</li>
         <li className="root-tab" onClick={this.handleBrowseClick} >Browse Dogs</li>
+        <li className="root-tab" onClick={this.handleFavoritesClick} >Favorites</li>
         <li className="root-tab" onClick={this.handleQuickMatchClick} >QuickMatch</li>
-          <div>
+        <div>
           <Modal
             isOpen={this.state.modalIsOpen}
             onRequestClose={this.closeModal}
@@ -106,8 +108,6 @@ var App = React.createClass({
             <QuickMatch closeModal={this.closeModal} />
           </Modal>
         </div>
-        <li className="root-tab" onClick={this.handleProfileClick} >Profile</li>
-        <li className="root-tab" onClick={this.handleFavoritesClick} >Favorites</li>
         {button}
     </nav>
     {this.props.children}
