@@ -124,10 +124,18 @@ var QuickMatch = React.createClass({
 
     return(
       <section className="dog-show-content group">
-        <button
-          className="favorite-button"
-          onClick={this.toggleFavorite}
-          >{favoriteText}</button>
+        <form className="quickmatch-buttons">
+          <button
+            className="favorite-button"
+            onClick={this.toggleFavorite}
+            >{favoriteText}</button>
+          <button
+            className="favorite-button"
+            onClick={this.redoSearch}>
+            Match me again
+          </button>
+          </form>
+
 
         <label className="dog-show-label">Name:</label>
          <label className="dog-show-info">{this.state.dog.name}</label>
@@ -159,12 +167,6 @@ var QuickMatch = React.createClass({
 
         <label className="dog-show-info"><a href={mailtoLink}>{this.state.dog.email}</a></label>
 
-
-       <a href="/#/quickmatch"
-         className="next-page"
-         onClick={this.redoSearch}>
-         Match me again!
-       </a>
 
 
       </section>

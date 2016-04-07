@@ -33845,12 +33845,23 @@
 	      'section',
 	      { className: 'dog-show-content group' },
 	      React.createElement(
-	        'button',
-	        {
-	          className: 'favorite-button',
-	          onClick: this.toggleFavorite
-	        },
-	        favoriteText
+	        'form',
+	        { className: 'quickmatch-buttons' },
+	        React.createElement(
+	          'button',
+	          {
+	            className: 'favorite-button',
+	            onClick: this.toggleFavorite
+	          },
+	          favoriteText
+	        ),
+	        React.createElement(
+	          'button',
+	          {
+	            className: 'favorite-button',
+	            onClick: this.redoSearch },
+	          'Match me again'
+	        )
 	      ),
 	      React.createElement(
 	        'label',
@@ -33950,13 +33961,6 @@
 	          { href: mailtoLink },
 	          this.state.dog.email
 	        )
-	      ),
-	      React.createElement(
-	        'a',
-	        { href: '/#/quickmatch',
-	          className: 'next-page',
-	          onClick: this.redoSearch },
-	        'Match me again!'
 	      )
 	    );
 	  }

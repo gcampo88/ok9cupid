@@ -92,7 +92,7 @@ body {
   display: inline-block;;
 }
 
-.logo-header > h1 > em {
+.logo-header > h1 > strong {
   color: darkblue;
 }
 
