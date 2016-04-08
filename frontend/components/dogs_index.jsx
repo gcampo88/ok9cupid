@@ -60,6 +60,7 @@ var DogsIndex = React.createClass({
       user_params.location = this.state.zipcode;
     }
 
+
     if (this.state.search_age !== "Any" && this.state.search_age !== "") {
       user_params.age = this.state.search_age;
     }

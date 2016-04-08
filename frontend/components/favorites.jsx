@@ -75,6 +75,10 @@ var Favorites = React.createClass({
       )
     })
 
+    if (this.state.favorites.length === 0) {
+      return (<div className="placeholder-text">You haven't added any favorites yet! Check out QuickMatch to begin.</div>);
+    }
+
     return(
       <ul className="favorites-index group">
         {favToRender}

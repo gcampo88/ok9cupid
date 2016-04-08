@@ -35692,7 +35692,7 @@
 	    if (!this.state.dog) {
 	      return React.createElement(
 	        'div',
-	        null,
+	        { className: 'placeholder-text' },
 	        'Great news-- this pup may have been adopted already!'
 	      );
 	    }
@@ -35930,6 +35930,14 @@
 	        )
 	      );
 	    });
+	
+	    if (this.state.favorites.length === 0) {
+	      return React.createElement(
+	        'div',
+	        { className: 'placeholder-text' },
+	        'You haven\'t added any favorites yet! Check out QuickMatch to begin.'
+	      );
+	    }
 	
 	    return React.createElement(
 	      'ul',

@@ -78,7 +78,7 @@ var DogDetail = React.createClass({
 
     if (!this.state.dog) {
       return (
-        <div>
+        <div className="placeholder-text">
           Great news-- this pup may have been adopted already!
         </div>);
     }
